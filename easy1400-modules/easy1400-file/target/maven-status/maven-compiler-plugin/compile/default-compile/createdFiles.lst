@@ -1,0 +1,9 @@
+com/easy1400/file/config/ResourcesConfig.class
+com/easy1400/file/service/LocalSysFileServiceImpl.class
+com/easy1400/file/utils/FileUploadUtils.class
+com/easy1400/file/controller/SysFileController.class
+com/easy1400/file/service/ISysFileService.class
+com/easy1400/file/config/MinioConfig.class
+com/easy1400/file/service/FastDfsSysFileServiceImpl.class
+com/easy1400/file/Easy1400FileApplication.class
+com/easy1400/file/service/MinioSysFileServiceImpl.class

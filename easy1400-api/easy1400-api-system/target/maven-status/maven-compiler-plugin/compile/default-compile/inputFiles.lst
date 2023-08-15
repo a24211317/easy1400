@@ -1,0 +1,15 @@
+/Users/chenghong/Documents/workspace/java/project/easy1400/easy1400-api/easy1400-api-system/src/main/java/com/easy1400/system/api/factory/RemoteUserFallbackFactory.java
+/Users/chenghong/Documents/workspace/java/project/easy1400/easy1400-api/easy1400-api-system/src/main/java/com/easy1400/system/api/domain/SysLogininfor.java
+/Users/chenghong/Documents/workspace/java/project/easy1400/easy1400-api/easy1400-api-system/src/main/java/com/easy1400/system/api/domain/SysDept.java
+/Users/chenghong/Documents/workspace/java/project/easy1400/easy1400-api/easy1400-api-system/src/main/java/com/easy1400/system/api/RemoteUserService.java
+/Users/chenghong/Documents/workspace/java/project/easy1400/easy1400-api/easy1400-api-system/src/main/java/com/easy1400/system/api/domain/SysDictType.java
+/Users/chenghong/Documents/workspace/java/project/easy1400/easy1400-api/easy1400-api-system/src/main/java/com/easy1400/system/api/domain/SysOperLog.java
+/Users/chenghong/Documents/workspace/java/project/easy1400/easy1400-api/easy1400-api-system/src/main/java/com/easy1400/system/api/factory/RemoteLogFallbackFactory.java
+/Users/chenghong/Documents/workspace/java/project/easy1400/easy1400-api/easy1400-api-system/src/main/java/com/easy1400/system/api/model/LoginUser.java
+/Users/chenghong/Documents/workspace/java/project/easy1400/easy1400-api/easy1400-api-system/src/main/java/com/easy1400/system/api/domain/SysRole.java
+/Users/chenghong/Documents/workspace/java/project/easy1400/easy1400-api/easy1400-api-system/src/main/java/com/easy1400/system/api/RemoteLogService.java
+/Users/chenghong/Documents/workspace/java/project/easy1400/easy1400-api/easy1400-api-system/src/main/java/com/easy1400/system/api/domain/SysFile.java
+/Users/chenghong/Documents/workspace/java/project/easy1400/easy1400-api/easy1400-api-system/src/main/java/com/easy1400/system/api/domain/SysUser.java
+/Users/chenghong/Documents/workspace/java/project/easy1400/easy1400-api/easy1400-api-system/src/main/java/com/easy1400/system/api/RemoteFileService.java
+/Users/chenghong/Documents/workspace/java/project/easy1400/easy1400-api/easy1400-api-system/src/main/java/com/easy1400/system/api/domain/SysDictData.java
+/Users/chenghong/Documents/workspace/java/project/easy1400/easy1400-api/easy1400-api-system/src/main/java/com/easy1400/system/api/factory/RemoteFileFallbackFactory.java

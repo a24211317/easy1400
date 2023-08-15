@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>com.easy1400</groupId>
+        <artifactId>easy1400</artifactId>
+        <version>3.6.3</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <modules>
+        <module>easy1400-common-log</module>
+        <module>easy1400-common-core</module>
+        <module>easy1400-common-redis</module>
+        <module>easy1400-common-seata</module>
+        <module>easy1400-common-swagger</module>
+        <module>easy1400-common-security</module>
+        <module>easy1400-common-datascope</module>
+        <module>easy1400-common-datasource</module>
+    </modules>
+
+    <artifactId>easy1400-common</artifactId>
+    <packaging>pom</packaging>
+
+    <description>
+        easy1400-common通用模块
+    </description>
+
+</project>

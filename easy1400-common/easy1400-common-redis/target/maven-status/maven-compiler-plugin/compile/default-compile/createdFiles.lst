@@ -1,0 +1,3 @@
+com/easy1400/common/redis/configure/FastJson2JsonRedisSerializer.class
+com/easy1400/common/redis/service/RedisService.class
+com/easy1400/common/redis/configure/RedisConfig.class
