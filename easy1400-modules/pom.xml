@@ -9,6 +9,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <modules>
+        <module>easy1400-viid</module>
         <module>easy1400-system</module>
         <module>easy1400-gen</module>
         <module>easy1400-job</module>

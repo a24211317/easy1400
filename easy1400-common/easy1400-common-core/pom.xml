@@ -16,7 +16,11 @@
     </description>
 
     <dependencies>
-
+        <!-- mybatisPlus -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+        </dependency>
         <!-- SpringCloud Openfeign -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
