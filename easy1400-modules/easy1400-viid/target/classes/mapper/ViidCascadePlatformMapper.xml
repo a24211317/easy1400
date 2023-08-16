@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.easy1400.viid.mapper.ViidCascadePlatformMapper">
+
+    <resultMap id="BaseResultMap" type="com.easy1400.viid.domain.ViidCascadePlatform">
+            <result property="systemid" column="SystemID" jdbcType="VARCHAR"/>
+            <result property="name" column="Name" jdbcType="VARCHAR"/>
+            <result property="ipaddr" column="IPAddr" jdbcType="VARCHAR"/>
+            <result property="port" column="Port" jdbcType="VARCHAR"/>
+            <result property="isonline" column="IsOnline" jdbcType="VARCHAR"/>
+            <result property="lastonlinetime" column="LastOnlineTime" jdbcType="TIMESTAMP"/>
+            <result property="type" column="Type" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        SystemID,Name,IPAddr,
+        Port,IsOnline,LastOnlineTime,
+        Type
+    </sql>
+</mapper>

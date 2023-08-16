@@ -7,32 +7,31 @@ package com.easy1400.viid.domain.message;
  * @Version 1.0
  */
 public class RegisterRequest {
-    private RegisterObject registerObject;
+    private RegisterObject RegisterObject;
 
-    public RegisterRequest(RegisterObject registerObject) {
-        this.registerObject = registerObject;
-    }
+
 
     public RegisterRequest() {
+        this.RegisterObject = new RegisterObject();
     }
 
     public RegisterObject getRegisterObject() {
-        return registerObject;
+        return RegisterObject;
     }
 
     public void setRegisterObject(RegisterObject registerObject) {
-        this.registerObject = registerObject;
+        this.RegisterObject = registerObject;
     }
 
     public void setRegisterObject(String registerObject) {
     }
 
     public String getDeviceID() {
-        return registerObject.getDeviceID();
+        return RegisterObject.getDeviceID();
     }
 
     public void setDeviceID(String deviceID) {
-        registerObject.setDeviceID(deviceID);
+        RegisterObject.setDeviceID(deviceID);
     }
 
     static class RegisterObject {
