@@ -1,6 +1,7 @@
 package com.easy1400.viid.common.util;
 
 import cn.hutool.crypto.digest.DigestUtil;
+import com.easy1400.common.core.utils.uuid.UUID;
 import com.easy1400.viid.domain.ViidApe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,5 +41,16 @@ public class RegisterAuthUtil {
         log.debug("HA1====strHA1===={}===={}", HA1, strHA1);
         log.debug("HA2====strHA2===={}======={}", HA2, strHA2);
         return strResponse.equals(response);
+    }
+
+
+    public static String getAuthHeader(){
+        StringBuilder responseHeader = new StringBuilder();
+        responseHeader.append("Digest realm=\"easy1400.ch@com\"");
+        responseHeader.append(",qop=\"auth\"");
+        responseHeader.append(",algorithm=\"MD5\"");
+        responseHeader.append(",nonce=\"" + UUID.randomUUID() + "\"");
+        responseHeader.append(",opaque=\"" + UUID.randomUUID() + "\"");
+        return responseHeader.toString();
     }
 }

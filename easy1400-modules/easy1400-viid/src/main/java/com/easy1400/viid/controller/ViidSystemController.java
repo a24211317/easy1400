@@ -1,6 +1,7 @@
 package com.easy1400.viid.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.easy1400.viid.domain.message.KeepaliveRequest;
 import com.easy1400.viid.domain.message.RegisterRequest;
 import com.easy1400.viid.service.ViidApeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,5 +33,16 @@ public class ViidSystemController {
         Map register = viidApeService.register(registerRequest.toJavaObject(RegisterRequest.class),request,response);
         return register;
 
+    }
+
+
+    /**
+     * 心跳保活
+     * @param response
+     * @return
+     */
+    @PostMapping(value = "/Keepalive")
+    public Map Keepalive(@RequestBody JSONObject keepaliveRequest,HttpServletResponse response){
+        return viidApeService.Keepalive(keepaliveRequest.toJavaObject(KeepaliveRequest.class),response);
     }
 }

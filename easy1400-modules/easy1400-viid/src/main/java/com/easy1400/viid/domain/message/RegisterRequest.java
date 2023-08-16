@@ -25,16 +25,14 @@ public class RegisterRequest {
     }
 
     public void setRegisterObject(String registerObject) {
-
-        System.out.println(registerObject);
     }
 
     public String getDeviceID() {
-        return registerObject.DeviceID;
+        return registerObject.getDeviceID();
     }
 
     public void setDeviceID(String deviceID) {
-        registerObject.DeviceID = deviceID;
+        registerObject.setDeviceID(deviceID);
     }
 
     static class RegisterObject {

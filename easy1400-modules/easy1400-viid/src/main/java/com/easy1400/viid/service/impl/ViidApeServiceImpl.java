@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.easy1400.common.core.utils.uuid.UUID;
 import com.easy1400.viid.common.util.RegisterAuthUtil;
 import com.easy1400.viid.domain.ViidApe;
+import com.easy1400.viid.domain.message.KeepaliveRequest;
 import com.easy1400.viid.domain.message.RegisterRequest;
 import com.easy1400.viid.service.ViidApeService;
 import com.easy1400.viid.mapper.ViidApeMapper;
@@ -17,7 +18,9 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -30,6 +33,9 @@ import java.util.Map;
 public class ViidApeServiceImpl extends ServiceImpl<ViidApeMapper, ViidApe>
         implements ViidApeService {
     private static final Logger log = LoggerFactory.getLogger(ViidApeServiceImpl.class);
+
+    //暂时用来记录已注册的设备
+    static final List<String> DeviceIDs = new ArrayList<>();
 
     @Override
     public Map register(RegisterRequest registerRequest, HttpServletRequest request, HttpServletResponse response) {
@@ -46,13 +52,7 @@ public class ViidApeServiceImpl extends ServiceImpl<ViidApeMapper, ViidApe>
         // 请求头无此字段，表示第一次注册，返回401
         if (authorization == null || "".equals(authorization)) {
             System.out.println("我是第一次发送注册请求");
-            StringBuilder responseHeader = new StringBuilder();
-            responseHeader.append("Digest realm=\"easy1400.ch@com\"");
-            responseHeader.append(",qop=\"auth\"");
-            responseHeader.append(",algorithm=\"MD5\"");
-            responseHeader.append(",nonce=\"" + UUID.randomUUID() + "\"");
-            responseHeader.append(",opaque=\"" + UUID.randomUUID() + "\"");
-            response.addHeader("WWW-Authenticate", responseHeader.toString());
+            response.addHeader("WWW-Authenticate", RegisterAuthUtil.getAuthHeader());
             response.setStatus(401);
             return null;
         }
@@ -77,13 +77,32 @@ public class ViidApeServiceImpl extends ServiceImpl<ViidApeMapper, ViidApe>
             HashMap<String, String> responseStatus = new HashMap<>();
             responseStatus.put("RequestURL", stringStringHashMap.get("uri"));
             responseStatus.put("StatusCode", "0");
-            responseStatus.put("StatusString", "");
+            responseStatus.put("StatusString", "OK");
             responseStatus.put("Id", deviceID);
             responseStatus.put("LocalTime", String.valueOf(DateUtil.current()));
             responseMap.put("ResponseStatusObject", responseStatus);
+            DeviceIDs.add(ape.getApeid());
             return responseMap;
         }
         log.debug("下级平台验证未通过");
+        return null;
+    }
+
+    @Override
+    public Map Keepalive(KeepaliveRequest keepaliveRequest,HttpServletResponse response) {
+        if (DeviceIDs.contains(keepaliveRequest.getDeviceID())) {
+            HashMap<String, Object> responseObj = new HashMap<>();
+            HashMap<String, String> responseStatus = new HashMap<>();
+            responseStatus.put("StatusCode", "0");
+            responseStatus.put("StatusString", "OK");
+            responseStatus.put("Id", keepaliveRequest.getDeviceID());
+            responseStatus.put("LocalTime", String.valueOf(DateUtil.current()));
+            responseObj.put("ResponseStatusObject", responseStatus);
+            response.setStatus(200);
+            return responseObj;
+        }
+        response.addHeader("WWW-Authenticate", RegisterAuthUtil.getAuthHeader());
+        response.setStatus(401);
         return null;
     }
 }
