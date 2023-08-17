@@ -43,7 +43,7 @@ public class ViidCascadePlatformController {
     @GetMapping("/registerSend")
     public AjaxResult registerSend(String systemid) {
         LambdaQueryWrapper<ViidCascadePlatform> queryWrapper = new LambdaQueryWrapper();
-        queryWrapper.eq(ViidCascadePlatform::getSystemid, systemid);
+        queryWrapper.eq(ViidCascadePlatform::getSystemID, systemid);
         queryWrapper.eq(ViidCascadePlatform::getType, "0");
         ViidCascadePlatform viidCascadePlatform = viidCascadePlatformService.getOne(queryWrapper);
         if (viidCascadePlatform != null) {

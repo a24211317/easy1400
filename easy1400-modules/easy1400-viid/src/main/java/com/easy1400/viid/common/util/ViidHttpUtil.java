@@ -45,12 +45,12 @@ public class ViidHttpUtil {
      */
     public String registerSend(ViidCascadePlatform viidCascadePlatform) {
         RegisterRequest registerRequest = new RegisterRequest();
-        registerRequest.setDeviceID(viidCascadePlatform.getUserid());
+        registerRequest.setDeviceID(viidCascadePlatform.getUserId());
         //第一次注册 得到注册信息
-        HttpResponse execute = HttpRequest.post("http://" + viidCascadePlatform.getIpaddr() + ":" + viidCascadePlatform.getPort() + "/VIID/System/Register")
+        HttpResponse execute = HttpRequest.post("http://" + viidCascadePlatform.getIPAddr() + ":" + viidCascadePlatform.getPort() + "/VIID/System/Register")
                 .body(JSONUtil.toJsonStr(registerRequest))
                 .execute();
-        ncCountMap.put(viidCascadePlatform.getSystemid(), 1);
+        ncCountMap.put(viidCascadePlatform.getSystemID(), 1);
         if (execute != null) {
             Map<String, List<String>> headers = execute.headers();
             String strings = String.valueOf(headers.get("WWW-Authenticate"));
@@ -58,19 +58,19 @@ public class ViidHttpUtil {
             try {
                 //解析授权信息
                 authorization = RegisterAuthUtil.getAuthorization(
-                        strings, "/VIID/System/Register", viidCascadePlatform.getUserid(), viidCascadePlatform.getPassword(),
-                        "POST", ncCountMap.getInteger(viidCascadePlatform.getSystemid()));
+                        strings, "/VIID/System/Register", viidCascadePlatform.getUserId(), viidCascadePlatform.getPassword(),
+                        "POST", ncCountMap.getInteger(viidCascadePlatform.getSystemID()));
                 //再次注册 注册成功会的到200OK
-                HttpResponse https = HttpRequest.post("http://" + viidCascadePlatform.getIpaddr() + ":" + viidCascadePlatform.getPort() + "/VIID/System/Register")
+                HttpResponse https = HttpRequest.post("http://" + viidCascadePlatform.getIPAddr() + ":" + viidCascadePlatform.getPort() + "/VIID/System/Register")
                         .header("authorization", authorization)
                         .body(JSONUtil.toJsonStr(registerRequest))
                         .execute();
                 boolean ok = https.isOk();
                 if (ok) {
                     //开启定时保活任务
-                    ncCountMap.put(viidCascadePlatform.getSystemid(), 1);
-                    String keepaliveTaskKey = DynamicTask.KEEPALIVE_KEY_PREFIX + viidCascadePlatform.getSystemid();
-                    if (!dynamicTask.contains(DynamicTask.KEEPALIVE_KEY_PREFIX + viidCascadePlatform.getSystemid())) {
+                    ncCountMap.put(viidCascadePlatform.getSystemID(), 1);
+                    String keepaliveTaskKey = DynamicTask.KEEPALIVE_KEY_PREFIX + viidCascadePlatform.getSystemID();
+                    if (!dynamicTask.contains(DynamicTask.KEEPALIVE_KEY_PREFIX + viidCascadePlatform.getSystemID())) {
                         dynamicTask.startCron(keepaliveTaskKey,
                                 () -> {
                                     this.KeepaliveSend(viidCascadePlatform);
@@ -79,9 +79,9 @@ public class ViidHttpUtil {
                     }
                     return "success";
                 }
-                ncCountMap.put(viidCascadePlatform.getSystemid(), ncCountMap.getInteger(viidCascadePlatform.getSystemid()) + 1);
+                ncCountMap.put(viidCascadePlatform.getSystemID(), ncCountMap.getInteger(viidCascadePlatform.getSystemID()) + 1);
             } catch (IOException e) {
-                log.error("[平台注册 ] 向上级平台注册失败,上级平台编号为 {}", viidCascadePlatform.getSystemid());
+                log.error("[平台注册 ] 向上级平台注册失败,上级平台编号为 {}", viidCascadePlatform.getSystemID());
             }
         }
         return "faild";
@@ -95,11 +95,11 @@ public class ViidHttpUtil {
      */
     public Map KeepaliveSend(ViidCascadePlatform viidCascadePlatform) {
         KeepaliveRequest keepaliveRequest = new KeepaliveRequest();
-        keepaliveRequest.setDeviceID(viidCascadePlatform.getUserid());
+        keepaliveRequest.setDeviceID(viidCascadePlatform.getUserId());
 
-        HttpRequest.post("http://" + viidCascadePlatform.getIpaddr() + ":" + viidCascadePlatform.getPort() + "/VIID/System/Keepalive")
+        HttpRequest.post("http://" + viidCascadePlatform.getIPAddr() + ":" + viidCascadePlatform.getPort() + "/VIID/System/Keepalive")
                 .body(JSONUtil.toJsonStr(keepaliveRequest))
-                .header("User-Identify", viidCascadePlatform.getSystemid())
+                .header("User-Identify", viidCascadePlatform.getSystemID())
                 .contentType("application/VIID+JSON")
                 .execute();
         //弱校验 暂时不判断是否有效

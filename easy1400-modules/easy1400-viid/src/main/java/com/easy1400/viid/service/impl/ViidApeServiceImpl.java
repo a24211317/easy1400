@@ -81,7 +81,7 @@ public class ViidApeServiceImpl extends ServiceImpl<ViidApeMapper, ViidApe>
             responseStatus.put("Id", deviceID);
             responseStatus.put("LocalTime", String.valueOf(DateUtil.current()));
             responseMap.put("ResponseStatusObject", responseStatus);
-            DeviceIDs.add(ape.getApeid());
+            DeviceIDs.add(ape.getApeID());
             return responseMap;
         }
         log.debug("下级平台验证未通过");

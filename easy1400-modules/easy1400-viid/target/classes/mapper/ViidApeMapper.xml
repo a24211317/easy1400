@@ -4,26 +4,6 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.easy1400.viid.mapper.ViidApeMapper">
 
-    <resultMap id="BaseResultMap" type="com.easy1400.viid.domain.ViidApe">
-            <id property="apeid" column="ApeID" jdbcType="VARCHAR"/>
-            <result property="name" column="Name" jdbcType="VARCHAR"/>
-            <result property="model" column="Model" jdbcType="VARCHAR"/>
-            <result property="ipaddr" column="IPAddr" jdbcType="VARCHAR"/>
-            <result property="ipv6addr" column="IPV6Addr" jdbcType="VARCHAR"/>
-            <result property="port" column="Port" jdbcType="INTEGER"/>
-            <result property="longitude" column="Longitude" jdbcType="DOUBLE"/>
-            <result property="latitude" column="Latitude" jdbcType="DOUBLE"/>
-            <result property="placecode" column="PlaceCode" jdbcType="VARCHAR"/>
-            <result property="place" column="Place" jdbcType="VARCHAR"/>
-            <result property="orgcode" column="OrgCode" jdbcType="VARCHAR"/>
-            <result property="capdirection" column="CapDirection" jdbcType="INTEGER"/>
-            <result property="monitordirection" column="MonitorDirection" jdbcType="INTEGER"/>
-            <result property="monitorareadesc" column="MonitorAreaDesc" jdbcType="VARCHAR"/>
-            <result property="isonline" column="IsOnline" jdbcType="VARCHAR"/>
-            <result property="ownerapsid" column="OwnerApsID" jdbcType="VARCHAR"/>
-            <result property="password" column="Password" jdbcType="VARCHAR"/>
-    </resultMap>
-
     <sql id="Base_Column_List">
         ApeID,Name,Model,
         IPAddr,IPV6Addr,Port,

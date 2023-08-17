@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.easy1400.viid.mapper.ViidSubscribeMapper">
+
+
+    <sql id="Base_Column_List">
+        SubscribeID,Title,SubscribeDetail,
+        ResourceURI,ApplicantName,ApplicantOrg,
+        BeginTime,EndTime,ReceiveAddr,
+        ReportInterval,Reason,OperateType,
+        SubscribeStatus,SubscribeCancOrg,SubscribeCancelPerson,
+        CancelTime,CancelReason,SubscribeType,
+        ApprovalStatus,ApprovalUser,ApprovalTime
+    </sql>
+</mapper>

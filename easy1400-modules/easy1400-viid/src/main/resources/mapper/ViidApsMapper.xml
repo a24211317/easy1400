@@ -4,14 +4,6 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.easy1400.viid.mapper.ViidApsMapper">
 
-    <resultMap id="BaseResultMap" type="com.easy1400.viid.domain.ViidAps">
-            <id property="apsid" column="ApsID" jdbcType="VARCHAR"/>
-            <result property="name" column="Name" jdbcType="VARCHAR"/>
-            <result property="ipaddr" column="IPAddr" jdbcType="VARCHAR"/>
-            <result property="ipv6addr" column="IPV6Addr" jdbcType="VARCHAR"/>
-            <result property="port" column="Port" jdbcType="INTEGER"/>
-            <result property="isonline" column="IsOnline" jdbcType="VARCHAR"/>
-    </resultMap>
 
     <sql id="Base_Column_List">
         ApsID,Name,IPAddr,

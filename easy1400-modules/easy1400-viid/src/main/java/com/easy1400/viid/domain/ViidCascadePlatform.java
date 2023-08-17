@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 
+ * 级联信息表
  * @TableName viid_cascade_platform
  */
 @TableName(value ="viid_cascade_platform")
@@ -16,160 +16,144 @@ public class ViidCascadePlatform implements Serializable {
     /**
      * 平台ID
      */
-    private String systemid;
+    @TableField(value = "SystemID")
+    private String SystemID;
 
     /**
      * 平台名称
      */
-    private String name;
+    @TableField(value = "Name")
+    private String Name;
 
     /**
      * IP地址
      */
-    private String ipaddr;
+    @TableField(value = "IPAddr")
+    private String IPAddr;
 
     /**
      * 端口
      */
-    private String port;
+    @TableField(value = "Port")
+    private String Port;
 
     /**
      * 是否在线
      */
-    private String isonline;
+    @TableField(value = "IsOnline")
+    private String IsOnline;
 
     /**
      * 最后在线时间
      */
-    private Date lastonlinetime;
+    @TableField(value = "LastOnlineTime")
+    private Date LastOnlineTime;
 
     /**
      * 级联平台类型（0上级 1下级）
      */
-    private String type;
+    @TableField(value = "Type")
+    private String Type;
+
     /**
      * 用户ID
      */
-    private String userid;
+    @TableField(value = "UserId")
+    private String UserId;
+
     /**
      * 密码
      */
-    private String password;
+    @TableField(value = "Password")
+    private String Password;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 
-    /**
-     * 平台ID
-     */
-    public String getSystemid() {
-        return systemid;
+    public ViidCascadePlatform() {
     }
 
-    /**
-     * 平台ID
-     */
-    public void setSystemid(String systemid) {
-        this.systemid = systemid;
+    public ViidCascadePlatform(String systemID, String name, String IPAddr, String port, String isOnline, Date lastOnlineTime, String type, String userId, String password) {
+        SystemID = systemID;
+        Name = name;
+        this.IPAddr = IPAddr;
+        Port = port;
+        IsOnline = isOnline;
+        LastOnlineTime = lastOnlineTime;
+        Type = type;
+        UserId = userId;
+        Password = password;
     }
 
-    /**
-     * 平台名称
-     */
+    public String getSystemID() {
+        return SystemID;
+    }
+
+    public void setSystemID(String systemID) {
+        SystemID = systemID;
+    }
+
     public String getName() {
-        return name;
+        return Name;
     }
 
-    /**
-     * 平台名称
-     */
     public void setName(String name) {
-        this.name = name;
+        Name = name;
     }
 
-    /**
-     * IP地址
-     */
-    public String getIpaddr() {
-        return ipaddr;
+    public String getIPAddr() {
+        return IPAddr;
     }
 
-    /**
-     * IP地址
-     */
-    public void setIpaddr(String ipaddr) {
-        this.ipaddr = ipaddr;
+    public void setIPAddr(String IPAddr) {
+        this.IPAddr = IPAddr;
     }
 
-    /**
-     * 端口
-     */
     public String getPort() {
-        return port;
+        return Port;
     }
 
-    /**
-     * 端口
-     */
     public void setPort(String port) {
-        this.port = port;
+        Port = port;
     }
 
-    /**
-     * 是否在线
-     */
-    public String getIsonline() {
-        return isonline;
+    public String getIsOnline() {
+        return IsOnline;
     }
 
-    /**
-     * 是否在线
-     */
-    public void setIsonline(String isonline) {
-        this.isonline = isonline;
+    public void setIsOnline(String isOnline) {
+        IsOnline = isOnline;
     }
 
-    /**
-     * 最后在线时间
-     */
-    public Date getLastonlinetime() {
-        return lastonlinetime;
+    public Date getLastOnlineTime() {
+        return LastOnlineTime;
     }
 
-    /**
-     * 最后在线时间
-     */
-    public void setLastonlinetime(Date lastonlinetime) {
-        this.lastonlinetime = lastonlinetime;
+    public void setLastOnlineTime(Date lastOnlineTime) {
+        LastOnlineTime = lastOnlineTime;
     }
 
-    /**
-     * 级联平台类型（0上级 1下级）
-     */
     public String getType() {
-        return type;
+        return Type;
     }
 
-    /**
-     * 级联平台类型（0上级 1下级）
-     */
     public void setType(String type) {
-        this.type = type;
+        Type = type;
     }
 
-    public String getUserid() {
-        return userid;
+    public String getUserId() {
+        return UserId;
     }
 
-    public void setUserid(String userid) {
-        this.userid = userid;
+    public void setUserId(String userId) {
+        UserId = userId;
     }
 
     public String getPassword() {
-        return password;
+        return Password;
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        Password = password;
     }
 }
