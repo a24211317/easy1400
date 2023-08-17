@@ -20,32 +20,36 @@ import org.springframework.web.bind.annotation.*;
 public class ViidCascadePlatformController {
     @Autowired
     private ViidCascadePlatformService viidCascadePlatformService;
+    @Autowired
+    private ViidHttpUtil viidHttpUtil;
 
     /**
      * 增加上/下级平台信息
+     *
      * @param viidCascadePlatform
      * @return
      */
     @PostMapping("/ViidCascadePlatform")
-    public AjaxResult addViidCascadePlatform(@RequestBody ViidCascadePlatform viidCascadePlatform){
+    public AjaxResult addViidCascadePlatform(@RequestBody ViidCascadePlatform viidCascadePlatform) {
         return AjaxResult.success(viidCascadePlatformService.addViidCascadePlatform(viidCascadePlatform));
     }
 
     /**
      * 手动向上级平台注册
+     *
      * @param systemid
      * @return
      */
     @GetMapping("/registerSend")
-    public AjaxResult registerSend(String systemid){
-        LambdaQueryWrapper<ViidCascadePlatform> queryWrapper=new LambdaQueryWrapper();
-        queryWrapper.eq(ViidCascadePlatform::getSystemid,systemid);
-        queryWrapper.eq(ViidCascadePlatform::getType,"0");
-        ViidCascadePlatform viidCascadePlatform= viidCascadePlatformService.getOne(queryWrapper);
+    public AjaxResult registerSend(String systemid) {
+        LambdaQueryWrapper<ViidCascadePlatform> queryWrapper = new LambdaQueryWrapper();
+        queryWrapper.eq(ViidCascadePlatform::getSystemid, systemid);
+        queryWrapper.eq(ViidCascadePlatform::getType, "0");
+        ViidCascadePlatform viidCascadePlatform = viidCascadePlatformService.getOne(queryWrapper);
         if (viidCascadePlatform != null) {
-            return AjaxResult.success(ViidHttpUtil.registerSend(viidCascadePlatform));
+            return AjaxResult.success(viidHttpUtil.registerSend(viidCascadePlatform));
         }
-        return  AjaxResult.error("未找到上级平台信息");
+        return AjaxResult.error("未找到上级平台信息");
     }
 
 }
