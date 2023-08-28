@@ -12,24 +12,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
-* @author chenghong
-* @description 针对表【viid_cascade_platform】的数据库操作Service实现
-* @createDate 2023-08-16 19:46:16
-*/
+ * @author chenghong
+ * @description 针对表【viid_cascade_platform】的数据库操作Service实现
+ * @createDate 2023-08-16 19:46:16
+ */
 @Service
 public class ViidCascadePlatformServiceImpl extends ServiceImpl<ViidCascadePlatformMapper, ViidCascadePlatform>
-    implements ViidCascadePlatformService{
+        implements ViidCascadePlatformService {
 
     @Autowired
     private ViidHttpUtil viidHttpUtil;
+
     @Override
     public Boolean addViidCascadePlatform(ViidCascadePlatform viidCascadePlatform) {
         //先保存数据入库
-      Boolean hasSave=  this.save(viidCascadePlatform);
-      //如果添加的平台为上级平台 则需要向上级平台注册
-      if (viidCascadePlatform.getType().equals("0")) {
-          viidHttpUtil.registerSend(viidCascadePlatform);
-      }
+        Boolean hasSave = this.save(viidCascadePlatform);
+        //如果添加的平台为上级平台 则需要向上级平台注册
+        if (viidCascadePlatform.getType().equals("0")) {
+            viidHttpUtil.registerSend(viidCascadePlatform);
+        }
         return hasSave;
     }
 }

@@ -5,7 +5,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.easy1400.common.core.web.domain.AjaxResult;
 import com.easy1400.viid.common.util.ViidHttpUtil;
 import com.easy1400.viid.domain.ViidCascadePlatform;
+import com.easy1400.viid.domain.ViidSubscribe;
 import com.easy1400.viid.service.ViidCascadePlatformService;
+import com.easy1400.viid.service.ViidSubscribeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +22,8 @@ import org.springframework.web.bind.annotation.*;
 public class ViidCascadePlatformController {
     @Autowired
     private ViidCascadePlatformService viidCascadePlatformService;
+    @Autowired
+    private ViidSubscribeService viidSubscribeService;
     @Autowired
     private ViidHttpUtil viidHttpUtil;
 
@@ -52,4 +56,17 @@ public class ViidCascadePlatformController {
         return AjaxResult.error("未找到上级平台信息");
     }
 
+    @PostMapping("/ViidSubscribe")
+    public AjaxResult addViidSubscribe(@RequestBody ViidSubscribe viidSubscribe) {
+        if (viidSubscribeService.save(viidSubscribe)) {
+            switch (viidSubscribe.getSubscribeType()) {
+                //订阅上级需要像上级发送通知
+                case "0":
+                    ViidCascadePlatform viidCascadePlatform=viidCascadePlatformService.getById(viidSubscribe.getResourceURI());
+                    return AjaxResult.success(viidSubscribeService.add(viidSubscribe,viidCascadePlatform));
+            }
+            return AjaxResult.success("save success");
+        }
+        return AjaxResult.error("500", "save error");
+    }
 }

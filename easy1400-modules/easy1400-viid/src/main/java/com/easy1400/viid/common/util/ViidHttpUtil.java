@@ -12,6 +12,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.easy1400.viid.common.conf.DynamicTask;
 import com.easy1400.viid.domain.ViidCascadePlatform;
+import com.easy1400.viid.domain.ViidSubscribe;
 import com.easy1400.viid.domain.message.KeepaliveRequest;
 import com.easy1400.viid.domain.message.RegisterRequest;
 import org.slf4j.Logger;
@@ -106,4 +107,16 @@ public class ViidHttpUtil {
         //TODO 判断心跳失效后重新注册
         return null;
     }
+
+    /**
+     * 向上级发送注册
+     */
+    public String subscribeSend(ViidSubscribe subscribe, ViidCascadePlatform viidCascadePlatform) {
+
+        return HttpRequest.post("http://" + viidCascadePlatform.getIPAddr() + ":" + viidCascadePlatform.getPort() + "/VIID/System/Subscribe")
+                .body(JSONUtil.toJsonStr(subscribe))
+                .contentType("application/VIID+JSON")
+                .execute().body();
+    }
+
 }
