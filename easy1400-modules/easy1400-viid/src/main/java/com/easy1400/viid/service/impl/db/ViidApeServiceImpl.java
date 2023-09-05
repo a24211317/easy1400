@@ -1,11 +1,7 @@
-package com.easy1400.viid.service.impl;
+package com.easy1400.viid.service.impl.db;
 
 import cn.hutool.core.date.DateUtil;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.nacos.common.utils.MapUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.easy1400.common.core.utils.uuid.UUID;
 import com.easy1400.viid.common.util.RegisterAuthUtil;
 import com.easy1400.viid.domain.ViidApe;
 import com.easy1400.viid.domain.message.KeepaliveRequest;

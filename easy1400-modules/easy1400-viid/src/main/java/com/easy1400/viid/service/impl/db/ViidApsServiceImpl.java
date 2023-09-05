@@ -1,4 +1,4 @@
-package com.easy1400.viid.service.impl;
+package com.easy1400.viid.service.impl.db;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.easy1400.viid.domain.ViidAps;

@@ -1,4 +1,4 @@
-package com.easy1400.viid.service.impl;
+package com.easy1400.viid.service.impl.db;
 
 import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSON;

@@ -1,6 +1,9 @@
 package com.easy1400.viid.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.easy1400.viid.domain.message.FaceRequest;
+import com.easy1400.viid.service.ViidDataService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,6 +21,8 @@ import java.util.Set;
 @RequestMapping("/VIID")
 public class ViidDataController {
 
+    @Autowired
+    private ViidDataService viidDataService;
     /**
      * 机动车相关接口
      *
@@ -43,11 +48,12 @@ public class ViidDataController {
     /**
      * 人脸相关接口
      *
-     * @param body
+     * @param
      * @return
      */
     @RequestMapping("/Faces")
-    public Map Faces(@RequestBody String body) {
+    public Map Faces(@RequestBody FaceRequest faceRequest) {
+        viidDataService.saveViidFaceData(faceRequest);
         return null;
     }
 
