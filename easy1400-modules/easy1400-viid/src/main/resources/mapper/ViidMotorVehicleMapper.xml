@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.easy1400.viid.mapper.ViidMotorVehicleMapper">
+
+
+    <sql id="Base_Column_List">
+        MotorVehicleID,InfoKind,SourceID,
+        TollgateID,DeviceID,StorageUrl1,
+        StorageUrl2,StorageUrl3,StorageUrl4,
+        StorageUrl5,LeftTopX,LeftTopY,
+        RightBtmX,RightBtmY,MarkTime,
+        AppearTime,DisappearTime,LaneNo,
+        HasPlate,PlateClass,PlateColor,
+        PlateNo,PlateNoAttach,PlateDescribe,
+        IsDecked,IsAltered,IsCovered,
+        Speed,Direction,DrivingStatusCode,
+        UsingPropertiesCode,VehicleClass,VehicleBrand,
+        VehicleModel,VehicleStyles,VehicleLength,
+        VehicleWidth,VehicleHeight,VehicleColor,
+        VehicleColorDepth,VehicleHood,VehicleTrunk,
+        VehicleWheel,WheelPrintedPattern,VehicleWindow,
+        VehicleRoof,VehicleDoor,SideOfVehicle,
+        CarOfVehicle,RearviewMirror,VehicleChassis,
+        VehicleShielding,FilmColor,IsModified,
+        HitMarkInfo,VehicleBodyDesc,VehicleFrontItem,
+        DescOfFrontItem,VehicleRearItem,DescOfRearItem,
+        NumOfPassenger,PassTime,NameOfPassedRoad,
+        IsSuspicious,Sunvisor,SafetyBelt,
+        Calling,PlateReliability,PlateCharReliability,
+        BrandReliability
+    </sql>
+</mapper>

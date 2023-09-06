@@ -8,6 +8,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.easy1400.viid.domain.enums.ResponsStatusEnum;
 import com.easy1400.viid.domain.message.FaceRequest;
+import com.easy1400.viid.domain.message.MotorVehicleRequest;
 import com.easy1400.viid.domain.message.ResponsObject;
 import com.easy1400.viid.service.ViidDataService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,12 +40,14 @@ public class ViidDataController {
     /**
      * 机动车相关接口
      *
-     * @param body
+     * @param
      * @return
      */
     @RequestMapping("/MotorVehicles")
-    public Map MotorVehicles(@RequestBody String body) {
-        return null;
+    public ResponsObject MotorVehicles(@RequestBody String motorVehicleRequest) {
+        viidDataService.saveViidMotorVehicleData(JSON.toJavaObject(JSON.parseObject(motorVehicleRequest),MotorVehicleRequest.class));
+        return new ResponsObject(ResponsStatusEnum.OK);
+
     }
 
     /**
@@ -54,8 +57,8 @@ public class ViidDataController {
      * @return
      */
     @RequestMapping("/NonMotorVehicles")
-    public Map NonMotorVehicles(HttpServletRequest request, @RequestBody String body) {
-        return null;
+    public ResponsObject NonMotorVehicles(HttpServletRequest request, @RequestBody String body) {
+        return new ResponsObject(ResponsStatusEnum.OK);
     }
 
     /**
@@ -67,8 +70,7 @@ public class ViidDataController {
     @PostMapping(value = "/Faces", produces = "application/json")
     public ResponsObject Faces(@RequestBody FaceRequest faceRequest) {
         viidDataService.saveViidFaceData(faceRequest);
-        ResponsObject responsObject = new ResponsObject(ResponsStatusEnum.OK);
-        return responsObject;
+        return new ResponsObject(ResponsStatusEnum.OK);
     }
 
     /**
@@ -78,8 +80,8 @@ public class ViidDataController {
      * @return
      */
     @RequestMapping("/Persons")
-    public Map Persons(@RequestBody String body) {
-        return null;
+    public ResponsObject Persons(@RequestBody String body) {
+        return new ResponsObject(ResponsStatusEnum.OK);
     }
 
 
