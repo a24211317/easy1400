@@ -2,6 +2,8 @@ package com.easy1400.viid.service;
 
 import com.easy1400.viid.domain.message.FaceRequest;
 import com.easy1400.viid.domain.message.MotorVehicleRequest;
+import com.easy1400.viid.domain.message.NonMotorVehicleRequest;
+import com.easy1400.viid.domain.message.PersonRequest;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 
@@ -16,5 +18,9 @@ public interface ViidDataService {
     void saveViidFaceData(FaceRequest faceRequest);
 
     void saveViidMotorVehicleData(MotorVehicleRequest motorVehicleRequest);
+
+    void saveViidNonMotorVehicleData(NonMotorVehicleRequest nonMotorVehicleRequest);
+
+    void saveViidPersonData(PersonRequest personRequest);
 
 }

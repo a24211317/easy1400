@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.easy1400.viid.mapper.ViidPersonMapper">
+
+
+    <sql id="Base_Column_List">
+        PersonID,InfoKind,SourceID,
+        DeviceID,LeftTopX,LeftTopY,
+        RightBtmX,RightBtmY,LocationMarkTime,
+        PersonAppearTime,PersonDisAppearTime,IDType,
+        IDNumber,Name,UsedName,
+        Alias,GenderCode,AgeUpLimit,
+        AgeLowerLimit,EthicCode,NationalityCode,
+        NativeCityCode,ResidenceAdminDivision,ChineseAccentCode,
+        PersonOrg,JobCategory,AccompanyNumber,
+        HeightUpLimit,HeightLowerLimit,BodyType,
+        SkinColor,HairStyle,HairColor,
+        Gesture,Status,FaceStyle,
+        FacialFeature,PhysicalFeature,BodyFeature,
+        HabitualMovement,Behavior,BehaviorDescription,
+        Appendant,AppendantDescription,UmbrellaColor,
+        RespiratorColor,CapStyle,CapColor,
+        GlassStyle,GlassColor,ScarfColor,
+        BagStyle,BagColor,CoatStyle,
+        CoatLength,CoatColor,TrousersStyle,
+        TrousersColor,TrousersLen,ShoesStyle,
+        ShoesColor,IsDriver,IsForeigner,
+        PassportType,ImmigrantTypeCode,IsSuspectedTerrorist,
+        SuspectedTerroristNumber,IsCriminalInvolved,CriminalInvolvedSpecilisationCode,
+        BodySpeciallMark,CrimeMethod,CrimeCharacterCode,
+        EscapedCriminalNumber,IsDetainees,DetentionHouseCode,
+        DetaineesIdentity,DetaineesSpecialIdentity,MemberTypeCode,
+        IsVictim,VictimType,InjuredDegree,
+        CorpseConditionCode,IsSuspiciousPerson,SubImageList
+    </sql>
+</mapper>

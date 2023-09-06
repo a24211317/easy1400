@@ -7,11 +7,17 @@ import com.easy1400.system.api.domain.SysFile;
 import com.easy1400.viid.common.util.MultipartFileUtil;
 import com.easy1400.viid.domain.ViidFace;
 import com.easy1400.viid.domain.ViidMotorVehicle;
+import com.easy1400.viid.domain.ViidNonMotorVehicle;
+import com.easy1400.viid.domain.ViidPerson;
 import com.easy1400.viid.domain.dto.SubImageListDTO;
 import com.easy1400.viid.domain.message.FaceRequest;
 import com.easy1400.viid.domain.message.MotorVehicleRequest;
+import com.easy1400.viid.domain.message.NonMotorVehicleRequest;
+import com.easy1400.viid.domain.message.PersonRequest;
 import com.easy1400.viid.mapper.ViidFaceMapper;
 import com.easy1400.viid.mapper.ViidMotorVehicleMapper;
+import com.easy1400.viid.mapper.ViidNonMotorVehicleMapper;
+import com.easy1400.viid.mapper.ViidPersonMapper;
 import com.easy1400.viid.service.ViidDataService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,6 +50,10 @@ public class ViidDataDBServiceImpl implements ViidDataService {
     private ViidFaceMapper viidFaceMapper;
     @Resource
     private ViidMotorVehicleMapper viidMotorVehicleMapper;
+    @Resource
+    private ViidNonMotorVehicleMapper viidNonMotorVehicleMapper;
+    @Resource
+    private ViidPersonMapper viidPersonMapper;
 
     @Async
     @Override
@@ -93,6 +103,56 @@ public class ViidDataDBServiceImpl implements ViidDataService {
             }
             //存入数据库
             viidMotorVehicleMapper.insert(motorVehicle);
+        }
+    }
+
+    @Override
+    public void saveViidNonMotorVehicleData(NonMotorVehicleRequest nonMotorVehicleRequest) {
+        for (ViidNonMotorVehicle nonMotorVehicle : nonMotorVehicleRequest.getNonMotorVehicleListObject().getNonMotorVehicleObject()) {
+            //图片存入服务
+            for (SubImageListDTO.SubImageInfoObjectDTO subImageInfoObjectDTO : nonMotorVehicle.getSubImageList().getSubImageInfoObject()) {
+                try {
+                    R<SysFile> saveFileResult =
+                            remoteFileService.upload(MultipartFileUtil.base64ConvertToMultipartFile(subImageInfoObjectDTO.getData(), subImageInfoObjectDTO.getImageID()));
+                    if (saveFileResult.getCode() == 200) {
+                        subImageInfoObjectDTO.setStoragePath(saveFileResult.getData().getUrl());
+                    }
+                    System.out.println(saveFileResult.getData().getUrl());
+                    //原始base64是否入库
+                    if (!base64StoreOrNot) {
+                        subImageInfoObjectDTO.setData("");
+                    }
+                } catch (IOException e) {
+                    log.error(String.format("[ %s ]图片存入失败: %s", Thread.currentThread().getStackTrace()[1].getMethodName(), e.getMessage()));
+                }
+            }
+            //存入数据库
+            viidNonMotorVehicleMapper.insert(nonMotorVehicle);
+        }
+    }
+
+    @Override
+    public void saveViidPersonData(PersonRequest personRequest) {
+        for (ViidPerson person : personRequest.getPersonListObject().getPersonObject()) {
+            //图片存入服务
+            for (SubImageListDTO.SubImageInfoObjectDTO subImageInfoObjectDTO : person.getSubImageList().getSubImageInfoObject()) {
+                try {
+                    R<SysFile> saveFileResult =
+                            remoteFileService.upload(MultipartFileUtil.base64ConvertToMultipartFile(subImageInfoObjectDTO.getData(), subImageInfoObjectDTO.getImageID()));
+                    if (saveFileResult.getCode() == 200) {
+                        subImageInfoObjectDTO.setStoragePath(saveFileResult.getData().getUrl());
+                    }
+                    System.out.println(saveFileResult.getData().getUrl());
+                    //原始base64是否入库
+                    if (!base64StoreOrNot) {
+                        subImageInfoObjectDTO.setData("");
+                    }
+                } catch (IOException e) {
+                    log.error(String.format("[ %s ]图片存入失败: %s", Thread.currentThread().getStackTrace()[1].getMethodName(), e.getMessage()));
+                }
+            }
+            //存入数据库
+            viidPersonMapper.insert(person);
         }
     }
 

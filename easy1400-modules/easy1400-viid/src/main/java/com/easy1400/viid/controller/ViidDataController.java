@@ -6,10 +6,9 @@ import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.easy1400.viid.domain.ViidNonMotorVehicle;
 import com.easy1400.viid.domain.enums.ResponsStatusEnum;
-import com.easy1400.viid.domain.message.FaceRequest;
-import com.easy1400.viid.domain.message.MotorVehicleRequest;
-import com.easy1400.viid.domain.message.ResponsObject;
+import com.easy1400.viid.domain.message.*;
 import com.easy1400.viid.service.ViidDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -44,6 +43,7 @@ public class ViidDataController {
      * @return
      */
     @RequestMapping("/MotorVehicles")
+    //大华的相机会传非utf8字符导致报错 所以先用string接
     public ResponsObject MotorVehicles(@RequestBody String motorVehicleRequest) {
         viidDataService.saveViidMotorVehicleData(JSON.toJavaObject(JSON.parseObject(motorVehicleRequest),MotorVehicleRequest.class));
         return new ResponsObject(ResponsStatusEnum.OK);
@@ -53,11 +53,12 @@ public class ViidDataController {
     /**
      * 非机动车相关接口
      *
-     * @param body
+     * @param
      * @return
      */
     @RequestMapping("/NonMotorVehicles")
-    public ResponsObject NonMotorVehicles(HttpServletRequest request, @RequestBody String body) {
+    public ResponsObject NonMotorVehicles(@RequestBody NonMotorVehicleRequest nonMotorVehicleRequest) {
+        viidDataService.saveViidNonMotorVehicleData(nonMotorVehicleRequest);
         return new ResponsObject(ResponsStatusEnum.OK);
     }
 
@@ -76,11 +77,12 @@ public class ViidDataController {
     /**
      * 人员相关接口
      *
-     * @param body
+     * @param
      * @return
      */
     @RequestMapping("/Persons")
-    public ResponsObject Persons(@RequestBody String body) {
+    public ResponsObject Persons(@RequestBody PersonRequest personRequest) {
+        viidDataService.saveViidPersonData(personRequest);
         return new ResponsObject(ResponsStatusEnum.OK);
     }
 
