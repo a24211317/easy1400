@@ -1,6 +1,8 @@
 package com.easy1400.viid.domain.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -11,14 +13,14 @@ import java.util.List;
  * @Version 1.0
  */
 
-@lombok.NoArgsConstructor
-@lombok.Data
+@NoArgsConstructor
+@Data
 public  class SubImageListDTO {
     @JsonProperty("SubImageInfoObject")
     private List<SubImageInfoObjectDTO> subImageInfoObject;
 
-    @lombok.NoArgsConstructor
-    @lombok.Data
+    @NoArgsConstructor
+    @Data
     public static class SubImageInfoObjectDTO {
         @JsonProperty("Data")
         private String data;

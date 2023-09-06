@@ -2,6 +2,8 @@ package com.easy1400.viid.service;
 
 import com.easy1400.viid.domain.message.FaceRequest;
 
+import java.sql.SQLIntegrityConstraintViolationException;
+
 /**
  * @ClassName ViidDataService
  * @Author CH

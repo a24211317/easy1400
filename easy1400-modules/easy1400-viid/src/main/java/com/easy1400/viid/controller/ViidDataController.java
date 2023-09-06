@@ -1,12 +1,24 @@
 package com.easy1400.viid.controller;
 
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.easy1400.viid.domain.enums.ResponsStatusEnum;
 import com.easy1400.viid.domain.message.FaceRequest;
+import com.easy1400.viid.domain.message.ResponsObject;
 import com.easy1400.viid.service.ViidDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -23,6 +35,7 @@ public class ViidDataController {
 
     @Autowired
     private ViidDataService viidDataService;
+
     /**
      * 机动车相关接口
      *
@@ -51,10 +64,11 @@ public class ViidDataController {
      * @param
      * @return
      */
-    @RequestMapping("/Faces")
-    public Map Faces(@RequestBody FaceRequest faceRequest) {
+    @PostMapping(value = "/Faces", produces = "application/json")
+    public ResponsObject Faces(@RequestBody FaceRequest faceRequest) {
         viidDataService.saveViidFaceData(faceRequest);
-        return null;
+        ResponsObject responsObject = new ResponsObject(ResponsStatusEnum.OK);
+        return responsObject;
     }
 
     /**
