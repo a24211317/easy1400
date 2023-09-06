@@ -31,6 +31,7 @@ import javax.annotation.Resource;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.List;
 
 /**
  * @ClassName ViidDataDBServiceImpl
@@ -60,20 +61,10 @@ public class ViidDataDBServiceImpl implements ViidDataService {
     public void saveViidFaceData(FaceRequest faceRequest) {
         for (ViidFace faceObjectDTO : faceRequest.getFaceListObject().getFaceObject()) {
             //图片存入服务
-            for (SubImageListDTO.SubImageInfoObjectDTO subImageInfoObjectDTO : faceObjectDTO.getSubImageList().getSubImageInfoObject()) {
-                try {
-                    R<SysFile> saveFileResult =
-                            remoteFileService.upload(MultipartFileUtil.base64ConvertToMultipartFile(subImageInfoObjectDTO.getData(), subImageInfoObjectDTO.getImageID()));
-                    if (saveFileResult.getCode() == 200) {
-                        subImageInfoObjectDTO.setStoragePath(saveFileResult.getData().getUrl());
-                    }
-                    //原始base64是否入库
-                    if (!base64StoreOrNot) {
-                        subImageInfoObjectDTO.setData("");
-                    }
-                } catch (IOException e) {
-                    log.error(String.format("[ %s ]图片存入失败: %s", Thread.currentThread().getStackTrace()[1].getMethodName(), e.getMessage()));
-                }
+            try {
+                this.saveSubImage(faceObjectDTO.getSubImageList().getSubImageInfoObject());
+            } catch (IOException e) {
+                log.error(String.format("[ %s ]图片存入失败: %s", Thread.currentThread().getStackTrace()[1].getMethodName(), e.getMessage()));
             }
             //存入数据库
             viidFaceMapper.insert(faceObjectDTO);
@@ -85,76 +76,56 @@ public class ViidDataDBServiceImpl implements ViidDataService {
     public void saveViidMotorVehicleData(MotorVehicleRequest motorVehicleRequest) {
         for (ViidMotorVehicle motorVehicle : motorVehicleRequest.getMotorVehicleListObject().getMotorVehicleObject()) {
             //图片存入服务
-            for (SubImageListDTO.SubImageInfoObjectDTO subImageInfoObjectDTO : motorVehicle.getSubImageList().getSubImageInfoObject()) {
-                try {
-                    R<SysFile> saveFileResult =
-                            remoteFileService.upload(MultipartFileUtil.base64ConvertToMultipartFile(subImageInfoObjectDTO.getData(), subImageInfoObjectDTO.getImageID()));
-                    if (saveFileResult.getCode() == 200) {
-                        subImageInfoObjectDTO.setStoragePath(saveFileResult.getData().getUrl());
-                    }
-                    System.out.println(saveFileResult.getData().getUrl());
-                    //原始base64是否入库
-                    if (!base64StoreOrNot) {
-                        subImageInfoObjectDTO.setData("");
-                    }
-                } catch (IOException e) {
-                    log.error(String.format("[ %s ]图片存入失败: %s", Thread.currentThread().getStackTrace()[1].getMethodName(), e.getMessage()));
-                }
+            try {
+                this.saveSubImage(motorVehicle.getSubImageList().getSubImageInfoObject());
+            } catch (IOException e) {
+                log.error(String.format("[ %s ]图片存入失败: %s", Thread.currentThread().getStackTrace()[1].getMethodName(), e.getMessage()));
             }
             //存入数据库
             viidMotorVehicleMapper.insert(motorVehicle);
         }
     }
-
+    @Async
     @Override
     public void saveViidNonMotorVehicleData(NonMotorVehicleRequest nonMotorVehicleRequest) {
         for (ViidNonMotorVehicle nonMotorVehicle : nonMotorVehicleRequest.getNonMotorVehicleListObject().getNonMotorVehicleObject()) {
             //图片存入服务
-            for (SubImageListDTO.SubImageInfoObjectDTO subImageInfoObjectDTO : nonMotorVehicle.getSubImageList().getSubImageInfoObject()) {
-                try {
-                    R<SysFile> saveFileResult =
-                            remoteFileService.upload(MultipartFileUtil.base64ConvertToMultipartFile(subImageInfoObjectDTO.getData(), subImageInfoObjectDTO.getImageID()));
-                    if (saveFileResult.getCode() == 200) {
-                        subImageInfoObjectDTO.setStoragePath(saveFileResult.getData().getUrl());
-                    }
-                    System.out.println(saveFileResult.getData().getUrl());
-                    //原始base64是否入库
-                    if (!base64StoreOrNot) {
-                        subImageInfoObjectDTO.setData("");
-                    }
-                } catch (IOException e) {
-                    log.error(String.format("[ %s ]图片存入失败: %s", Thread.currentThread().getStackTrace()[1].getMethodName(), e.getMessage()));
-                }
+            try {
+                this.saveSubImage(nonMotorVehicle.getSubImageList().getSubImageInfoObject());
+            } catch (IOException e) {
+                log.error(String.format("[ %s ]图片存入失败: %s", Thread.currentThread().getStackTrace()[1].getMethodName(), e.getMessage()));
             }
             //存入数据库
             viidNonMotorVehicleMapper.insert(nonMotorVehicle);
         }
     }
-
+    @Async
     @Override
     public void saveViidPersonData(PersonRequest personRequest) {
         for (ViidPerson person : personRequest.getPersonListObject().getPersonObject()) {
             //图片存入服务
-            for (SubImageListDTO.SubImageInfoObjectDTO subImageInfoObjectDTO : person.getSubImageList().getSubImageInfoObject()) {
-                try {
-                    R<SysFile> saveFileResult =
-                            remoteFileService.upload(MultipartFileUtil.base64ConvertToMultipartFile(subImageInfoObjectDTO.getData(), subImageInfoObjectDTO.getImageID()));
-                    if (saveFileResult.getCode() == 200) {
-                        subImageInfoObjectDTO.setStoragePath(saveFileResult.getData().getUrl());
-                    }
-                    System.out.println(saveFileResult.getData().getUrl());
-                    //原始base64是否入库
-                    if (!base64StoreOrNot) {
-                        subImageInfoObjectDTO.setData("");
-                    }
-                } catch (IOException e) {
-                    log.error(String.format("[ %s ]图片存入失败: %s", Thread.currentThread().getStackTrace()[1].getMethodName(), e.getMessage()));
-                }
+            try {
+                this.saveSubImage(person.getSubImageList().getSubImageInfoObject());
+            } catch (IOException e) {
+                log.error(String.format("[ %s ]图片存入失败: %s", Thread.currentThread().getStackTrace()[1].getMethodName(), e.getMessage()));
             }
             //存入数据库
             viidPersonMapper.insert(person);
         }
     }
 
+    private void saveSubImage(List<SubImageListDTO.SubImageInfoObjectDTO> subImageList) throws IOException {
+        for (SubImageListDTO.SubImageInfoObjectDTO subImageInfoObjectDTO : subImageList) {
+            R<SysFile> saveFileResult =
+                    remoteFileService.upload(MultipartFileUtil.base64ConvertToMultipartFile(subImageInfoObjectDTO.getData(), subImageInfoObjectDTO.getImageID()));
+            if (saveFileResult.getCode() == 200) {
+                subImageInfoObjectDTO.setStoragePath(saveFileResult.getData().getUrl());
+            }
+            //原始base64是否入库
+            if (!base64StoreOrNot) {
+                subImageInfoObjectDTO.setData("");
+            }
+        }
+    }
 
 }
