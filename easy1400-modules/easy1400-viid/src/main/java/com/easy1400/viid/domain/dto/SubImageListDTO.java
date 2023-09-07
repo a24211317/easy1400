@@ -15,7 +15,7 @@ import java.util.List;
 
 @NoArgsConstructor
 @Data
-public  class SubImageListDTO {
+public class SubImageListDTO {
     @JsonProperty("SubImageInfoObject")
     private List<SubImageInfoObjectDTO> subImageInfoObject;
 

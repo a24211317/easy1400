@@ -1,27 +1,20 @@
 package com.easy1400.viid.controller;
 
-import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.easy1400.viid.domain.ViidNonMotorVehicle;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.easy1400.common.core.utils.StringUtils;
+import com.easy1400.common.core.web.domain.AjaxResult;
+import com.easy1400.viid.domain.ViidMotorVehicle;
 import com.easy1400.viid.domain.enums.ResponsStatusEnum;
 import com.easy1400.viid.domain.message.*;
 import com.easy1400.viid.service.ViidDataService;
+import com.easy1400.viid.service.ViidMotorVehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import java.net.Inet4Address;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * @ClassName ViidDataController
@@ -35,6 +28,24 @@ public class ViidDataController {
 
     @Autowired
     private ViidDataService viidDataService;
+    @Autowired
+    private ViidMotorVehicleService viidMotorVehicleService;
+
+
+    @GetMapping("/MotorVehicles/{page}/{rows}")
+    public AjaxResult getMotorVehicles(@PathVariable(value = "page") Integer page, @PathVariable(value = "rows") Integer rows,
+                                       @RequestParam(value = "beginTime") String beginTime, @RequestParam(value = "endTime") String endTime,
+                                       @RequestParam(value = "deviceId", required = false) String deviceId, @RequestParam(value = "motorVehicleID", required = false) String motorVehicleID) {
+        if (StringUtils.isNotEmpty(motorVehicleID)) {
+            return AjaxResult.success(viidMotorVehicleService.getById(motorVehicleID));
+        }
+        LambdaQueryWrapper<ViidMotorVehicle>
+                queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.between(StringUtils.isNotEmpty(beginTime), ViidMotorVehicle::getPassTime,
+                DateUtil.format(DateUtil.parse(beginTime), DatePattern.PURE_DATETIME_FORMAT), DateUtil.format(DateUtil.parse(endTime),DatePattern.PURE_DATETIME_FORMAT));
+        queryWrapper.eq(StringUtils.isNotEmpty(deviceId), ViidMotorVehicle::getDeviceID, deviceId);
+        return AjaxResult.success(viidMotorVehicleService.page(new Page<>(page, rows), queryWrapper));
+    }
 
     /**
      * 机动车相关接口
@@ -42,10 +53,10 @@ public class ViidDataController {
      * @param
      * @return
      */
-    @RequestMapping("/MotorVehicles")
+    @PostMapping("/MotorVehicles")
     //大华的相机会传非utf8字符导致报错 所以先用string接
     public ResponsObject MotorVehicles(@RequestBody String motorVehicleRequest) {
-        viidDataService.saveViidMotorVehicleData(JSON.toJavaObject(JSON.parseObject(motorVehicleRequest),MotorVehicleRequest.class));
+        viidDataService.saveViidMotorVehicleData(JSON.toJavaObject(JSON.parseObject(motorVehicleRequest), MotorVehicleRequest.class));
         return new ResponsObject(ResponsStatusEnum.OK);
 
     }
@@ -56,7 +67,7 @@ public class ViidDataController {
      * @param
      * @return
      */
-    @RequestMapping("/NonMotorVehicles")
+    @PostMapping("/NonMotorVehicles")
     public ResponsObject NonMotorVehicles(@RequestBody NonMotorVehicleRequest nonMotorVehicleRequest) {
         viidDataService.saveViidNonMotorVehicleData(nonMotorVehicleRequest);
         return new ResponsObject(ResponsStatusEnum.OK);
@@ -80,7 +91,7 @@ public class ViidDataController {
      * @param
      * @return
      */
-    @RequestMapping("/Persons")
+    @PostMapping("/Persons")
     public ResponsObject Persons(@RequestBody PersonRequest personRequest) {
         viidDataService.saveViidPersonData(personRequest);
         return new ResponsObject(ResponsStatusEnum.OK);
@@ -115,9 +126,6 @@ public class ViidDataController {
         return null;
     }
 
-    /**
-     * /VIID/Subscribes
-     */
 
     /**
      * 通知相关接口

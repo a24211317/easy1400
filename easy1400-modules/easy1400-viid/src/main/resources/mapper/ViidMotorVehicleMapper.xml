@@ -29,6 +29,6 @@
         NumOfPassenger,PassTime,NameOfPassedRoad,
         IsSuspicious,Sunvisor,SafetyBelt,
         Calling,PlateReliability,PlateCharReliability,
-        BrandReliability
+        BrandReliability,SubImageList
     </sql>
 </mapper>
