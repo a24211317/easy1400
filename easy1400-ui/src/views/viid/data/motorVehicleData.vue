@@ -89,21 +89,49 @@
                 :src="imgObj.StoragePath"
               />
             </div>
-            <div :style="{padding:'2%'}">
+            <div :style="{ padding: '2%' }">
               <el-row :gutter="5">
-                <el-col :span="14">车牌号: {{motorVehicle.PlateNo}}</el-col>
-                <el-col :span="10">车辆品牌: {{motorVehicle.VehicleBrand}}</el-col>
+                <el-col :span="16"
+                  ><span class="motorVehicle-data-col-text"
+                    >车牌号: {{ motorVehicle.PlateNo }}</span
+                  ></el-col
+                >
+                <el-col :span="8"
+                  ><span class="motorVehicle-data-col-text"
+                    >车辆品牌: {{ motorVehicle.VehicleBrand }}</span
+                  ></el-col
+                >
               </el-row>
               <el-row :gutter="5">
-                <el-col :span="14">车牌型号:  {{motorVehicle.VehicleModel}}</el-col>
-                <el-col :span="10">车辆类型:  {{motorVehicle.VehicleClass}}</el-col>
+                <el-col :span="16"
+                  ><span class="motorVehicle-data-col-text"
+                    >车辆型号: {{ motorVehicle.VehicleModel }}</span
+                  ></el-col
+                >
+                <el-col :span="8"
+                  ><span class="motorVehicle-data-col-text"
+                    >车辆类型: {{ motorVehicle.VehicleClass }}</span
+                  ></el-col
+                >
               </el-row>
               <el-row :gutter="5">
-                <el-col :span="14">抓拍时间: {{parseTime(motorVehicle.PassTime)}} </el-col>
-                <el-col :span="10">年款:  {{motorVehicle.VehicleStyles}}</el-col>
+                <el-col :span="16"
+                  ><span class="motorVehicle-data-col-text"
+                    >抓拍时间: {{ parseDataTime(motorVehicle.PassTime) }}
+                  </span></el-col
+                >
+                <el-col :span="8"
+                  ><span class="motorVehicle-data-col-text"
+                    >年款: {{ motorVehicle.VehicleStyles }}</span
+                  ></el-col
+                >
               </el-row>
               <el-row :gutter="5">
-                <el-col :span="24">设备编号:  {{motorVehicle.DeviceID}}</el-col>
+                <el-col :span="24"
+                  ><span class="motorVehicle-data-col-text"
+                    >设备编号: {{ motorVehicle.DeviceID }}</span
+                  ></el-col
+                >
               </el-row>
             </div>
           </div>
@@ -184,6 +212,21 @@ export default {
   },
   mounted() {},
   methods: {
+    parseDataTime(time) {
+      return (
+        time.substr(0, 4) +
+        "-" +
+        time.substr(4, 2) +
+        "-" +
+        time.substr(6, 2) +
+        " " +
+        time.substr(8, 2) +
+        ":" +
+        time.substr(10, 2) +
+        ":" +
+        time.substr(12, 2)
+      );
+    },
     changeQueryTime(val) {
       this.formData.beginTime = val[0];
       this.formData.endTime = val[1];
@@ -214,6 +257,13 @@ export default {
 };
 </script>
 <style>
+.motorVehicle-data-col-text {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 100%;
+  display: block;
+}
 .motorVehicle_img {
   margin: 1%;
   width: 98%;
