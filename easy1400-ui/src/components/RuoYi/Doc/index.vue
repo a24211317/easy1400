@@ -6,10 +6,10 @@
 
 <script>
 export default {
-  name: 'easy1400Doc',
+  name: 'ruoyiDoc',
   data() {
     return {
-      url: 'http://doc.easy1400.vip/easy1400-cloud'
+      url: 'http://doc.ruoyi.vip/ruoyi-cloud'
     }
   },
   methods: {

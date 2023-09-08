@@ -2,10 +2,10 @@
 
 ```bash
 # 克隆项目
-git clone https://gitee.com/y_project/easy1400-Vue
+git clone https://gitee.com/y_project/ruoyi-Vue
 
 # 进入项目目录
-cd easy1400-ui
+cd ruoyi-ui
 
 # 安装依赖
 npm install

@@ -6,10 +6,10 @@
 
 <script>
 export default {
-  name: 'easy1400Git',
+  name: 'ruoyiGit',
   data() {
     return {
-      url: 'https://gitee.com/y_project/easy1400-Cloud'
+      url: 'https://gitee.com/y_project/ruoyi-Cloud'
     }
   },
   methods: {

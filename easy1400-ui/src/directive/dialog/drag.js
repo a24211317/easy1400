@@ -1,6 +1,6 @@
 /**
 * v-dialogDrag 弹窗拖拽
-* Copyright (c) 2019 easy1400
+* Copyright (c) 2019 ruoyi
 */
 
 export default {

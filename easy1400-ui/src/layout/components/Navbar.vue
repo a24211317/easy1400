@@ -10,11 +10,11 @@
         <search id="header-search" class="right-menu-item" />
 
         <el-tooltip content="源码地址" effect="dark" placement="bottom">
-          <ruo-yi-git id="easy1400-git" class="right-menu-item hover-effect" />
+          <ruo-yi-git id="ruoyi-git" class="right-menu-item hover-effect" />
         </el-tooltip>
 
         <el-tooltip content="文档地址" effect="dark" placement="bottom">
-          <ruo-yi-doc id="easy1400-doc" class="right-menu-item hover-effect" />
+          <ruo-yi-doc id="ruoyi-doc" class="right-menu-item hover-effect" />
         </el-tooltip>
 
         <screenfull id="screenfull" class="right-menu-item hover-effect" />
@@ -54,8 +54,8 @@ import Hamburger from '@/components/Hamburger'
 import Screenfull from '@/components/Screenfull'
 import SizeSelect from '@/components/SizeSelect'
 import Search from '@/components/HeaderSearch'
-import easy1400Git from '@/components/easy1400/Git'
-import easy1400Doc from '@/components/easy1400/Doc'
+import ruoyiGit from '@/components/RuoYi/Git'
+import ruoyiDoc from '@/components/RuoYi/Doc'
 
 export default {
   components: {
@@ -65,8 +65,8 @@ export default {
     Screenfull,
     SizeSelect,
     Search,
-    easy1400Git,
-    easy1400Doc
+    ruoyiGit,
+    ruoyiDoc
   },
   computed: {
     ...mapGetters([

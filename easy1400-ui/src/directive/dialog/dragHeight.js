@@ -1,6 +1,6 @@
 /**
 * v-dialogDragWidth 可拖动弹窗高度（右下角）
-* Copyright (c) 2019 easy1400
+* Copyright (c) 2019 ruoyi
 */
 
 export default {

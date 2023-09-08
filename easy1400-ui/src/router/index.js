@@ -42,6 +42,11 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '/viid/motorVehicleData',
+    component: () => import('@/views/viid/data/motorVehicleData'),
+    hidden: true
+  },
+  {
     path: '/login',
     component: () => import('@/views/login'),
     hidden: true
