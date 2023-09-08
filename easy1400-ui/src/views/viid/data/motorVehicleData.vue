@@ -267,11 +267,13 @@ export default {
 .motorVehicle_img {
   margin: 1%;
   width: 98%;
-  height: 98%;
+      height: 18rem;
+
 }
 .motorVehicle-data-col {
   margin-bottom: 20px;
   border-radius: 4px;
+
 }
 .bg-purple-dark {
   background: #99a9bf;
@@ -293,6 +295,5 @@ export default {
   background-color: #f9fafc;
 }
 .el-image__error {
-    height: 15.1rem;
 }
 </style>
