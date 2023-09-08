@@ -83,7 +83,7 @@
               v-for="imgObj in motorVehicle.SubImageList.SubImageInfoObject"
               :key="imgObj.ImageID"
             >
-              <img
+              <el-image 
                 class="motorVehicle_img"
                 v-if="imgObj.Type == 14"
                 :src="imgObj.StoragePath"
@@ -291,5 +291,8 @@ export default {
 .row-bg {
   padding: 10px 0;
   background-color: #f9fafc;
+}
+.el-image__error {
+    height: 15.1rem;
 }
 </style>
