@@ -1,6 +1,7 @@
 package com.easy1400.viid.domain;
 
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.easy1400.viid.common.handler.SubImageListTypeHandler;
 import com.easy1400.viid.domain.dto.SubImageListDTO;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -18,6 +19,7 @@ import org.apache.ibatis.type.JdbcType;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@TableName(autoResultMap = true)
 public class ViidNonMotorVehicle {
     /**
      * 车辆标识

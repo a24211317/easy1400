@@ -1,7 +1,7 @@
 package com.easy1400.viid.service.impl.db;
 
-import cn.hutool.core.date.DateUtil;
 import com.easy1400.common.core.domain.R;
+import com.easy1400.common.core.utils.StringUtils;
 import com.easy1400.system.api.RemoteFileService;
 import com.easy1400.system.api.domain.SysFile;
 import com.easy1400.viid.common.util.MultipartFileUtil;
@@ -21,7 +21,6 @@ import com.easy1400.viid.mapper.ViidPersonMapper;
 import com.easy1400.viid.service.ViidDataService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Async;
@@ -29,8 +28,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.io.IOException;
-import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 /**
@@ -66,6 +63,9 @@ public class ViidDataDBServiceImpl implements ViidDataService {
             } catch (IOException e) {
                 log.error(String.format("[ %s ]图片存入失败: %s", Thread.currentThread().getStackTrace()[1].getMethodName(), e.getMessage()));
             }
+            if (StringUtils.isEmpty(faceObjectDTO.getFaceAppearTime())){
+                faceObjectDTO.setFaceAppearTime(faceObjectDTO.getSubImageList().getSubImageInfoObject().get(0).getShotTime());
+            }
             //存入数据库
             viidFaceMapper.insert(faceObjectDTO);
         }
@@ -81,6 +81,9 @@ public class ViidDataDBServiceImpl implements ViidDataService {
             } catch (IOException e) {
                 log.error(String.format("[ %s ]图片存入失败: %s", Thread.currentThread().getStackTrace()[1].getMethodName(), e.getMessage()));
             }
+            if (StringUtils.isEmpty(motorVehicle.getAppearTime())){
+                motorVehicle.setAppearTime(motorVehicle.getSubImageList().getSubImageInfoObject().get(0).getShotTime());
+            }
             //存入数据库
             viidMotorVehicleMapper.insert(motorVehicle);
         }
@@ -95,6 +98,9 @@ public class ViidDataDBServiceImpl implements ViidDataService {
             } catch (IOException e) {
                 log.error(String.format("[ %s ]图片存入失败: %s", Thread.currentThread().getStackTrace()[1].getMethodName(), e.getMessage()));
             }
+            if (StringUtils.isEmpty(nonMotorVehicle.getAppearTime())){
+                nonMotorVehicle.setAppearTime(nonMotorVehicle.getSubImageList().getSubImageInfoObject().get(0).getShotTime());
+            }
             //存入数据库
             viidNonMotorVehicleMapper.insert(nonMotorVehicle);
         }
@@ -108,6 +114,9 @@ public class ViidDataDBServiceImpl implements ViidDataService {
                 this.saveSubImage(person.getSubImageList().getSubImageInfoObject());
             } catch (IOException e) {
                 log.error(String.format("[ %s ]图片存入失败: %s", Thread.currentThread().getStackTrace()[1].getMethodName(), e.getMessage()));
+            }
+            if (StringUtils.isEmpty(person.getPersonAppearTime())){
+                person.setPersonAppearTime(person.getSubImageList().getSubImageInfoObject().get(0).getShotTime());
             }
             //存入数据库
             viidPersonMapper.insert(person);
