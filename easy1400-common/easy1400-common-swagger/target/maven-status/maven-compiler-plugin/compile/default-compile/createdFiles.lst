@@ -1,8 +1,0 @@
-com/easy1400/common/swagger/config/SwaggerProperties.class
-com/easy1400/common/swagger/config/SwaggerBeanPostProcessor.class
-com/easy1400/common/swagger/config/SwaggerProperties$AuthorizationScope.class
-com/easy1400/common/swagger/config/SwaggerProperties$Contact.class
-com/easy1400/common/swagger/config/SwaggerAutoConfiguration.class
-com/easy1400/common/swagger/config/SwaggerWebConfiguration.class
-com/easy1400/common/swagger/config/SwaggerProperties$Authorization.class
-com/easy1400/common/swagger/annotation/EnableCustomSwagger2.class
