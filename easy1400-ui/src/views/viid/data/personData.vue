@@ -22,9 +22,9 @@
             </el-form-item>
           </el-col>
           <el-col :span="4">
-            <el-form-item label="人脸ID" prop="faceID">
+            <el-form-item label="人脸ID" prop="personID">
               <el-input
-                v-model="formData.faceID"
+                v-model="formData.personID"
                 clearable
                 :style="{ width: '90%' }"
               >
@@ -67,32 +67,32 @@
       <el-row :gutter="5">
         <el-col
           :span="6"
-          v-for="face in faceDataList"
-          :key="face.faceID"
-          class="face-data-col"
+          v-for="person in personDataList"
+          :key="person.personID"
+          class="person-data-col"
           ><div class="grid-content bg-purple">
             <div
-              v-for="imgObj in face.SubImageList.SubImageInfoObject"
+              v-for="imgObj in person.SubImageList.SubImageInfoObject"
               :key="imgObj.ImageID"
             >
               <el-image 
-                class="face_img"
+                class="person_img"
                 v-if="imgObj.Type == 14"
                 :src="imgObj.StoragePath"
               />
             </div>
             <div :style="{ padding: '2%' }">
               <el-row :gutter="5">
-                <el-col :span="16"
-                  ><span class="face-data-col-text"
-                    >抓拍时间: {{ parseDataTime(face.FaceAppearTime) }}
+                <el-col :span="24"
+                  ><span class="person-data-col-text"
+                    >抓拍时间: {{ parseDataTime(person.PersonAppearTime) }}
                   </span></el-col
                 >
               </el-row>
               <el-row :gutter="5">
                 <el-col :span="24"
-                  ><span class="face-data-col-text"
-                    >设备编号: {{ face.DeviceID }}</span
+                  ><span class="person-data-col-text"
+                    >设备编号: {{ person.DeviceID }}</span
                   ></el-col
                 >
               </el-row>
@@ -115,19 +115,19 @@
 </template>
 
 <script>
-import { getFacePage } from "@/api/viid/data/faceData";
+import { getPersonPage } from "@/api/viid/data/personData";
 import { getToken } from "@/utils/auth";
 
 export default {
-  name: "faceData",
+  name: "personData",
   data() {
     return {
-      faceDataList: [],
+      personDataList: [],
       formData: {
         page: 1,
         rows: 8,
         deviceId: "",
-        faceID: "",
+        personID: "",
         beginTime: "",
         endTime: "",
       },
@@ -170,7 +170,7 @@ export default {
     );
     this.changeQueryTime(this.timeArr);
     //查询车辆数据
-    this.getFacePage();
+    this.getPersonPage();
   },
   mounted() {},
   methods: {
@@ -193,14 +193,14 @@ export default {
       this.formData.beginTime = val[0];
       this.formData.endTime = val[1];
     },
-    getFacePage() {
+    getPersonPage() {
       var _this = this;
-      getFacePage(this.formData).then((response) => {
+      getPersonPage(this.formData).then((response) => {
         console.log(response.data);
         var data = response.data;
         _this.dataTotal = data.total;
         console.log(data.records);
-        _this.faceDataList = data.records;
+        _this.personDataList = data.records;
       });
     },
     submitForm() {
@@ -208,32 +208,32 @@ export default {
       this.$refs["elForm"].validate((valid) => {
         if (!valid) return;
         //  提交表单
-        _this.getFacePage();
+        _this.getPersonPage();
       });
     },
     //当前页改变时触发 跳转其他页
     handleCurrentChange(val) {
       this.formData.page = val;
-      this.getFacePage();
+      this.getPersonPage();
     },
   },
 };
 </script>
 <style>
-.face-data-col-text {
+.person-data-col-text {
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
   width: 100%;
   display: block;
 }
-.face_img {
+.person_img {
   margin: 1%;
   width: 98%;
       height: 18rem;
 
 }
-.face-data-col {
+.person-data-col {
   margin-bottom: 20px;
   border-radius: 4px;
 

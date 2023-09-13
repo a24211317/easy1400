@@ -10,11 +10,11 @@ import com.easy1400.common.core.utils.StringUtils;
 import com.easy1400.common.core.web.domain.AjaxResult;
 import com.easy1400.viid.domain.ViidFace;
 import com.easy1400.viid.domain.ViidMotorVehicle;
+import com.easy1400.viid.domain.ViidNonMotorVehicle;
+import com.easy1400.viid.domain.ViidPerson;
 import com.easy1400.viid.domain.enums.ResponsStatusEnum;
 import com.easy1400.viid.domain.message.*;
-import com.easy1400.viid.service.ViidDataService;
-import com.easy1400.viid.service.ViidFaceService;
-import com.easy1400.viid.service.ViidMotorVehicleService;
+import com.easy1400.viid.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,6 +34,10 @@ public class ViidDataController {
     private ViidMotorVehicleService viidMotorVehicleService;
     @Autowired
     private ViidFaceService viidFaceService;
+    @Autowired
+    private ViidPersonService viidPersonService;
+    @Autowired
+    private ViidNonMotorVehicleService viidNonMotorVehicleService;
 
 
     @GetMapping("/MotorVehicles/{page}/{rows}")
@@ -66,6 +70,38 @@ public class ViidDataController {
         queryWrapper.eq(StringUtils.isNotEmpty(deviceId), ViidFace::getDeviceID, deviceId);
         queryWrapper.orderByDesc(ViidFace::getFaceAppearTime);
         return AjaxResult.success(viidFaceService.page(new Page<>(page, rows), queryWrapper));
+    }
+
+    @GetMapping("/persons/{page}/{rows}")
+    public AjaxResult getPersons(@PathVariable(value = "page") Integer page, @PathVariable(value = "rows") Integer rows,
+                                 @RequestParam(value = "beginTime") String beginTime, @RequestParam(value = "endTime") String endTime,
+                                 @RequestParam(value = "deviceId", required = false) String deviceId, @RequestParam(value = "personID", required = false) String personID) {
+        if (StringUtils.isNotEmpty(personID)) {
+            return AjaxResult.success(viidPersonService.getById(personID));
+        }
+        LambdaQueryWrapper<ViidPerson>
+                queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.between(StringUtils.isNotEmpty(beginTime), ViidPerson::getPersonAppearTime,
+                DateUtil.format(DateUtil.parse(beginTime), DatePattern.PURE_DATETIME_FORMAT), DateUtil.format(DateUtil.parse(endTime), DatePattern.PURE_DATETIME_FORMAT));
+        queryWrapper.eq(StringUtils.isNotEmpty(deviceId), ViidPerson::getDeviceID, deviceId);
+        queryWrapper.orderByDesc(ViidPerson::getPersonAppearTime);
+        return AjaxResult.success(viidPersonService.page(new Page<>(page, rows), queryWrapper));
+    }
+
+    @GetMapping("/nonMotorVehicles/{page}/{rows}")
+    public AjaxResult getNonMotorVehicles(@PathVariable(value = "page") Integer page, @PathVariable(value = "rows") Integer rows,
+                               @RequestParam(value = "beginTime") String beginTime, @RequestParam(value = "endTime") String endTime,
+                               @RequestParam(value = "deviceId", required = false) String deviceId, @RequestParam(value = "NonMotorVehicleID", required = false) String NonMotorVehicleID) {
+        if (StringUtils.isNotEmpty(NonMotorVehicleID)) {
+            return AjaxResult.success(viidNonMotorVehicleService.getById(NonMotorVehicleID));
+        }
+        LambdaQueryWrapper<ViidNonMotorVehicle>
+                queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.between(StringUtils.isNotEmpty(beginTime), ViidNonMotorVehicle::getAppearTime,
+                DateUtil.format(DateUtil.parse(beginTime), DatePattern.PURE_DATETIME_FORMAT), DateUtil.format(DateUtil.parse(endTime), DatePattern.PURE_DATETIME_FORMAT));
+        queryWrapper.eq(StringUtils.isNotEmpty(deviceId), ViidNonMotorVehicle::getDeviceID, deviceId);
+        queryWrapper.orderByDesc(ViidNonMotorVehicle::getAppearTime);
+        return AjaxResult.success(viidNonMotorVehicleService.page(new Page<>(page, rows), queryWrapper));
     }
 
     /**

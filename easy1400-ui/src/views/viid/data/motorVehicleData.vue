@@ -267,7 +267,7 @@ export default {
 .motorVehicle_img {
   margin: 1%;
   width: 98%;
-      height: 18rem;
+      height: 16rem;
 
 }
 .motorVehicle-data-col {

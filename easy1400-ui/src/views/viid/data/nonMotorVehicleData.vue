@@ -10,6 +10,14 @@
           label-width="85px"
         >
           <el-col :span="4">
+            <el-form-item label="车牌号" prop="plateNo">
+              <el-input
+                v-model="formData.plateNo"
+                clearable
+                :style="{ width: '90%' }"
+              >
+              </el-input>
+            </el-form-item>
           </el-col>
           <el-col :span="4">
             <el-form-item label="设备ID" prop="deviceId">
@@ -22,9 +30,9 @@
             </el-form-item>
           </el-col>
           <el-col :span="4">
-            <el-form-item label="人脸ID" prop="faceID">
+            <el-form-item label="车辆ID" prop="nonMotorVehicleID">
               <el-input
-                v-model="formData.faceID"
+                v-model="formData.nonMotorVehicleID"
                 clearable
                 :style="{ width: '90%' }"
               >
@@ -66,17 +74,17 @@
     <div>
       <el-row :gutter="5">
         <el-col
-          :span="6"
-          v-for="face in faceDataList"
-          :key="face.faceID"
-          class="face-data-col"
+          :span="8"
+          v-for="nonMotorVehicle in nonMotorVehicleDataList"
+          :key="nonMotorVehicle.nonMotorVehicleID"
+          class="nonMotorVehicle-data-col"
           ><div class="grid-content bg-purple">
             <div
-              v-for="imgObj in face.SubImageList.SubImageInfoObject"
+              v-for="imgObj in nonMotorVehicle.SubImageList.SubImageInfoObject"
               :key="imgObj.ImageID"
             >
               <el-image 
-                class="face_img"
+                class="nonMotorVehicle_img"
                 v-if="imgObj.Type == 14"
                 :src="imgObj.StoragePath"
               />
@@ -84,15 +92,44 @@
             <div :style="{ padding: '2%' }">
               <el-row :gutter="5">
                 <el-col :span="16"
-                  ><span class="face-data-col-text"
-                    >抓拍时间: {{ parseDataTime(face.FaceAppearTime) }}
+                  ><span class="nonMotorVehicle-data-col-text"
+                    >车牌号: {{ nonMotorVehicle.PlateNo }}</span
+                  ></el-col
+                >
+                <el-col :span="8"
+                  ><span class="nonMotorVehicle-data-col-text"
+                    >车辆品牌: {{ nonMotorVehicle.VehicleBrand }}</span
+                  ></el-col
+                >
+              </el-row>
+              <el-row :gutter="5">
+                <el-col :span="16"
+                  ><span class="nonMotorVehicle-data-col-text"
+                    >车辆型号: {{ nonMotorVehicle.VehicleModel }}</span
+                  ></el-col
+                >
+                <el-col :span="8"
+                  ><span class="nonMotorVehicle-data-col-text"
+                    >车辆类型: {{ nonMotorVehicle.VehicleClass }}</span
+                  ></el-col
+                >
+              </el-row>
+              <el-row :gutter="5">
+                <el-col :span="16"
+                  ><span class="nonMotorVehicle-data-col-text"
+                    >抓拍时间: {{ parseDataTime(nonMotorVehicle.AppearTime) }}
                   </span></el-col
+                >
+                <el-col :span="8"
+                  ><span class="nonMotorVehicle-data-col-text"
+                    >年款: {{ nonMotorVehicle.VehicleStyles }}</span
+                  ></el-col
                 >
               </el-row>
               <el-row :gutter="5">
                 <el-col :span="24"
-                  ><span class="face-data-col-text"
-                    >设备编号: {{ face.DeviceID }}</span
+                  ><span class="nonMotorVehicle-data-col-text"
+                    >设备编号: {{ nonMotorVehicle.DeviceID }}</span
                   ></el-col
                 >
               </el-row>
@@ -107,7 +144,7 @@
         @current-change="handleCurrentChange"
         layout="prev, pager, next"
         :total="dataTotal"
-        :page-size="8"
+        :page-size="6"
       >
       </el-pagination>
     </div>
@@ -115,19 +152,20 @@
 </template>
 
 <script>
-import { getFacePage } from "@/api/viid/data/faceData";
+import { getNonMotorVehiclePage } from "@/api/viid/data/nonMotorVehicleData";
 import { getToken } from "@/utils/auth";
 
 export default {
-  name: "faceData",
+  name: "nonMotorVehicleData",
   data() {
     return {
-      faceDataList: [],
+      nonMotorVehicleDataList: [],
       formData: {
         page: 1,
-        rows: 8,
+        rows: 6,
+        plateNo: "",
         deviceId: "",
-        faceID: "",
+        nonMotorVehicleID: "",
         beginTime: "",
         endTime: "",
       },
@@ -170,7 +208,7 @@ export default {
     );
     this.changeQueryTime(this.timeArr);
     //查询车辆数据
-    this.getFacePage();
+    this.getNonMotorVehiclePage();
   },
   mounted() {},
   methods: {
@@ -193,14 +231,13 @@ export default {
       this.formData.beginTime = val[0];
       this.formData.endTime = val[1];
     },
-    getFacePage() {
+    getNonMotorVehiclePage() {
       var _this = this;
-      getFacePage(this.formData).then((response) => {
+      getNonMotorVehiclePage(this.formData).then((response) => {
         console.log(response.data);
         var data = response.data;
         _this.dataTotal = data.total;
-        console.log(data.records);
-        _this.faceDataList = data.records;
+        _this.nonMotorVehicleDataList = data.records;
       });
     },
     submitForm() {
@@ -208,32 +245,32 @@ export default {
       this.$refs["elForm"].validate((valid) => {
         if (!valid) return;
         //  提交表单
-        _this.getFacePage();
+        _this.getNonMotorVehiclePage();
       });
     },
     //当前页改变时触发 跳转其他页
     handleCurrentChange(val) {
       this.formData.page = val;
-      this.getFacePage();
+      this.getNonMotorVehiclePage();
     },
   },
 };
 </script>
 <style>
-.face-data-col-text {
+.nonMotorVehicle-data-col-text {
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
   width: 100%;
   display: block;
 }
-.face_img {
+.nonMotorVehicle_img {
   margin: 1%;
   width: 98%;
-      height: 18rem;
+      height: 16rem;
 
 }
-.face-data-col {
+.nonMotorVehicle-data-col {
   margin-bottom: 20px;
   border-radius: 4px;
 

@@ -47,6 +47,20 @@ export const constantRoutes = [
     hidden: true
   },
   {
+    path: '/viid/faceData',
+    component: () => import('@/views/viid/data/faceData'),
+    hidden: true
+  },
+  {
+    path: '/viid/personData',
+    component: () => import('@/views/viid/data/personData'),
+    hidden: true
+  },  {
+    path: '/viid/nonMotorVehicleData',
+    component: () => import('@/views/viid/data/nonMotorVehicleData'),
+    hidden: true
+  },
+  {
     path: '/login',
     component: () => import('@/views/login'),
     hidden: true
