@@ -1,4 +1,11 @@
+DROP DATABASE IF EXISTS `easy1400-ry`;
+
+CREATE DATABASE  `easy1400-ry` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+
 SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS = 0;
+
+USE `easy1400-ry`;
 
 -- ----------------------------
 -- 1、部门表

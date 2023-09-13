@@ -1,19 +1,11 @@
-/*
- Navicat Premium Data Transfer
+DROP DATABASE IF EXISTS `easy1400-data`;
 
- Source Server         : 42.193.99.93
- Source Server Type    : MySQL
- Source Server Version : 50741
- Source Host           : 42.193.99.93:31000
- Source Schema         : easy1400-data
+CREATE DATABASE  `easy1400-data` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 
- Target Server Type    : MySQL
- Target Server Version : 50741
- File Encoding         : 65001
+SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS = 0;
 
- Date: 13/09/2023 15:26:49
-*/
-
+USE `easy1400-data`;
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
