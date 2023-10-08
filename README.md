@@ -2,8 +2,8 @@
 因公司的对接平台实在太过拉垮，甚至连对接页面也没有，纯靠postman对接实属无语。公司也没计划开发一个像样的平台，所以决定利用自己闲暇时间开发一个稍微像点样的对接平台！
 
 [![JAVA](https://img.shields.io/badge/language-java-red.svg)](https://en.cppreference.com/)
-[![platform](https://img.shields.io/badge/platform-linux%20|%20macos%20|%20windows-blue.svg)](https://github.com/xia-chu/ZLMediaKit)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-yellow.svg)](https://github.com/xia-chu/ZLMediaKit/pulls)
+[![platform](https://img.shields.io/badge/platform-linux%20|%20macos%20|%20windows-blue.svg)]()
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-yellow.svg)]()
 
 
 
