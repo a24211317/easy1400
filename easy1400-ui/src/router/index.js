@@ -64,6 +64,11 @@ export const constantRoutes = [
     component: () => import('@/views/viid/data/apesData'),
     hidden: true
   },
+   {
+    path: '/viid/viidCascadePlatform',
+    component: () => import('@/views/viid/system/viidCascadePlatform'),
+    hidden: true
+  },
   {
     path: '/login',
     component: () => import('@/views/login'),

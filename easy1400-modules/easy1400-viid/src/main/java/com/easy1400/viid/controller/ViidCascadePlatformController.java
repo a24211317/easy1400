@@ -1,6 +1,7 @@
 package com.easy1400.viid.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.easy1400.common.core.utils.StringUtils;
 import com.easy1400.common.core.web.domain.AjaxResult;
 import com.easy1400.viid.common.util.ViidHttpUtil;
 import com.easy1400.viid.domain.ViidCascadePlatform;
@@ -37,6 +38,13 @@ public class ViidCascadePlatformController {
         return AjaxResult.success(viidCascadePlatformService.addViidCascadePlatform(viidCascadePlatform));
     }
 
+    @GetMapping("/ViidCascadePlatform/{type}")
+    public AjaxResult getViidCascadePlatform(@PathVariable String type) {
+        LambdaQueryWrapper<ViidCascadePlatform> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(StringUtils.isNotEmpty(type), ViidCascadePlatform::getType, type);
+        return AjaxResult.success(viidCascadePlatformService.list(queryWrapper));
+    }
+
     /**
      * 手动向上级平台注册
      *
@@ -57,6 +65,7 @@ public class ViidCascadePlatformController {
 
     /**
      * 新增订阅通知
+     *
      * @param viidSubscribe
      * @return
      */
@@ -66,8 +75,8 @@ public class ViidCascadePlatformController {
             switch (viidSubscribe.getSubscribeType()) {
                 //订阅上级需要像上级发送通知
                 case "0":
-                    ViidCascadePlatform viidCascadePlatform=viidCascadePlatformService.getById(viidSubscribe.getResourceURI());
-                    return AjaxResult.success(viidSubscribeService.add(viidSubscribe,viidCascadePlatform));
+                    ViidCascadePlatform viidCascadePlatform = viidCascadePlatformService.getById(viidSubscribe.getResourceURI());
+                    return AjaxResult.success(viidSubscribeService.add(viidSubscribe, viidCascadePlatform));
             }
             return AjaxResult.success("save success");
         }
