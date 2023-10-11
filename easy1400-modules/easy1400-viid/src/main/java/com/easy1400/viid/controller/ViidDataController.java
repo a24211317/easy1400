@@ -163,13 +163,19 @@ public class ViidDataController {
      * @return
      */
     @GetMapping("/APEs")
-    public ApeRequest APEs(@RequestParam(value = "ApeID", required = false) String ApeID, @RequestParam(value = "Name", required = false) String Name) {
-        ApeRequest apeRequest = new ApeRequest();
+    public Object APEs(@RequestParam(value = "ApeID", required = false) String ApeID, @RequestParam(value = "Name", required = false) String Name,
+                       @RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "rows", required = false) Integer rows) {
         QueryWrapper<ViidApe> apeQueryWrapper = new QueryWrapper();
         apeQueryWrapper.eq(StringUtils.isNotEmpty(ApeID), "ApeID", ApeID);
         apeQueryWrapper.eq(StringUtils.isNotEmpty(Name), "Name", Name);
-        apeRequest.setAPEListObject(new ApeRequest.APEListObjectDTO(viidApeService.list(apeQueryWrapper)));
-        return apeRequest;
+        //分页参数用于平台自查，无分页则代表下级平台调用 返回全量
+        if (page != null && rows != null) {
+            return viidApeService.page(new Page<>(page, rows), apeQueryWrapper);
+        }
+        ApeRequest ApeRequest = new ApeRequest();
+
+        ApeRequest.setAPEListObject(new ApeRequest.APEListObjectDTO(viidApeService.list(apeQueryWrapper)));
+        return ApeRequest;
     }
 
 

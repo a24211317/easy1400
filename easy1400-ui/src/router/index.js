@@ -59,6 +59,10 @@ export const constantRoutes = [
     path: '/viid/nonMotorVehicleData',
     component: () => import('@/views/viid/data/nonMotorVehicleData'),
     hidden: true
+  },  {
+    path: '/viid/apesData',
+    component: () => import('@/views/viid/data/apesData'),
+    hidden: true
   },
   {
     path: '/login',

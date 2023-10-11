@@ -1,11 +1,11 @@
 package com.easy1400.viid.domain;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.io.Serializable;
-import java.util.Arrays;
 
 /**
  * 采集设备表
@@ -16,110 +16,128 @@ public class ViidApe implements Serializable {
     /**
      * 设备ID
      */
+    @JsonProperty("ApeID")
     @TableId(value = "ApeID")
     private String ApeID;
 
     /**
      * 名称
      */
+    @JsonProperty("Name")
     @TableField(value = "Name")
     private String Name;
 
     /**
      * 型号
      */
+    @JsonProperty("Model")
     @TableField(value = "Model")
     private String Model;
 
     /**
      * IP地址
      */
+    @JsonProperty("IPAddr")
     @TableField(value = "IPAddr")
     private String IPAddr;
 
     /**
-     * IPv6 地址
+     * IPv6地址
      */
+    @JsonProperty("IPV6Addr")
     @TableField(value = "IPV6Addr")
     private String IPV6Addr;
 
     /**
      * 端口号
      */
+    @JsonProperty("Port")
     @TableField(value = "Port")
     private Integer Port;
 
     /**
      * 经度
      */
+    @JsonProperty("Longitude")
     @TableField(value = "Longitude")
     private Double Longitude;
 
     /**
      * 纬度
      */
+    @JsonProperty("Latitude")
     @TableField(value = "Latitude")
     private Double Latitude;
 
     /**
      * 安装地点行政区划代码
      */
+    @JsonProperty("PlaceCode")
     @TableField(value = "PlaceCode")
     private String PlaceCode;
 
     /**
      * 位置名
      */
+    @JsonProperty("Place")
     @TableField(value = "Place")
     private String Place;
 
     /**
      * 管辖单位代码
      */
+    @JsonProperty("OrgCode")
     @TableField(value = "OrgCode")
     private String OrgCode;
 
     /**
      * 车辆抓拍方向
      */
+    @JsonProperty("CapDirection")
     @TableField(value = "CapDirection")
     private Integer CapDirection;
 
     /**
      * 监视方向
      */
+    @JsonProperty("MonitorDirection")
     @TableField(value = "MonitorDirection")
     private Integer MonitorDirection;
 
     /**
      * 监视区域说明
      */
+    @JsonProperty("MonitorAreaDesc")
     @TableField(value = "MonitorAreaDesc")
     private String MonitorAreaDesc;
 
     /**
      * 是否在线
      */
+    @JsonProperty("IsOnline")
     @TableField(value = "IsOnline")
     private String IsOnline;
 
     /**
      * 所属采集系统
      */
+    @JsonProperty("OwnerApsID")
     @TableField(value = "OwnerApsID")
     private String OwnerApsID;
 
     /**
      * 口令
      */
+    @JsonProperty("Password")
     @TableField(value = "Password")
     private String Password;
 
     /**
      * 用户帐号
      */
+    @JsonProperty("UserId")
     @TableField(value = "UserId")
-    private byte[] UserId;
+    private String UserId;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
@@ -127,7 +145,7 @@ public class ViidApe implements Serializable {
     public ViidApe() {
     }
 
-    public ViidApe(String apeID, String name, String model, String IPAddr, String IPV6Addr, Integer port, Double longitude, Double latitude, String placeCode, String place, String orgCode, Integer capDirection, Integer monitorDirection, String monitorAreaDesc, String isOnline, String ownerApsID, String password, byte[] userId) {
+    public ViidApe(String apeID, String name, String model, String IPAddr, String IPV6Addr, Integer port, Double longitude, Double latitude, String placeCode, String place, String orgCode, Integer capDirection, Integer monitorDirection, String monitorAreaDesc, String isOnline, String ownerApsID, String password, String userId) {
         ApeID = apeID;
         Name = name;
         Model = model;
@@ -284,11 +302,11 @@ public class ViidApe implements Serializable {
         Password = password;
     }
 
-    public byte[] getUserId() {
+    public String getUserId() {
         return UserId;
     }
 
-    public void setUserId(byte[] userId) {
+    public void setUserId(String userId) {
         UserId = userId;
     }
 }
