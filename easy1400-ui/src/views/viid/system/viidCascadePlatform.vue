@@ -36,7 +36,7 @@
               </el-descriptions-item>
               <el-descriptions-item>
                 <template slot="label"> 状态 </template>
-                {{ platform.isOnline }}
+                {{ platform.isOnline ==0 ?'离线' :'在线' }}
               </el-descriptions-item>
               <!-- <el-descriptions-item>
                 <template slot="label"> 开关 </template>
