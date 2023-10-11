@@ -113,7 +113,10 @@ public class ViidDataController {
     @PostMapping("/MotorVehicles")
     //大华的相机会传非utf8字符导致报错 所以先用string接
     public ResponsObject MotorVehicles(@RequestBody String motorVehicleRequest) {
-        viidDataService.saveViidMotorVehicleData(JSON.toJavaObject(JSON.parseObject(motorVehicleRequest), MotorVehicleRequest.class));
+        for (ViidMotorVehicle motorVehicle : JSON.toJavaObject(JSON.parseObject(motorVehicleRequest), MotorVehicleRequest.class).getMotorVehicleListObject().getMotorVehicleObject()) {
+            viidDataService.saveViidMotorVehicleData(motorVehicle);
+
+        }
         return new ResponsObject(ResponsStatusEnum.OK);
 
     }
@@ -126,7 +129,9 @@ public class ViidDataController {
      */
     @PostMapping("/NonMotorVehicles")
     public ResponsObject NonMotorVehicles(@RequestBody NonMotorVehicleRequest nonMotorVehicleRequest) {
-        viidDataService.saveViidNonMotorVehicleData(nonMotorVehicleRequest);
+        for (ViidNonMotorVehicle nonMotorVehicle : nonMotorVehicleRequest.getNonMotorVehicleListObject().getNonMotorVehicleObject()) {
+            viidDataService.saveViidNonMotorVehicleData(nonMotorVehicle);
+        }
         return new ResponsObject(ResponsStatusEnum.OK);
     }
 
@@ -138,7 +143,9 @@ public class ViidDataController {
      */
     @PostMapping(value = "/Faces", produces = "application/json")
     public ResponsObject Faces(@RequestBody FaceRequest faceRequest) {
-        viidDataService.saveViidFaceData(faceRequest);
+        for (ViidFace viidFace : faceRequest.getFaceListObject().getFaceObject()) {
+            viidDataService.saveViidFaceData(viidFace);
+        }
         return new ResponsObject(ResponsStatusEnum.OK);
     }
 
@@ -150,7 +157,9 @@ public class ViidDataController {
      */
     @PostMapping("/Persons")
     public ResponsObject Persons(@RequestBody PersonRequest personRequest) {
-        viidDataService.saveViidPersonData(personRequest);
+        for (ViidPerson viidPerson : personRequest.getPersonListObject().getPersonObject()) {
+            viidDataService.saveViidPersonData(viidPerson);
+        }
         return new ResponsObject(ResponsStatusEnum.OK);
     }
 
@@ -187,21 +196,23 @@ public class ViidDataController {
      * @return 结构参考C.25，字段定义参考A.26。
      */
     @PostMapping("/Subscribes")
-    public JSONObject Subscribes(@RequestBody JSONObject body) {
-        return null;
+    public ResponsObject Subscribes(@RequestBody JSONObject body) {
+
+        return new ResponsObject(ResponsStatusEnum.OK);
     }
 
 
     /**
      * 通知相关接口
      *
-     * @param body 消息体结构参考C.19，字段定义参考A.19 。
+     * @param subscribeNotificationsRequest 消息体结构参考C.19，字段定义参考A.19 。
      * @return 结构参考C.25，字段定义参考A.26。
      */
     @PostMapping("/SubscribeNotifications")
-    public JSONObject SubscribeNotifications(@RequestBody JSONObject body) {
+    public ResponsObject SubscribeNotifications(@RequestBody SubscribeNotificationsRequest subscribeNotificationsRequest) {
 
-        return null;
+      viidDataService.SubscribeNotifications(subscribeNotificationsRequest);
+        return new ResponsObject(ResponsStatusEnum.OK);
     }
 
 

@@ -10,10 +10,7 @@ import com.easy1400.viid.domain.ViidMotorVehicle;
 import com.easy1400.viid.domain.ViidNonMotorVehicle;
 import com.easy1400.viid.domain.ViidPerson;
 import com.easy1400.viid.domain.dto.SubImageListDTO;
-import com.easy1400.viid.domain.message.FaceRequest;
-import com.easy1400.viid.domain.message.MotorVehicleRequest;
-import com.easy1400.viid.domain.message.NonMotorVehicleRequest;
-import com.easy1400.viid.domain.message.PersonRequest;
+import com.easy1400.viid.domain.message.SubscribeNotificationsRequest;
 import com.easy1400.viid.mapper.ViidFaceMapper;
 import com.easy1400.viid.mapper.ViidMotorVehicleMapper;
 import com.easy1400.viid.mapper.ViidNonMotorVehicleMapper;
@@ -55,84 +52,107 @@ public class ViidDataDBServiceImpl implements ViidDataService {
 
     @Async
     @Override
-    public void saveViidFaceData(FaceRequest faceRequest) {
-        for (ViidFace faceObjectDTO : faceRequest.getFaceListObject().getFaceObject()) {
-            //图片存入服务
-            try {
-                this.saveSubImage(faceObjectDTO.getSubImageList().getSubImageInfoObject());
-            } catch (IOException e) {
-                log.error(String.format("[ %s ]图片存入失败: %s", Thread.currentThread().getStackTrace()[1].getMethodName(), e.getMessage()));
-            }
-            if (StringUtils.isEmpty(faceObjectDTO.getFaceAppearTime())){
-                faceObjectDTO.setFaceAppearTime(faceObjectDTO.getSubImageList().getSubImageInfoObject().get(0).getShotTime());
-            }
-            //存入数据库
-            viidFaceMapper.insert(faceObjectDTO);
+    public void saveViidFaceData(ViidFace viidFace) {
+        //图片存入服务
+        try {
+            this.saveSubImage(viidFace.getSubImageList().getSubImageInfoObject());
+        } catch (IOException e) {
+            log.error(String.format("[ %s ]图片存入失败: %s", Thread.currentThread().getStackTrace()[1].getMethodName(), e.getMessage()));
         }
+        if (StringUtils.isEmpty(viidFace.getFaceAppearTime())) {
+            viidFace.setFaceAppearTime(viidFace.getSubImageList().getSubImageInfoObject().get(0).getShotTime());
+        }
+        //存入数据库
+        viidFaceMapper.insert(viidFace);
+
     }
 
     @Async
     @Override
-    public void saveViidMotorVehicleData(MotorVehicleRequest motorVehicleRequest) {
-        for (ViidMotorVehicle motorVehicle : motorVehicleRequest.getMotorVehicleListObject().getMotorVehicleObject()) {
-            //图片存入服务
-            try {
-                this.saveSubImage(motorVehicle.getSubImageList().getSubImageInfoObject());
-            } catch (IOException e) {
-                log.error(String.format("[ %s ]图片存入失败: %s", Thread.currentThread().getStackTrace()[1].getMethodName(), e.getMessage()));
-            }
-            if (StringUtils.isEmpty(motorVehicle.getAppearTime())){
-                motorVehicle.setAppearTime(motorVehicle.getSubImageList().getSubImageInfoObject().get(0).getShotTime());
-            }
-            //存入数据库
-            viidMotorVehicleMapper.insert(motorVehicle);
+    public void saveViidMotorVehicleData(ViidMotorVehicle viidMotorVehicle) {
+        //图片存入服务
+        try {
+            this.saveSubImage(viidMotorVehicle.getSubImageList().getSubImageInfoObject());
+        } catch (IOException e) {
+            log.error(String.format("[ %s ]图片存入失败: %s", Thread.currentThread().getStackTrace()[1].getMethodName(), e.getMessage()));
         }
+        if (StringUtils.isEmpty(viidMotorVehicle.getAppearTime())) {
+            viidMotorVehicle.setAppearTime(viidMotorVehicle.getSubImageList().getSubImageInfoObject().get(0).getShotTime());
+        }
+        //存入数据库
+        viidMotorVehicleMapper.insert(viidMotorVehicle);
     }
+
     @Async
     @Override
-    public void saveViidNonMotorVehicleData(NonMotorVehicleRequest nonMotorVehicleRequest) {
-        for (ViidNonMotorVehicle nonMotorVehicle : nonMotorVehicleRequest.getNonMotorVehicleListObject().getNonMotorVehicleObject()) {
-            //图片存入服务
-            try {
-                this.saveSubImage(nonMotorVehicle.getSubImageList().getSubImageInfoObject());
-            } catch (IOException e) {
-                log.error(String.format("[ %s ]图片存入失败: %s", Thread.currentThread().getStackTrace()[1].getMethodName(), e.getMessage()));
-            }
-            if (StringUtils.isEmpty(nonMotorVehicle.getAppearTime())){
-                nonMotorVehicle.setAppearTime(nonMotorVehicle.getSubImageList().getSubImageInfoObject().get(0).getShotTime());
-            }
-            //存入数据库
-            viidNonMotorVehicleMapper.insert(nonMotorVehicle);
+    public void saveViidNonMotorVehicleData(ViidNonMotorVehicle viidNonMotorVehicle) {
+        //图片存入服务
+        try {
+            this.saveSubImage(viidNonMotorVehicle.getSubImageList().getSubImageInfoObject());
+        } catch (IOException e) {
+            log.error(String.format("[ %s ]图片存入失败: %s", Thread.currentThread().getStackTrace()[1].getMethodName(), e.getMessage()));
         }
+        if (StringUtils.isEmpty(viidNonMotorVehicle.getAppearTime())) {
+            viidNonMotorVehicle.setAppearTime(viidNonMotorVehicle.getSubImageList().getSubImageInfoObject().get(0).getShotTime());
+        }
+        //存入数据库
+        viidNonMotorVehicleMapper.insert(viidNonMotorVehicle);
+
     }
+
     @Async
     @Override
-    public void saveViidPersonData(PersonRequest personRequest) {
-        for (ViidPerson person : personRequest.getPersonListObject().getPersonObject()) {
-            //图片存入服务
-            try {
-                this.saveSubImage(person.getSubImageList().getSubImageInfoObject());
-            } catch (IOException e) {
-                log.error(String.format("[ %s ]图片存入失败: %s", Thread.currentThread().getStackTrace()[1].getMethodName(), e.getMessage()));
+    public void saveViidPersonData(ViidPerson viidPerson) {
+        //图片存入服务
+        try {
+            this.saveSubImage(viidPerson.getSubImageList().getSubImageInfoObject());
+        } catch (IOException e) {
+            log.error(String.format("[ %s ]图片存入失败: %s", Thread.currentThread().getStackTrace()[1].getMethodName(), e.getMessage()));
+        }
+        if (StringUtils.isEmpty(viidPerson.getPersonAppearTime())) {
+            viidPerson.setPersonAppearTime(viidPerson.getSubImageList().getSubImageInfoObject().get(0).getShotTime());
+        }
+        //存入数据库
+        viidPersonMapper.insert(viidPerson);
+    }
+
+    @Override
+    public void SubscribeNotifications(SubscribeNotificationsRequest subscribeNotificationsRequest) {
+        for (SubscribeNotificationsRequest.SubscribeNotificationListObjectDTO.SubscribeNotificationObjectDTO subscribeNotificationObjectDTO : subscribeNotificationsRequest.getSubscribeNotificationListObject().getSubscribeNotificationObject()) {
+            if (subscribeNotificationObjectDTO.getFaceObjectList() != null) {
+                for (ViidFace viidFace : subscribeNotificationObjectDTO.getFaceObjectList().getFaceObject()) {
+                    this.saveViidFaceData(viidFace);
+                }
             }
-            if (StringUtils.isEmpty(person.getPersonAppearTime())){
-                person.setPersonAppearTime(person.getSubImageList().getSubImageInfoObject().get(0).getShotTime());
+            if (subscribeNotificationObjectDTO.getPersonObjectList() != null) {
+                for (ViidPerson viidPerson : subscribeNotificationObjectDTO.getPersonObjectList().getPersonObject()) {
+                    this.saveViidPersonData(viidPerson);
+                }
             }
-            //存入数据库
-            viidPersonMapper.insert(person);
+            if (subscribeNotificationObjectDTO.getMotorVehicleObjectList() != null) {
+                for (ViidMotorVehicle motorVehicle : subscribeNotificationObjectDTO.getMotorVehicleObjectList().getMotorVehicleObject()) {
+                    this.saveViidMotorVehicleData(motorVehicle);
+                }
+            }
+            if (subscribeNotificationObjectDTO.getNonMotorVehicleObjectList() != null) {
+                for (ViidNonMotorVehicle nonMotorVehicle : subscribeNotificationObjectDTO.getNonMotorVehicleObjectList().getNonMotorVehicleObject()) {
+                    this.saveViidNonMotorVehicleData(nonMotorVehicle);
+                }
+            }
         }
     }
 
     private void saveSubImage(List<SubImageListDTO.SubImageInfoObjectDTO> subImageList) throws IOException {
         for (SubImageListDTO.SubImageInfoObjectDTO subImageInfoObjectDTO : subImageList) {
-            R<SysFile> saveFileResult =
-                    remoteFileService.upload(MultipartFileUtil.base64ConvertToMultipartFile(subImageInfoObjectDTO.getData(), subImageInfoObjectDTO.getImageID()));
-            if (saveFileResult.getCode() == 200) {
-                subImageInfoObjectDTO.setStoragePath(saveFileResult.getData().getUrl());
-            }
-            //原始base64是否入库
-            if (!base64StoreOrNot) {
-                subImageInfoObjectDTO.setData("");
+            if (StringUtils.isNotEmpty(subImageInfoObjectDTO.getData())) {
+                R<SysFile> saveFileResult = remoteFileService.upload(MultipartFileUtil.base64ConvertToMultipartFile(subImageInfoObjectDTO.getData(), subImageInfoObjectDTO.getImageID()));
+                if (saveFileResult.getCode() == 200) {
+                    subImageInfoObjectDTO.setStoragePath(saveFileResult.getData().getUrl());
+                }
+                //原始base64是否入库
+                if (!base64StoreOrNot) {
+                    subImageInfoObjectDTO.setData("");
+                }
             }
         }
     }
