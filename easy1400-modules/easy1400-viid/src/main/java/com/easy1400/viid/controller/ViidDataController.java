@@ -5,13 +5,11 @@ import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.easy1400.common.core.utils.StringUtils;
 import com.easy1400.common.core.web.domain.AjaxResult;
-import com.easy1400.viid.domain.ViidFace;
-import com.easy1400.viid.domain.ViidMotorVehicle;
-import com.easy1400.viid.domain.ViidNonMotorVehicle;
-import com.easy1400.viid.domain.ViidPerson;
+import com.easy1400.viid.domain.*;
 import com.easy1400.viid.domain.enums.ResponsStatusEnum;
 import com.easy1400.viid.domain.message.*;
 import com.easy1400.viid.service.*;
@@ -38,6 +36,8 @@ public class ViidDataController {
     private ViidPersonService viidPersonService;
     @Autowired
     private ViidNonMotorVehicleService viidNonMotorVehicleService;
+    @Autowired
+    private ViidApeService viidApeService;
 
 
     @GetMapping("/MotorVehicles/{page}/{rows}")
@@ -90,8 +90,8 @@ public class ViidDataController {
 
     @GetMapping("/nonMotorVehicles/{page}/{rows}")
     public AjaxResult getNonMotorVehicles(@PathVariable(value = "page") Integer page, @PathVariable(value = "rows") Integer rows,
-                               @RequestParam(value = "beginTime") String beginTime, @RequestParam(value = "endTime") String endTime,
-                               @RequestParam(value = "deviceId", required = false) String deviceId, @RequestParam(value = "NonMotorVehicleID", required = false) String NonMotorVehicleID) {
+                                          @RequestParam(value = "beginTime") String beginTime, @RequestParam(value = "endTime") String endTime,
+                                          @RequestParam(value = "deviceId", required = false) String deviceId, @RequestParam(value = "NonMotorVehicleID", required = false) String NonMotorVehicleID) {
         if (StringUtils.isNotEmpty(NonMotorVehicleID)) {
             return AjaxResult.success(viidNonMotorVehicleService.getById(NonMotorVehicleID));
         }
@@ -163,16 +163,18 @@ public class ViidDataController {
      * @return
      */
     @GetMapping("/APEs")
-    public JSONObject APEs(@RequestParam(value = "ApeID", required = false) String ApeID, @RequestParam(value = "Name", required = false) String Name) {
-        return null;
+    public ApeRequest APEs(@RequestParam(value = "ApeID", required = false) String ApeID, @RequestParam(value = "Name", required = false) String Name) {
+        ApeRequest apeRequest = new ApeRequest();
+        QueryWrapper<ViidApe> apeQueryWrapper = new QueryWrapper();
+        apeQueryWrapper.eq(StringUtils.isNotEmpty(ApeID), "ApeID", ApeID);
+        apeQueryWrapper.eq(StringUtils.isNotEmpty(Name), "Name", Name);
+        apeRequest.setAPEListObject(new ApeRequest.APEListObjectDTO(viidApeService.list(apeQueryWrapper)));
+        return apeRequest;
     }
 
 
     /**
      * /VIID/Subscribes
-     */
-
-    /**
      * 批量订阅接口
      *
      * @param body 消息体结构参考C.19，字段定义参考A.19 。

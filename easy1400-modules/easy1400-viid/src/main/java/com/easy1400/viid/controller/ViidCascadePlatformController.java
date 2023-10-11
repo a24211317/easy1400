@@ -1,7 +1,6 @@
 package com.easy1400.viid.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.easy1400.common.core.web.domain.AjaxResult;
 import com.easy1400.viid.common.util.ViidHttpUtil;
 import com.easy1400.viid.domain.ViidCascadePlatform;
@@ -56,6 +55,11 @@ public class ViidCascadePlatformController {
         return AjaxResult.error("未找到上级平台信息");
     }
 
+    /**
+     * 新增订阅通知
+     * @param viidSubscribe
+     * @return
+     */
     @PostMapping("/ViidSubscribe")
     public AjaxResult addViidSubscribe(@RequestBody ViidSubscribe viidSubscribe) {
         if (viidSubscribeService.save(viidSubscribe)) {
