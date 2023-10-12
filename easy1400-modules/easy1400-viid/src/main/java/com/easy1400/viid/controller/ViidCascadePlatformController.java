@@ -3,6 +3,7 @@ package com.easy1400.viid.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.easy1400.common.core.utils.StringUtils;
 import com.easy1400.common.core.web.domain.AjaxResult;
+import com.easy1400.common.security.utils.SecurityUtils;
 import com.easy1400.viid.common.util.ViidHttpUtil;
 import com.easy1400.viid.domain.ViidCascadePlatform;
 import com.easy1400.viid.domain.ViidSubscribe;
@@ -35,13 +36,15 @@ public class ViidCascadePlatformController {
      */
     @PostMapping("/ViidCascadePlatform")
     public AjaxResult addViidCascadePlatform(@RequestBody ViidCascadePlatform viidCascadePlatform) {
+        viidCascadePlatform.setUserId(SecurityUtils.getUserId().toString());
         return AjaxResult.success(viidCascadePlatformService.addViidCascadePlatform(viidCascadePlatform));
     }
 
-    @GetMapping("/ViidCascadePlatform/{type}")
-    public AjaxResult getViidCascadePlatform(@PathVariable String type) {
+    @GetMapping("/ViidCascadePlatform")
+    public AjaxResult getViidCascadePlatform(String type,String name) {
         LambdaQueryWrapper<ViidCascadePlatform> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(StringUtils.isNotEmpty(type), ViidCascadePlatform::getType, type);
+        queryWrapper.like(StringUtils.isNotEmpty(name), ViidCascadePlatform::getName, name);
         return AjaxResult.success(viidCascadePlatformService.list(queryWrapper));
     }
 

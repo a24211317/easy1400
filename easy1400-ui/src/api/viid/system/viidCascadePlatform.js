@@ -1,9 +1,19 @@
 import request from '@/utils/request'
 
-// 预览生成代码
-export function getViidCascadePlatforms(type) {
+// 查询级联平台
+export function getViidCascadePlatforms(data) {
     return request({
-      url: '/VIID/Platform/ViidCascadePlatform/'+type,
-      method: 'get'
+      url: '/VIID/Platform/ViidCascadePlatform',
+      method: 'get',
+      params:data
     })
   }
+
+  // 添加级联平台
+export function addViidCascadePlatforms(data) {
+  return request({
+    url: '/VIID/Platform/ViidCascadePlatform',
+    method: 'post',
+    data:data
+  })
+}

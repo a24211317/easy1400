@@ -4,6 +4,11 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -12,148 +17,82 @@ import java.util.Date;
  * @TableName viid_cascade_platform
  */
 @TableName(value ="viid_cascade_platform")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class ViidCascadePlatform implements Serializable {
+
     /**
      * 平台ID
      */
+    @TableId(type = IdType.AUTO)
+    @TableField(value = "id")
+    private String id;
+
+    /**
+     * 平台ID
+     */
+    @JsonProperty("SystemID")
     @TableField(value = "SystemID")
     private String SystemID;
 
     /**
      * 平台名称
      */
+    @JsonProperty("Name")
     @TableField(value = "Name")
     private String Name;
 
     /**
      * IP地址
      */
+    @JsonProperty("IPAddr")
     @TableField(value = "IPAddr")
     private String IPAddr;
 
     /**
      * 端口
      */
+    @JsonProperty("Port")
     @TableField(value = "Port")
     private String Port;
 
     /**
      * 是否在线
      */
+    @JsonProperty("IsOnline")
     @TableField(value = "IsOnline")
     private String IsOnline;
 
     /**
      * 最后在线时间
      */
+    @JsonProperty("LastOnlineTime")
     @TableField(value = "LastOnlineTime")
     private Date LastOnlineTime;
 
     /**
      * 级联平台类型（0上级 1下级）
      */
+    @JsonProperty("Type")
     @TableField(value = "Type")
     private String Type;
 
     /**
      * 用户ID
      */
+    @JsonProperty("UserId")
     @TableField(value = "UserId")
     private String UserId;
 
     /**
      * 密码
      */
+    @JsonProperty("Password")
     @TableField(value = "Password")
     private String Password;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 
-    public ViidCascadePlatform() {
-    }
-
-    public ViidCascadePlatform(String systemID, String name, String IPAddr, String port, String isOnline, Date lastOnlineTime, String type, String userId, String password) {
-        SystemID = systemID;
-        Name = name;
-        this.IPAddr = IPAddr;
-        Port = port;
-        IsOnline = isOnline;
-        LastOnlineTime = lastOnlineTime;
-        Type = type;
-        UserId = userId;
-        Password = password;
-    }
-
-    public String getSystemID() {
-        return SystemID;
-    }
-
-    public void setSystemID(String systemID) {
-        SystemID = systemID;
-    }
-
-    public String getName() {
-        return Name;
-    }
-
-    public void setName(String name) {
-        Name = name;
-    }
-
-    public String getIPAddr() {
-        return IPAddr;
-    }
-
-    public void setIPAddr(String IPAddr) {
-        this.IPAddr = IPAddr;
-    }
-
-    public String getPort() {
-        return Port;
-    }
-
-    public void setPort(String port) {
-        Port = port;
-    }
-
-    public String getIsOnline() {
-        return IsOnline;
-    }
-
-    public void setIsOnline(String isOnline) {
-        IsOnline = isOnline;
-    }
-
-    public Date getLastOnlineTime() {
-        return LastOnlineTime;
-    }
-
-    public void setLastOnlineTime(Date lastOnlineTime) {
-        LastOnlineTime = lastOnlineTime;
-    }
-
-    public String getType() {
-        return Type;
-    }
-
-    public void setType(String type) {
-        Type = type;
-    }
-
-    public String getUserId() {
-        return UserId;
-    }
-
-    public void setUserId(String userId) {
-        UserId = userId;
-    }
-
-    public String getPassword() {
-        return Password;
-    }
-
-    public void setPassword(String password) {
-        Password = password;
-    }
 }
