@@ -40,12 +40,41 @@ public class ViidCascadePlatformController {
         return AjaxResult.success(viidCascadePlatformService.addViidCascadePlatform(viidCascadePlatform));
     }
 
+    /**
+     * 删除上/下级平台信息
+     *
+     * @param id
+     * @return
+     */
+    @DeleteMapping("/ViidCascadePlatform/{id}")
+    public AjaxResult delViidCascadePlatform(@PathVariable String id) {
+        return AjaxResult.success(viidCascadePlatformService.removeById(id));
+
+    }
+
+    /**
+     * 查询上/下级平台信息
+     *
+     * @param type
+     * @param name
+     * @return
+     */
     @GetMapping("/ViidCascadePlatform")
-    public AjaxResult getViidCascadePlatform(String type,String name) {
+    public AjaxResult getViidCascadePlatform(String type, String name) {
         LambdaQueryWrapper<ViidCascadePlatform> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(StringUtils.isNotEmpty(type), ViidCascadePlatform::getType, type);
         queryWrapper.like(StringUtils.isNotEmpty(name), ViidCascadePlatform::getName, name);
         return AjaxResult.success(viidCascadePlatformService.list(queryWrapper));
+    }
+
+    /**
+     * 修改上/下级平台信息
+     * @param viidCascadePlatform
+     * @return
+     */
+    @PutMapping("/ViidCascadePlatform")
+    public AjaxResult updateViidCascadePlatform(@RequestBody ViidCascadePlatform viidCascadePlatform) {
+        return AjaxResult.success(viidCascadePlatformService.updateById(viidCascadePlatform));
     }
 
     /**

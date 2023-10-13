@@ -54,7 +54,11 @@
               plain
               icon="el-icon-plus"
               size="medium"
-              @click="addFormOpen = true;addForm={}"
+              @click="
+                addFormOpen = true;
+                addFormID = 0;
+                addForm = {};
+              "
               >新增</el-button
             >
           </el-col>
@@ -65,10 +69,20 @@
       <el-collapse v-model="activeNames" accordion @change="colChange">
         <el-collapse-item
           v-for="platform in viidCascadePlatformList"
-          :key="platform.SystemID"
+          :key="platform.id"
           :title="platform.Name"
-          :name="platform.SystemID"
+          :name="platform.id"
         >
+          <div slot="title" style="width: 100%">
+            <span>{{ platform.Name }}</span>
+            <div
+              style="float: right; margin-right: 30px"
+              @click.stop.prevent="openCollapse()"
+            >
+              <el-button @click="updatePlatform(platform)">修改</el-button>
+              <el-button @click="delPlatform(platform)">删除</el-button>
+            </div>
+          </div>
           <div>
             <el-descriptions class="margin-top" :column="2" border>
               <el-descriptions-item>
@@ -111,13 +125,13 @@
 
     <!-- 添加或修改用户配置对话框 -->
     <el-dialog
-      title="新增平台"
+      :title="addFormTitle"
       :visible.sync="addFormOpen"
       width="700px"
       append-to-body
     >
       <el-form
-      v-if="addFormOpen"
+        v-if="addFormOpen"
         ref="addForm"
         :rules="addFormRules"
         :model="addForm"
@@ -143,7 +157,7 @@
             <el-select v-model="addForm.Type" style="width: 100%">
               <el-option key="0" label="下级平台" value="0"> </el-option>
               <el-option key="1" label="上级平台" value="1"> </el-option>
-              <el-option key="2" label="本级平台" value="2"> </el-option>
+              <!-- <el-option key="2" label="本级平台" value="2"> </el-option> -->
             </el-select>
           </el-form-item>
         </div>
@@ -159,7 +173,9 @@
 <script>
 import {
   getViidCascadePlatforms,
-  addViidCascadePlatforms,
+  addViidCascadePlatform,
+  delViidCascadePlatform,
+  updateViidCascadePlatform,
 } from "@/api/viid/system/viidCascadePlatform";
 import { getToken } from "@/utils/auth";
 
@@ -199,6 +215,9 @@ export default {
         type: "",
         name: "",
       },
+      addFormTitle: "",
+      addFormID: "",
+
       addForm: {
         SystemID: "",
         Name: "",
@@ -206,6 +225,7 @@ export default {
         Port: "",
         Type: "",
         Password: "",
+        id: "",
       },
       addFormRules: {
         SystemID: [
@@ -233,6 +253,9 @@ export default {
   },
   computed: {},
   watch: {},
+  stopCollapse(e) {
+    return e.stopPropagation();
+  },
   created() {
     this.getViidCascadePlatforms();
   },
@@ -253,17 +276,56 @@ export default {
     },
     addPlatformSubmit() {
       var _this = this;
+      this.addFormTitle = "新增平台";
       this.$refs["addForm"].validate((valid) => {
         if (valid) {
-          addViidCascadePlatforms(_this.addForm).then((response) => {
-            if (response.data == true) {
-              _this.$modal.msgSuccess("新增成功");
-              _this.addFormOpen = false;
-              _this.getViidCascadePlatforms();
-            }
-          });
+          if (_this.addFormID == 1) {
+            updateViidCascadePlatform(_this.addForm).then((response) => {
+              if (response.data == true) {
+                _this.$modal.msgSuccess("修改成功");
+                _this.addFormOpen = false;
+                _this.getViidCascadePlatforms();
+              }
+            });
+          } else {
+            addViidCascadePlatform(_this.addForm).then((response) => {
+              if (response.data == true) {
+                _this.$modal.msgSuccess("新增成功");
+                _this.addFormOpen = false;
+                _this.getViidCascadePlatforms();
+              }
+            });
+          }
         }
       });
+    },
+    delPlatform(platform) {
+      if (platform.Type == 2) {
+        this.$modal.msgError("本级视图库禁止删除！");
+      } else {
+        this.$modal
+          .confirm("删除不可恢复,确认删除吗？")
+          .then(function () {
+            return delViidCascadePlatform(platform.id);
+          })
+          .then(() => {
+            this.getViidCascadePlatforms();
+            this.$modal.msgSuccess("删除成功");
+          })
+          .catch(() => {});
+      }
+    },
+    updatePlatform(platform) {
+      this.addFormTitle = "修改平台";
+      this.addFormID = 1;
+      this.addForm.SystemID = platform.SystemID;
+      this.addForm.Name = platform.Name;
+      this.addForm.IPAddr = platform.IPAddr;
+      this.addForm.Port = platform.Port;
+      this.addForm.Type = platform.Type;
+      this.addForm.Password = platform.Password;
+      this.addForm.id = platform.id;
+      this.addFormOpen = true;
     },
   },
 };
