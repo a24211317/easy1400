@@ -1,10 +1,5 @@
 package com.easy1400.viid.common.util;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONUtil;
@@ -19,6 +14,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 1400调用上级接口
@@ -44,9 +43,9 @@ public class ViidHttpUtil {
      * @param viidCascadePlatform
      * @return
      */
-    public String registerSend(ViidCascadePlatform viidCascadePlatform) {
+    public String registerSend(ViidCascadePlatform viidCascadePlatform,ViidCascadePlatform bJPlatform) {
         RegisterRequest registerRequest = new RegisterRequest();
-        registerRequest.setDeviceID(viidCascadePlatform.getUserId());
+        registerRequest.setDeviceID(bJPlatform.getSystemID());
         //第一次注册 得到注册信息
         HttpResponse execute = HttpRequest.post("http://" + viidCascadePlatform.getIPAddr() + ":" + viidCascadePlatform.getPort() + "/VIID/System/Register")
                 .body(JSONUtil.toJsonStr(registerRequest))
@@ -59,11 +58,13 @@ public class ViidHttpUtil {
             try {
                 //解析授权信息
                 authorization = RegisterAuthUtil.getAuthorization(
-                        strings, "/VIID/System/Register", viidCascadePlatform.getUserId(), viidCascadePlatform.getPassword(),
+                        strings, "/VIID/System/Register", bJPlatform.getPassword(), bJPlatform.getPassword(),
                         "POST", ncCountMap.getInteger(viidCascadePlatform.getSystemID()));
                 //再次注册 注册成功会的到200OK
+
                 HttpResponse https = HttpRequest.post("http://" + viidCascadePlatform.getIPAddr() + ":" + viidCascadePlatform.getPort() + "/VIID/System/Register")
                         .header("authorization", authorization)
+                        .contentType("application/VIID+JSON")
                         .body(JSONUtil.toJsonStr(registerRequest))
                         .execute();
                 boolean ok = https.isOk();
@@ -95,9 +96,10 @@ public class ViidHttpUtil {
      * @return
      */
     public Map KeepaliveSend(ViidCascadePlatform viidCascadePlatform) {
+        log.info("viidCascadePlatform    {}", JSON.toJSONString(viidCascadePlatform));
+
         KeepaliveRequest keepaliveRequest = new KeepaliveRequest();
         keepaliveRequest.setDeviceID(viidCascadePlatform.getUserId());
-
         HttpRequest.post("http://" + viidCascadePlatform.getIPAddr() + ":" + viidCascadePlatform.getPort() + "/VIID/System/Keepalive")
                 .body(JSONUtil.toJsonStr(keepaliveRequest))
                 .header("User-Identify", viidCascadePlatform.getSystemID())

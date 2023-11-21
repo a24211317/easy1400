@@ -14,6 +14,7 @@ public class KeepaliveRequest {
     }
 
     public KeepaliveRequest() {
+        keepaliveObject = new KeepaliveObject();
     }
 
     public KeepaliveObject getKeepaliveObject() {

@@ -101,10 +101,10 @@
                 <template slot="label"> 系统端口 </template>
                 {{ platform.Port }}
               </el-descriptions-item>
-              <!-- <el-descriptions-item>
-                <template slot="label"> 用户名 </template>
-                {{ platform.userId }}
-              </el-descriptions-item> -->
+              <el-descriptions-item>
+                <template slot="label"> 注册ID </template>
+                {{ platform.UserId }}
+              </el-descriptions-item>
               <el-descriptions-item>
                 <template slot="label"> 密码 </template>
                 {{ platform.Password }}
@@ -152,6 +152,9 @@
           </el-form-item>
           <el-form-item label="密码" prop="Password">
             <el-input v-model="addForm.Password"></el-input>
+          </el-form-item>
+          <el-form-item label="注册ID" prop="UserId">
+            <el-input v-model="addForm.UserId"></el-input>
           </el-form-item>
           <el-form-item label="平台类型" prop="Type">
             <el-select v-model="addForm.Type" style="width: 100%">
@@ -226,6 +229,7 @@ export default {
         Type: "",
         Password: "",
         id: "",
+        UserId: "",
       },
       addFormRules: {
         SystemID: [
@@ -247,6 +251,9 @@ export default {
         ],
         Password: [
           { required: true, message: "平台密码不能为空", trigger: "blur" },
+        ],
+        UserId: [
+          { required: true, message: "注册ID不能为空", trigger: "blur" },
         ],
       },
     };
@@ -325,6 +332,7 @@ export default {
       this.addForm.Type = platform.Type;
       this.addForm.Password = platform.Password;
       this.addForm.id = platform.id;
+            this.addForm.UserId = platform.UserId;
       this.addFormOpen = true;
     },
   },

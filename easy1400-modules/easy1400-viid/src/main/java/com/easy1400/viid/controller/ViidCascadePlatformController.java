@@ -69,6 +69,7 @@ public class ViidCascadePlatformController {
 
     /**
      * 修改上/下级平台信息
+     *
      * @param viidCascadePlatform
      * @return
      */
@@ -87,10 +88,13 @@ public class ViidCascadePlatformController {
     public AjaxResult registerSend(String systemid) {
         LambdaQueryWrapper<ViidCascadePlatform> queryWrapper = new LambdaQueryWrapper();
         queryWrapper.eq(ViidCascadePlatform::getSystemID, systemid);
-        queryWrapper.eq(ViidCascadePlatform::getType, "0");
+        queryWrapper.eq(ViidCascadePlatform::getType, "1");
         ViidCascadePlatform viidCascadePlatform = viidCascadePlatformService.getOne(queryWrapper);
+        queryWrapper = new LambdaQueryWrapper();
+        queryWrapper.eq(ViidCascadePlatform::getType, "2");
+        ViidCascadePlatform bJPlatform = viidCascadePlatformService.getOne(queryWrapper);
         if (viidCascadePlatform != null) {
-            return AjaxResult.success(viidHttpUtil.registerSend(viidCascadePlatform));
+            return AjaxResult.success(viidHttpUtil.registerSend(viidCascadePlatform, bJPlatform));
         }
         return AjaxResult.error("未找到上级平台信息");
     }
