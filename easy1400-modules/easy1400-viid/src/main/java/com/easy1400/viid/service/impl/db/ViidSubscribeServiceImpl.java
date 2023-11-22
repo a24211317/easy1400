@@ -22,7 +22,6 @@ public class ViidSubscribeServiceImpl extends ServiceImpl<ViidSubscribeMapper, V
 
     @Override
     public String add(ViidSubscribe subscribe, ViidCascadePlatform viidCascadePlatform) {
-        //TODO 订阅消息发送
         return viidHttpUtil.subscribeSend(subscribe, viidCascadePlatform);
     }
 }

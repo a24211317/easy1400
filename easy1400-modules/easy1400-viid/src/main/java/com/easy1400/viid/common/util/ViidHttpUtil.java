@@ -43,9 +43,9 @@ public class ViidHttpUtil {
      * @param viidCascadePlatform
      * @return
      */
-    public String registerSend(ViidCascadePlatform viidCascadePlatform,ViidCascadePlatform bJPlatform) {
+    public boolean registerSend(ViidCascadePlatform viidCascadePlatform) {
         RegisterRequest registerRequest = new RegisterRequest();
-        registerRequest.setDeviceID(bJPlatform.getSystemID());
+        registerRequest.setDeviceID(viidCascadePlatform.getUserId());
         //第一次注册 得到注册信息
         HttpResponse execute = HttpRequest.post("http://" + viidCascadePlatform.getIPAddr() + ":" + viidCascadePlatform.getPort() + "/VIID/System/Register")
                 .body(JSONUtil.toJsonStr(registerRequest))
@@ -58,7 +58,7 @@ public class ViidHttpUtil {
             try {
                 //解析授权信息
                 authorization = RegisterAuthUtil.getAuthorization(
-                        strings, "/VIID/System/Register", bJPlatform.getPassword(), bJPlatform.getPassword(),
+                        strings, "/VIID/System/Register", viidCascadePlatform.getPassword(), viidCascadePlatform.getPassword(),
                         "POST", ncCountMap.getInteger(viidCascadePlatform.getSystemID()));
                 //再次注册 注册成功会的到200OK
 
@@ -73,20 +73,23 @@ public class ViidHttpUtil {
                     ncCountMap.put(viidCascadePlatform.getSystemID(), 1);
                     String keepaliveTaskKey = DynamicTask.KEEPALIVE_KEY_PREFIX + viidCascadePlatform.getSystemID();
                     if (!dynamicTask.contains(DynamicTask.KEEPALIVE_KEY_PREFIX + viidCascadePlatform.getSystemID())) {
-                        dynamicTask.startCron(keepaliveTaskKey,
-                                () -> {
-                                    this.KeepaliveSend(viidCascadePlatform);
-                                    //30秒一次
-                                }, 1000 * 30);
+                        dynamicTask.startCron(keepaliveTaskKey, () -> {
+                            if (!this.KeepaliveSend(viidCascadePlatform)){
+                                dynamicTask.stop(keepaliveTaskKey);
+                                this.registerSend(viidCascadePlatform);
+                            } ;
+                            //30秒一次
+                        }, 1000 * 30);
                     }
-                    return "success";
+                    return true;
                 }
+                log.error("[平台注册 ] 向上级平台注册失败,响应信息为 {}", https.body());
                 ncCountMap.put(viidCascadePlatform.getSystemID(), ncCountMap.getInteger(viidCascadePlatform.getSystemID()) + 1);
             } catch (IOException e) {
                 log.error("[平台注册 ] 向上级平台注册失败,上级平台编号为 {}", viidCascadePlatform.getSystemID());
             }
         }
-        return "faild";
+        return false;
     }
 
     /**
@@ -95,19 +98,17 @@ public class ViidHttpUtil {
      * @param viidCascadePlatform
      * @return
      */
-    public Map KeepaliveSend(ViidCascadePlatform viidCascadePlatform) {
+    public boolean KeepaliveSend(ViidCascadePlatform viidCascadePlatform) {
         log.info("viidCascadePlatform    {}", JSON.toJSONString(viidCascadePlatform));
-
         KeepaliveRequest keepaliveRequest = new KeepaliveRequest();
         keepaliveRequest.setDeviceID(viidCascadePlatform.getUserId());
-        HttpRequest.post("http://" + viidCascadePlatform.getIPAddr() + ":" + viidCascadePlatform.getPort() + "/VIID/System/Keepalive")
+        HttpResponse response = HttpRequest.post("http://" + viidCascadePlatform.getIPAddr() + ":" + viidCascadePlatform.getPort() + "/VIID/System/Keepalive")
                 .body(JSONUtil.toJsonStr(keepaliveRequest))
                 .header("User-Identify", viidCascadePlatform.getSystemID())
                 .contentType("application/VIID+JSON")
                 .execute();
         //弱校验 暂时不判断是否有效
-        //TODO 判断心跳失效后重新注册
-        return null;
+        return response.isOk();
     }
 
     /**

@@ -90,11 +90,11 @@ public class ViidCascadePlatformController {
         queryWrapper.eq(ViidCascadePlatform::getSystemID, systemid);
         queryWrapper.eq(ViidCascadePlatform::getType, "1");
         ViidCascadePlatform viidCascadePlatform = viidCascadePlatformService.getOne(queryWrapper);
-        queryWrapper = new LambdaQueryWrapper();
-        queryWrapper.eq(ViidCascadePlatform::getType, "2");
-        ViidCascadePlatform bJPlatform = viidCascadePlatformService.getOne(queryWrapper);
         if (viidCascadePlatform != null) {
-            return AjaxResult.success(viidHttpUtil.registerSend(viidCascadePlatform, bJPlatform));
+            if (viidHttpUtil.registerSend(viidCascadePlatform)) {
+                return AjaxResult.success();
+            }
+            return AjaxResult.error("注册时发生错误");
         }
         return AjaxResult.error("未找到上级平台信息");
     }
