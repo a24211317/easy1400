@@ -7,24 +7,25 @@
           :model="formData"
           :rules="rules"
           size="medium"
-          label-width="85px"
+          label-width="auto"
+          label-position="left"
         >
           <el-col :span="4">
             <el-form-item label="车牌号" prop="plateNo">
               <el-input
                 v-model="formData.plateNo"
                 clearable
-                :style="{ width: '90%' }"
+                :style="{ width: '99%' }"
               >
               </el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="4">
+          <el-col :span="6">
             <el-form-item label="设备ID" prop="deviceId">
               <el-input
                 v-model="formData.deviceId"
                 clearable
-                :style="{ width: '90%' }"
+                :style="{ width: '99%' }"
               >
               </el-input>
             </el-form-item>
@@ -34,12 +35,12 @@
               <el-input
                 v-model="formData.motorVehicleID"
                 clearable
-                :style="{ width: '90%' }"
+                :style="{ width: '99%' }"
               >
               </el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="9">
+          <el-col :span="8">
             <el-form-item label="时间范围" prop="timeArr">
               <el-date-picker
                 @change="changeQueryTime($event)"
@@ -48,7 +49,7 @@
                 is-range
                 format="yyyy-MM-dd HH:mm:ss"
                 value-format="yyyy-MM-dd HH:mm:ss"
-                :style="{ width: '100%' }"
+                :style="{ width: '95%' }"
                 start-placeholder="开始时间"
                 end-placeholder="结束时间"
                 range-separator="至"
@@ -83,7 +84,7 @@
               v-for="imgObj in motorVehicle.SubImageList.SubImageInfoObject"
               :key="imgObj.ImageID"
             >
-              <el-image 
+              <el-image
                 class="motorVehicle_img"
                 v-if="imgObj.Type == 14"
                 :src="imgObj.StoragePath"
@@ -267,13 +268,11 @@ export default {
 .motorVehicle_img {
   margin: 1%;
   width: 98%;
-      height: 16rem;
-
+  height: 16rem;
 }
 .motorVehicle-data-col {
   margin-bottom: 20px;
   border-radius: 4px;
-
 }
 .bg-purple-dark {
   background: #99a9bf;

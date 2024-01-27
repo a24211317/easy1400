@@ -7,26 +7,27 @@
           :model="formData"
           :rules="rules"
           size="medium"
-          label-width="85px"
+          label-width="auto"
+          label-position="left"
         >
           <el-col :span="4">
           </el-col>
-          <el-col :span="4">
+          <el-col :span="6">
             <el-form-item label="设备ID" prop="deviceId">
               <el-input
                 v-model="formData.deviceId"
                 clearable
-                :style="{ width: '90%' }"
+                :style="{ width: '99%' }"
               >
               </el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="4">
-            <el-form-item label="人脸ID" prop="personID">
+          <el-col :span="7">
+            <el-form-item label="人员ID" prop="personID">
               <el-input
                 v-model="formData.personID"
                 clearable
-                :style="{ width: '90%' }"
+                :style="{ width: '99%' }"
               >
               </el-input>
             </el-form-item>

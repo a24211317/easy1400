@@ -7,34 +7,35 @@
           :model="formData"
           :rules="rules"
           size="medium"
-          label-width="85px"
+          label-width="auto"
+          label-position="left"
         >
-          <el-col :span="4">
+          <!-- <el-col :span="4">
             <el-form-item label="车牌号" prop="plateNo">
               <el-input
                 v-model="formData.plateNo"
                 clearable
-                :style="{ width: '90%' }"
+                :style="{ width: '99%' }"
               >
               </el-input>
             </el-form-item>
-          </el-col>
-          <el-col :span="4">
+          </el-col> -->
+          <el-col :span="6">
             <el-form-item label="设备ID" prop="deviceId">
               <el-input
                 v-model="formData.deviceId"
                 clearable
-                :style="{ width: '90%' }"
+                :style="{ width: '99%' }"
               >
               </el-input>
             </el-form-item>
           </el-col>
           <el-col :span="4">
-            <el-form-item label="车辆ID" prop="nonMotorVehicleID">
+            <el-form-item label="非机动车ID" prop="nonMotorVehicleID">
               <el-input
                 v-model="formData.nonMotorVehicleID"
                 clearable
-                :style="{ width: '90%' }"
+                :style="{ width: '99%' }"
               >
               </el-input>
             </el-form-item>
@@ -83,7 +84,7 @@
               v-for="imgObj in nonMotorVehicle.SubImageList.SubImageInfoObject"
               :key="imgObj.ImageID"
             >
-              <el-image 
+              <el-image
                 class="nonMotorVehicle_img"
                 v-if="imgObj.Type == 14"
                 :src="imgObj.StoragePath"
@@ -267,13 +268,11 @@ export default {
 .nonMotorVehicle_img {
   margin: 1%;
   width: 98%;
-      height: 16rem;
-
+  height: 16rem;
 }
 .nonMotorVehicle-data-col {
   margin-bottom: 20px;
   border-radius: 4px;
-
 }
 .bg-purple-dark {
   background: #99a9bf;

@@ -8,7 +8,7 @@
           size="medium"
           label-width="85px"
         >
-          <el-col :span="3">
+          <el-col :span="5">
             <el-form-item label="平台类型" prop="type">
               <el-select v-model="formData.type" placeholder="请选择">
                 <el-option key="0" label="下级平台" value="0"> </el-option>
@@ -56,6 +56,7 @@
               size="medium"
               @click="
                 addFormOpen = true;
+                addFormTitle=`新增平台`;
                 addFormID = 0;
                 addForm = {};
               "
@@ -77,8 +78,8 @@
             <span>{{ platform.Name }}</span>
             <div
               style="float: right; margin-right: 30px"
-              @click.stop.prevent="openCollapse()"
             >
+            <!--               @click.stop.prevent="openCollapse()" -->
               <el-button @click="updatePlatform(platform)">修改</el-button>
               <el-button @click="delPlatform(platform)">删除</el-button>
             </div>
@@ -92,6 +93,10 @@
               <el-descriptions-item>
                 <template slot="label"> 系统名称 </template>
                 {{ platform.Name }}
+              </el-descriptions-item>
+              <el-descriptions-item>
+                <template slot="label"> 系统类型 </template>
+                {{ platform.Type==0?"下级平台":platform.Type==1?"上级平台":"本级平台" }}
               </el-descriptions-item>
               <el-descriptions-item>
                 <template slot="label"> 系统IP </template>
@@ -160,7 +165,7 @@
             <el-select v-model="addForm.Type" style="width: 100%">
               <el-option key="0" label="下级平台" value="0"> </el-option>
               <el-option key="1" label="上级平台" value="1"> </el-option>
-              <!-- <el-option key="2" label="本级平台" value="2"> </el-option> -->
+              <el-option key="2" label="本级平台" value="2"> </el-option>
             </el-select>
           </el-form-item>
         </div>
@@ -332,7 +337,7 @@ export default {
       this.addForm.Type = platform.Type;
       this.addForm.Password = platform.Password;
       this.addForm.id = platform.id;
-            this.addForm.UserId = platform.UserId;
+      this.addForm.UserId = platform.UserId;
       this.addFormOpen = true;
     },
   },
