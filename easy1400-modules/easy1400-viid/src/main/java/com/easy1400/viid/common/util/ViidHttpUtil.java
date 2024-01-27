@@ -74,10 +74,11 @@ public class ViidHttpUtil {
                     String keepaliveTaskKey = DynamicTask.KEEPALIVE_KEY_PREFIX + viidCascadePlatform.getSystemID();
                     if (!dynamicTask.contains(DynamicTask.KEEPALIVE_KEY_PREFIX + viidCascadePlatform.getSystemID())) {
                         dynamicTask.startCron(keepaliveTaskKey, () -> {
-                            if (!this.KeepaliveSend(viidCascadePlatform)){
+                            if (!this.KeepaliveSend(viidCascadePlatform)) {
                                 dynamicTask.stop(keepaliveTaskKey);
                                 this.registerSend(viidCascadePlatform);
-                            } ;
+                            }
+                            ;
                             //30秒一次
                         }, 1000 * 30);
                     }
@@ -115,9 +116,13 @@ public class ViidHttpUtil {
      * 向上级发送注册
      */
     public String subscribeSend(ViidSubscribe subscribe, ViidCascadePlatform viidCascadePlatform) {
-
+        JSONObject subscribeObj = JSON.parseObject(JSONUtil.toJsonStr(subscribe));
+        subscribeObj.remove("SubscribeType");
+        subscribeObj.remove("ApprovalStatus");
+        subscribeObj.remove("ApprovalUser");
+        subscribeObj.remove("ApprovalTime");
         return HttpRequest.post("http://" + viidCascadePlatform.getIPAddr() + ":" + viidCascadePlatform.getPort() + "/VIID/System/Subscribe")
-                .body(JSONUtil.toJsonStr(subscribe))
+                .body(subscribeObj.toJSONString())
                 .contentType("application/VIID+JSON")
                 .execute().body();
     }
