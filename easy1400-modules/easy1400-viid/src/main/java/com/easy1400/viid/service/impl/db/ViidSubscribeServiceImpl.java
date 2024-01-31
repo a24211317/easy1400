@@ -22,7 +22,11 @@ public class ViidSubscribeServiceImpl extends ServiceImpl<ViidSubscribeMapper, V
 
     @Override
     public String add(ViidSubscribe subscribe, ViidCascadePlatform viidCascadePlatform) {
-        return viidHttpUtil.subscribeSend(subscribe, viidCascadePlatform);
+        try {
+            return viidHttpUtil.subscribeSend(subscribe, viidCascadePlatform);
+        } catch (Exception e) {
+            return "send error";
+        }
     }
 }
 

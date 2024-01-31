@@ -12,6 +12,7 @@
         ReportInterval,Reason,OperateType,
         SubscribeStatus,SubscribeCancOrg,SubscribeCancelPerson,
         CancelTime,CancelReason,SubscribeType,
-        ApprovalStatus,ApprovalUser,ApprovalTime
+        ApprovalStatus,ApprovalUser,ApprovalTime,ResultFeatureDeclare,
+        TabID,ResultImageDeclare,SubscriberSendOrgID,SubscriberRecoverOrgID,ResourceClass
     </sql>
 </mapper>

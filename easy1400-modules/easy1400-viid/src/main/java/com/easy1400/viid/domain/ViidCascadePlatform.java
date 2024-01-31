@@ -23,7 +23,7 @@ import java.util.Date;
 public class ViidCascadePlatform implements Serializable {
 
     /**
-     * 平台ID
+     * ID
      */
     @TableId(type = IdType.AUTO)
     @TableField(value = "id")

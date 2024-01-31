@@ -7,31 +7,31 @@ package com.easy1400.viid.domain.message;
  * @Version 1.0
  */
 public class KeepaliveRequest {
-    private KeepaliveObject keepaliveObject;
+    private KeepaliveObject KeepaliveObject;
 
     public KeepaliveRequest(KeepaliveObject keepaliveObject) {
-        this.keepaliveObject = keepaliveObject;
+        this.KeepaliveObject = keepaliveObject;
     }
 
     public KeepaliveRequest() {
-        keepaliveObject = new KeepaliveObject();
+        KeepaliveObject = new KeepaliveObject();
     }
 
     public KeepaliveObject getKeepaliveObject() {
-        return keepaliveObject;
+        return KeepaliveObject;
     }
 
     public void setKeepaliveObject(KeepaliveObject keepaliveObject) {
-        this.keepaliveObject = keepaliveObject;
+        this.KeepaliveObject = keepaliveObject;
     }
 
 
     public String getDeviceID() {
-        return keepaliveObject.getDeviceID();
+        return KeepaliveObject.getDeviceID();
     }
 
     public void setDeviceID(String deviceID) {
-        keepaliveObject.setDeviceID(deviceID);
+        KeepaliveObject.setDeviceID(deviceID);
     }
 
     static class KeepaliveObject {

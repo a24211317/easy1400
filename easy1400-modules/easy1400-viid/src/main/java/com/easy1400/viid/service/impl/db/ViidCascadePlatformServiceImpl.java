@@ -25,7 +25,7 @@ public class ViidCascadePlatformServiceImpl extends ServiceImpl<ViidCascadePlatf
         //先保存数据入库
         Boolean hasSave = this.save(viidCascadePlatform);
         //如果添加的平台为上级平台 则需要向上级平台注册
-        if (viidCascadePlatform.getType().equals("0")) {
+        if (viidCascadePlatform.getType().equals("1")) {
             viidHttpUtil.registerSend(viidCascadePlatform);
         }
         return hasSave;

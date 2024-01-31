@@ -12,6 +12,8 @@ import com.easy1400.viid.service.ViidSubscribeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @ClassName ViidCascadePlatformController
  * @Author CH
@@ -106,15 +108,31 @@ public class ViidCascadePlatformController {
      * @return
      */
     @PostMapping("/ViidSubscribe")
-    public AjaxResult addViidSubscribe(@RequestBody ViidSubscribe viidSubscribe) {
-        if (viidSubscribeService.save(viidSubscribe)) {
-            switch (viidSubscribe.getSubscribeType()) {
-                //订阅上级需要像上级发送通知
-                case "0":
-                    ViidCascadePlatform viidCascadePlatform = viidCascadePlatformService.getById(viidSubscribe.getResourceURI());
-                    return AjaxResult.success(viidSubscribeService.add(viidSubscribe, viidCascadePlatform));
+    public AjaxResult addViidSubscribe(@RequestBody ViidSubscribe viidSubscribe, HttpServletRequest request) {
+        LambdaQueryWrapper<ViidCascadePlatform> viidCascadePlatformQueryWrapper=new LambdaQueryWrapper<>();
+        viidCascadePlatformQueryWrapper.eq(ViidCascadePlatform::getSystemID,viidSubscribe.getResourceURI());
+        ViidCascadePlatform viidCascadePlatform = viidCascadePlatformService.getOne(viidCascadePlatformQueryWrapper);
+        String UserIdentify = request.getHeader("User-Identify");
+        if (viidSubscribeService != null) {
+
+            //被订阅
+            if (StringUtils.isNotEmpty(UserIdentify)) {
+                viidSubscribe.setSubscriberSendOrgID(UserIdentify);
+                viidSubscribe.setSubscriberRecoverOrgID(viidCascadePlatform.getSystemID());
+            }else {
+                viidSubscribe.setSubscriberSendOrgID(viidCascadePlatform.getSystemID());
+                viidSubscribe.setSubscriberRecoverOrgID(UserIdentify);
             }
-            return AjaxResult.success("save success");
+            if (viidSubscribeService.save(viidSubscribe)) {
+                switch (viidSubscribe.getSubscribeType()) {
+                    //订阅上级需要像上级发送通知
+                    case "0":
+                        return AjaxResult.success(viidSubscribeService.add(viidSubscribe, viidCascadePlatform));
+                }
+                return AjaxResult.success("save success");
+            }
+        } else {
+            return AjaxResult.error("404", "platform not found");
         }
         return AjaxResult.error("500", "save error");
     }

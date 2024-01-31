@@ -4,6 +4,7 @@ import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.easy1400.viid.common.conf.DynamicTask;
 import com.easy1400.viid.domain.ViidCascadePlatform;
@@ -78,7 +79,6 @@ public class ViidHttpUtil {
                                 dynamicTask.stop(keepaliveTaskKey);
                                 this.registerSend(viidCascadePlatform);
                             }
-                            ;
                             //30秒一次
                         }, 1000 * 30);
                     }
@@ -105,7 +105,7 @@ public class ViidHttpUtil {
         keepaliveRequest.setDeviceID(viidCascadePlatform.getUserId());
         HttpResponse response = HttpRequest.post("http://" + viidCascadePlatform.getIPAddr() + ":" + viidCascadePlatform.getPort() + "/VIID/System/Keepalive")
                 .body(JSONUtil.toJsonStr(keepaliveRequest))
-                .header("User-Identify", viidCascadePlatform.getSystemID())
+                .header("User-Identify", viidCascadePlatform.getUserId())
                 .contentType("application/VIID+JSON")
                 .execute();
         //弱校验 暂时不判断是否有效
@@ -115,14 +115,27 @@ public class ViidHttpUtil {
     /**
      * 向上级发送注册
      */
-    public String subscribeSend(ViidSubscribe subscribe, ViidCascadePlatform viidCascadePlatform) {
+    public String subscribeSend(ViidSubscribe subscribe, ViidCascadePlatform viidCascadePlatform)throws Exception {
+
+        JSONObject SnedData=new JSONObject();
+        JSONObject SubscribeListObject=new JSONObject();
+        JSONArray SubscribeObject=new JSONArray();
         JSONObject subscribeObj = JSON.parseObject(JSONUtil.toJsonStr(subscribe));
         subscribeObj.remove("SubscribeType");
         subscribeObj.remove("ApprovalStatus");
         subscribeObj.remove("ApprovalUser");
         subscribeObj.remove("ApprovalTime");
-        return HttpRequest.post("http://" + viidCascadePlatform.getIPAddr() + ":" + viidCascadePlatform.getPort() + "/VIID/System/Subscribe")
-                .body(subscribeObj.toJSONString())
+        subscribeObj.remove("SubscribeStatus");
+        subscribeObj.remove("SubscriberSendOrgID");
+        subscribeObj.remove("SubscriberRecoverOrgID");
+        SubscribeObject.add(subscribeObj);
+        SubscribeListObject.put("SubscribeObject",SubscribeObject);
+        SnedData.put("SubscribeListObject",SubscribeListObject);
+        log.info(SnedData.toJSONString());
+        log.info(JSONUtil.toJsonStr(viidCascadePlatform));
+        return HttpRequest.post("http://" + viidCascadePlatform.getIPAddr() + ":" + viidCascadePlatform.getPort() + "/VIID/Subscribes")
+                .header("User-Identify", viidCascadePlatform.getUserId())
+                .body(SnedData.toJSONString())
                 .contentType("application/VIID+JSON")
                 .execute().body();
     }
