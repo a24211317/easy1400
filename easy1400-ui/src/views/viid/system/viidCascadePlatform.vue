@@ -2,12 +2,7 @@
   <div class="app-container">
     <div>
       <el-row :gutter="12">
-        <el-form
-          ref="elForm"
-          :model="formData"
-          size="medium"
-          label-width="85px"
-        >
+        <el-form ref="elForm" :model="formData" size="medium" label-width="85px">
           <el-col :span="5">
             <el-form-item label="平台类型" prop="type">
               <el-select v-model="formData.type" placeholder="请选择">
@@ -25,23 +20,14 @@
           </el-col>
           <el-col :span="3">
             <el-form-item label="平台名称" prop="name">
-              <el-input
-                v-model="formData.name"
-                clearable
-                :style="{ width: '90%' }"
-              >
+              <el-input v-model="formData.name" clearable :style="{ width: '90%' }">
               </el-input>
             </el-form-item>
           </el-col>
 
           <el-col :span="1">
             <el-form-item label-width="1px">
-              <el-button
-                type="primary"
-                icon="el-icon-search"
-                size="medium"
-                @click="submitForm"
-              >
+              <el-button type="primary" icon="el-icon-search" size="medium" @click="submitForm">
                 查询
               </el-button>
             </el-form-item>
@@ -49,37 +35,24 @@
         </el-form>
         <div style="float: right">
           <el-col :span="1.5">
-            <el-button
-              type="primary"
-              plain
-              icon="el-icon-plus"
-              size="medium"
-              @click="
-                addFormOpen = true;
-                addFormTitle=`新增平台`;
-                addFormID = 0;
-                addForm = {};
-              "
-              >新增</el-button
-            >
+            <el-button type="primary" plain icon="el-icon-plus" size="medium" @click="
+              addFormOpen = true;
+            addFormTitle = `新增平台`;
+            addFormID = 0;
+            addForm = {};
+            ">新增</el-button>
           </el-col>
         </div>
       </el-row>
     </div>
     <div>
       <el-collapse v-model="activeNames" accordion @change="colChange">
-        <el-collapse-item
-          v-for="platform in viidCascadePlatformList"
-          :key="platform.id"
-          :title="platform.Name"
-          :name="platform.id"
-        >
+        <el-collapse-item v-for="platform in viidCascadePlatformList" :key="platform.id" :title="platform.Name"
+          :name="platform.id">
           <div slot="title" style="width: 100%">
             <span>{{ platform.Name }}</span>
-            <div
-              style="float: right; margin-right: 30px"
-            >
-            <!--               @click.stop.prevent="openCollapse()" -->
+            <div style="float: right; margin-right: 30px">
+              <!--               @click.stop.prevent="openCollapse()" -->
               <el-button @click="updatePlatform(platform)">修改</el-button>
               <el-button @click="delPlatform(platform)">删除</el-button>
             </div>
@@ -96,7 +69,7 @@
               </el-descriptions-item>
               <el-descriptions-item>
                 <template slot="label"> 系统类型 </template>
-                {{ platform.Type==0?"下级平台":platform.Type==1?"上级平台":"本级平台" }}
+                {{ platform.Type == 0 ? "下级平台" : platform.Type == 1 ? "上级平台" : "本级平台" }}
               </el-descriptions-item>
               <el-descriptions-item>
                 <template slot="label"> 系统IP </template>
@@ -129,19 +102,8 @@
     </div>
 
     <!-- 添加或修改用户配置对话框 -->
-    <el-dialog
-      :title="addFormTitle"
-      :visible.sync="addFormOpen"
-      width="700px"
-      append-to-body
-    >
-      <el-form
-        v-if="addFormOpen"
-        ref="addForm"
-        :rules="addFormRules"
-        :model="addForm"
-        label-width="80px"
-      >
+    <el-dialog :title="addFormTitle" :visible.sync="addFormOpen" width="700px" append-to-body>
+      <el-form v-if="addFormOpen" ref="addForm" :rules="addFormRules" :model="addForm" label-width="80px">
         <div>
           <el-form-item label="系统编码" prop="SystemID">
             <el-input v-model="addForm.SystemID"></el-input>
@@ -179,12 +141,7 @@
 </template>
 
 <script>
-import {
-  getViidCascadePlatforms,
-  addViidCascadePlatform,
-  delViidCascadePlatform,
-  updateViidCascadePlatform,
-} from "@/api/viid/system/viidCascadePlatform";
+import { getViidCascadePlatforms, addViidCascadePlatform, delViidCascadePlatform, updateViidCascadePlatform, } from "@/api/viid/system/viidCascadePlatform";
 import { getToken } from "@/utils/auth";
 
 export default {
@@ -271,7 +228,7 @@ export default {
   created() {
     this.getViidCascadePlatforms();
   },
-  mounted() {},
+  mounted() { },
   methods: {
     getViidCascadePlatforms() {
       var _this = this;
@@ -324,7 +281,7 @@ export default {
             this.getViidCascadePlatforms();
             this.$modal.msgSuccess("删除成功");
           })
-          .catch(() => {});
+          .catch(() => { });
       }
     },
     updatePlatform(platform) {
@@ -347,12 +304,15 @@ export default {
 .el-collapse-item__content {
   padding: 0;
 }
+
 .el-collapse-item__header {
   padding: 2rem;
 }
+
 .el-collapse-item__header.is-active {
   background: #01a3b0;
 }
+
 .face-data-col-text {
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -360,34 +320,41 @@ export default {
   width: 100%;
   display: block;
 }
+
 .face_img {
   margin: 1%;
   width: 98%;
   height: 18rem;
 }
+
 .face-data-col {
   margin-bottom: 20px;
   border-radius: 4px;
 }
+
 .bg-purple-dark {
   background: #99a9bf;
 }
+
 .bg-purple {
   width: 100%;
   height: 100%;
   background: #d3dce6;
 }
+
 .bg-purple-light {
   background: #e5e9f2;
 }
+
 .grid-content {
   border-radius: 4px;
   min-height: 36px;
 }
+
 .row-bg {
   padding: 10px 0;
   background-color: #f9fafc;
 }
-.el-image__error {
-}
+
+.el-image__error {}
 </style>

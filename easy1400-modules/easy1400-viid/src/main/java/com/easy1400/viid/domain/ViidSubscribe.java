@@ -148,7 +148,7 @@ public class ViidSubscribe implements Serializable {
     @JsonProperty("SubscribeType")
     private String SubscribeType;
     /**
-     * 0 订 阅 资 源 类 别
+     * 订阅资源类别
      * 订阅时必选， 指定订阅的 资源类别。
      * 0-卡口
      * 1-设备
