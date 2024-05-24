@@ -72,7 +72,7 @@ public class ViidCascadePlatform implements Serializable {
     private Date LastOnlineTime;
 
     /**
-     * 级联平台类型（0上级 1下级）
+     * 级联平台类型（0上级 1下级 2本级）
      */
     @JsonProperty("Type")
     @TableField(value = "Type")

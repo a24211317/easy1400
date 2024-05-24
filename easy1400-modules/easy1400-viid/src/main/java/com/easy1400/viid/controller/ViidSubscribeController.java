@@ -38,45 +38,40 @@ public class ViidSubscribeController {
     @PostMapping("/ViidSubscribe")
     public AjaxResult addViidSubscribe(@RequestBody ViidSubscribe viidSubscribe, HttpServletRequest request) {
         LambdaQueryWrapper<ViidCascadePlatform> viidCascadePlatformQueryWrapper = new LambdaQueryWrapper<>();
-        viidCascadePlatformQueryWrapper.eq(ViidCascadePlatform::getSystemID, viidSubscribe.getResourceURI());
+        viidCascadePlatformQueryWrapper.eq(ViidCascadePlatform::getType, 2);
         ViidCascadePlatform viidCascadePlatform = viidCascadePlatformService.getOne(viidCascadePlatformQueryWrapper);
         String UserIdentify = request.getHeader("User-Identify");
-        if (viidSubscribeService != null) {
-
-            //被订阅
-            if (StringUtils.isNotEmpty(UserIdentify)) {
-                viidSubscribe.setSubscriberSendOrgID(UserIdentify);
-                viidSubscribe.setSubscriberRecoverOrgID(viidCascadePlatform.getSystemID());
-            } else {
-                viidSubscribe.setSubscriberSendOrgID(viidCascadePlatform.getSystemID());
-                viidSubscribe.setSubscriberRecoverOrgID(UserIdentify);
-            }
-            if (viidSubscribeService.save(viidSubscribe)) {
-                switch (viidSubscribe.getSubscribeType()) {
-                    //订阅上级需要像上级发送通知
-                    case "0":
-                        return AjaxResult.success(viidSubscribeService.add(viidSubscribe, viidCascadePlatform));
-                }
-                return AjaxResult.success("save success");
-            }
+        //被订阅
+        if (StringUtils.isNotEmpty(UserIdentify)) {
+            viidSubscribe.setSubscriberSendOrgID(UserIdentify);
+            viidSubscribe.setSubscriberRecoverOrgID(viidCascadePlatform.getSystemID());
         } else {
-            return AjaxResult.error("404", "platform not found");
+            viidSubscribe.setSubscriberSendOrgID(viidCascadePlatform.getSystemID());
+            viidSubscribe.setSubscriberRecoverOrgID(viidSubscribe.getSubscriberRecoverOrgID());
         }
-        return AjaxResult.error("500", "save error");
-    }
+        if (viidSubscribeService.save(viidSubscribe)) {
+            switch (viidSubscribe.getSubscribeType()) {
+                //订阅上级需要像上级发送通知
+                case "0":
+                    return AjaxResult.success(viidSubscribeService.add(viidSubscribe, viidCascadePlatform));
+            }
+            return AjaxResult.success("save success");
+        }
+        return AjaxResult.error("500","save error");
+}
 
-    /**
-     * 查询订阅信息
-     *
-     * @param type
-     * @return
-     */
-    @GetMapping("/ViidSubscribe")
-    public AjaxResult getViidCascadePlatform(String type) {
-        LambdaQueryWrapper<ViidSubscribe> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(StringUtils.isNotEmpty(type), ViidSubscribe::getSubscribeType, type);
-        return AjaxResult.success(viidSubscribeService.list(queryWrapper));
-    }
+/**
+ * 查询订阅信息
+ *
+ * @param type
+ * @return
+ */
+@GetMapping("/ViidSubscribe")
+public AjaxResult getViidCascadePlatform(String type) {
+    LambdaQueryWrapper<ViidSubscribe> queryWrapper = new LambdaQueryWrapper<>();
+    queryWrapper.eq(StringUtils.isNotEmpty(type), ViidSubscribe::getSubscribeType, type);
+    return AjaxResult.success(viidSubscribeService.list(queryWrapper));
+}
 
 
 }
