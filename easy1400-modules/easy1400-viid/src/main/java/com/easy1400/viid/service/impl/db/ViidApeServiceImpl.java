@@ -1,17 +1,21 @@
 package com.easy1400.viid.service.impl.db;
 
 import cn.hutool.core.date.DateUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.easy1400.viid.common.util.RegisterAuthUtil;
 import com.easy1400.viid.domain.ViidApe;
+import com.easy1400.viid.domain.ViidCascadePlatform;
 import com.easy1400.viid.domain.message.KeepaliveRequest;
 import com.easy1400.viid.domain.message.RegisterRequest;
-import com.easy1400.viid.service.ViidApeService;
 import com.easy1400.viid.mapper.ViidApeMapper;
+import com.easy1400.viid.mapper.ViidCascadePlatformMapper;
+import com.easy1400.viid.service.ViidApeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
@@ -29,6 +33,8 @@ import java.util.Map;
 public class ViidApeServiceImpl extends ServiceImpl<ViidApeMapper, ViidApe>
         implements ViidApeService {
     private static final Logger log = LoggerFactory.getLogger(ViidApeServiceImpl.class);
+    @Resource
+    private ViidCascadePlatformMapper viidCascadePlatformMapper;
 
     //暂时用来记录已注册的设备
     static final List<String> DeviceIDs = new ArrayList<>();
@@ -37,12 +43,22 @@ public class ViidApeServiceImpl extends ServiceImpl<ViidApeMapper, ViidApe>
     public Map register(RegisterRequest registerRequest, HttpServletRequest request, HttpServletResponse response) {
         // 取到下级平台ID
         String deviceID = registerRequest.getDeviceID();
-        // 从数据库查询是否有此下级平台ID
         ViidApe ape = this.getById(deviceID);
-        // 判断结果集是否为空
+        String password = null;
+        // 从采集设备库查询是否有此下级平台ID
         if (ape == null) {
-            log.info("无此下级平台ID");
-            return null;
+            //从下级平台里查询
+            LambdaQueryWrapper<ViidCascadePlatform> queryWrapper = new LambdaQueryWrapper<>();
+            queryWrapper.eq(ViidCascadePlatform::getUserId, deviceID);
+            queryWrapper.eq(ViidCascadePlatform::getType, 1);
+            ViidCascadePlatform viidCascadePlatform = viidCascadePlatformMapper.selectOne(queryWrapper);
+            if (viidCascadePlatform == null) {
+                log.info("无此下级平台ID");
+                return null;
+            }
+            password = viidCascadePlatform.getPassword();
+        }else {
+            password=ape.getPassword();
         }
         String authorization = request.getHeader("authorization");
         // 请求头无此字段，表示第一次注册，返回401
@@ -66,7 +82,7 @@ public class ViidApeServiceImpl extends ServiceImpl<ViidApeMapper, ViidApe>
         log.debug("平台id为====》{}", deviceID);
         log.debug("注册信息为====》{}", stringStringHashMap);
 
-        if (RegisterAuthUtil.hasAuth(stringStringHashMap.get("response").toString(), ape, stringStringHashMap)) {
+        if (RegisterAuthUtil.hasAuth(stringStringHashMap.get("response").toString(), password, stringStringHashMap)) {
             log.debug("下级平台验证通过");
             response.setStatus(200);
             HashMap<String, Object> responseMap = new HashMap<>();
@@ -85,7 +101,7 @@ public class ViidApeServiceImpl extends ServiceImpl<ViidApeMapper, ViidApe>
     }
 
     @Override
-    public Map Keepalive(KeepaliveRequest keepaliveRequest,HttpServletResponse response) {
+    public Map Keepalive(KeepaliveRequest keepaliveRequest, HttpServletResponse response) {
         if (DeviceIDs.contains(keepaliveRequest.getDeviceID())) {
             HashMap<String, Object> responseObj = new HashMap<>();
             HashMap<String, String> responseStatus = new HashMap<>();

@@ -5,7 +5,6 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.easy1400.common.core.utils.StringUtils;
 import com.easy1400.common.core.utils.uuid.UUID;
-import com.easy1400.viid.domain.ViidApe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,8 +12,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-
-import static com.easy1400.common.core.utils.ServletUtils.getResponse;
 
 /**
  * @ClassName RegisterAuthorizationUtil
@@ -31,9 +28,8 @@ public class RegisterAuthUtil {
      *
      * @return 验证结果
      */
-    public static boolean hasAuth(String response, ViidApe ape, Map<String, String> stringStringHashMap) {
+    public static boolean hasAuth(String response, String password, Map<String, String> stringStringHashMap) {
         String realm = stringStringHashMap.get("realm");
-        String password = ape.getPassword();
         String strUsername = stringStringHashMap.get("Digest username");
         String HA1 = strUsername + ':' + realm + ':' + password;
         String strHA1 = DigestUtil.md5Hex(HA1);
