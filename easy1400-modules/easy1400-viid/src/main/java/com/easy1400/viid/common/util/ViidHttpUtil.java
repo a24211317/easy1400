@@ -2,6 +2,7 @@ package com.easy1400.viid.common.util;
 
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
+import cn.hutool.json.JSONConfig;
 import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -11,9 +12,11 @@ import com.easy1400.viid.domain.ViidCascadePlatform;
 import com.easy1400.viid.domain.ViidSubscribe;
 import com.easy1400.viid.domain.message.KeepaliveRequest;
 import com.easy1400.viid.domain.message.RegisterRequest;
+import com.easy1400.viid.domain.message.SubscribeNotificationsRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -113,13 +116,13 @@ public class ViidHttpUtil {
     }
 
     /**
-     * 向上级发送注册
+     * 向上级发送订阅
      */
-    public String subscribeSend(ViidSubscribe subscribe, ViidCascadePlatform viidCascadePlatform)throws Exception {
+    public String subscribeSend(ViidSubscribe subscribe, ViidCascadePlatform viidCascadePlatform) throws Exception {
 
-        JSONObject SnedData=new JSONObject();
-        JSONObject SubscribeListObject=new JSONObject();
-        JSONArray SubscribeObject=new JSONArray();
+        JSONObject SnedData = new JSONObject();
+        JSONObject SubscribeListObject = new JSONObject();
+        JSONArray SubscribeObject = new JSONArray();
         JSONObject subscribeObj = JSON.parseObject(JSONUtil.toJsonStr(subscribe));
         subscribeObj.remove("SubscribeType");
         subscribeObj.remove("ApprovalStatus");
@@ -129,8 +132,8 @@ public class ViidHttpUtil {
         subscribeObj.remove("SubscriberSendOrgID");
         subscribeObj.remove("SubscriberRecoverOrgID");
         SubscribeObject.add(subscribeObj);
-        SubscribeListObject.put("SubscribeObject",SubscribeObject);
-        SnedData.put("SubscribeListObject",SubscribeListObject);
+        SubscribeListObject.put("SubscribeObject", SubscribeObject);
+        SnedData.put("SubscribeListObject", SubscribeListObject);
         log.info(SnedData.toJSONString());
         log.info(JSONUtil.toJsonStr(viidCascadePlatform));
         return HttpRequest.post("http://" + viidCascadePlatform.getIPAddr() + ":" + viidCascadePlatform.getPort() + "/VIID/Subscribes")
@@ -138,6 +141,21 @@ public class ViidHttpUtil {
                 .body(SnedData.toJSONString())
                 .contentType("application/VIID+JSON")
                 .execute().body();
+    }
+
+    /**
+     * 向上级发送通知
+     */
+    @Async
+    public String subscribeNotificationsSend(ViidSubscribe subscribe, SubscribeNotificationsRequest subscribeNotificationsRequest) throws Exception {
+        JSONConfig jsonConfig = new JSONConfig();
+        jsonConfig.setIgnoreCase(false);
+        return HttpRequest.post(subscribe.getReceiveAddr())
+                .header("User-Identify", subscribe.getSubscriberRecoverOrgID())
+                .body(JSONUtil.toJsonStr(subscribeNotificationsRequest,jsonConfig))
+                .contentType("application/VIID+JSON")
+                .execute()
+                .body();
     }
 
 }

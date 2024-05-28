@@ -41,4 +41,9 @@ public class ViidDataESServiceImpl implements ViidDataService {
     public void SubscribeNotifications(SubscribeNotificationsRequest subscribeNotificationsRequest) {
 
     }
+
+    @Override
+    public void SubscribeNotificationsSend(ViidFace viidFace, ViidPerson viidPerson, ViidMotorVehicle viidMotorVehicle, ViidNonMotorVehicle viidNonMotorVehicle) {
+
+    }
 }

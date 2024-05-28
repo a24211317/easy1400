@@ -22,6 +22,8 @@ public interface ViidDataService {
 
     void saveViidPersonData(ViidPerson personRequest);
 
-    void SubscribeNotifications( SubscribeNotificationsRequest subscribeNotificationsRequest);
+    void SubscribeNotifications(SubscribeNotificationsRequest subscribeNotificationsRequest);
+
+    void SubscribeNotificationsSend(ViidFace viidFace, ViidPerson viidPerson, ViidMotorVehicle viidMotorVehicle, ViidNonMotorVehicle viidNonMotorVehicle);
 
 }

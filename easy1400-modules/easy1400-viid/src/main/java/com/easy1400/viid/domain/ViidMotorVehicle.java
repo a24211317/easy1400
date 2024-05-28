@@ -32,7 +32,7 @@ public class ViidMotorVehicle {
      */
     @JsonProperty("InfoKind")
     @TableField(value = "InfoKind")
-    private String InfoKind;
+    private int InfoKind;
     /**
      * 来源标识
      */
@@ -86,25 +86,25 @@ public class ViidMotorVehicle {
      */
     @JsonProperty("LeftTopX")
     @TableField(value = "LeftTopX")
-    private String LeftTopX;
+    private int LeftTopX;
     /**
      * 左上角Y坐标
      */
     @JsonProperty("LeftTopY")
     @TableField(value = "LeftTopY")
-    private String LeftTopY;
+    private int LeftTopY;
     /**
      * 右下角X坐标
      */
     @JsonProperty("RightBtmX")
     @TableField(value = "RightBtmX")
-    private String RightBtmX;
+    private int RightBtmX;
     /**
      * 右下角Y坐标
      */
     @JsonProperty("RightBtmY")
     @TableField(value = "RightBtmY")
-    private String RightBtmY;
+    private int RightBtmY;
     /**
      * 位置标记时间
      */
@@ -128,7 +128,7 @@ public class ViidMotorVehicle {
      */
     @JsonProperty("LaneNo")
     @TableField(value = "LaneNo")
-    private String LaneNo;
+    private int LaneNo;
     /**
      * 有无车牌
      */
@@ -410,19 +410,19 @@ public class ViidMotorVehicle {
      */
     @JsonProperty("Sunvisor")
     @TableField(value = "Sunvisor")
-    private String Sunvisor;
+    private int Sunvisor;
     /**
      * 安全带状态
      */
     @JsonProperty("SafetyBelt")
     @TableField(value = "SafetyBelt")
-    private String SafetyBelt;
+    private int SafetyBelt;
     /**
      * 打电话状态
      */
     @JsonProperty("Calling")
     @TableField(value = "Calling")
-    private String Calling;
+    private int Calling;
     /**
      * 号牌识别可信度
      */

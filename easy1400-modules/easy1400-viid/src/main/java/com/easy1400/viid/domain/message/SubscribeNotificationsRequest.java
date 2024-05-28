@@ -21,23 +21,23 @@ import java.util.List;
 public class SubscribeNotificationsRequest {
 
     @JsonProperty("SubscribeNotificationListObject")
-    private SubscribeNotificationListObjectDTO subscribeNotificationListObject;
+    private SubscribeNotificationListObjectDTO SubscribeNotificationListObject;
 
     @NoArgsConstructor
     @Data
     public static class SubscribeNotificationListObjectDTO {
         @JsonProperty("SubscribeNotificationObject")
-        private List<SubscribeNotificationObjectDTO> subscribeNotificationObject;
+        private List<SubscribeNotificationObjectDTO> SubscribeNotificationObject;
 
         @NoArgsConstructor
         @Data
         public static class SubscribeNotificationObjectDTO {
             @JsonProperty("NotificationID")
-            private String notificationID;
+            private String NotificationID;
             @JsonProperty("SubscribeID")
-            private String subscribeID;
+            private String SubscribeID;
             @JsonProperty("MotorVehicleObjectList")
-            private MotorVehicleObjectListDTO motorVehicleObjectList;
+            private MotorVehicleObjectListDTO MotorVehicleObjectList;
             @JsonProperty("PersonObjectList")
             private PersonObjectListDTO PersonObjectList;
             @JsonProperty("FaceObjectList")
@@ -45,38 +45,38 @@ public class SubscribeNotificationsRequest {
             @JsonProperty("NonMotorVehicleObjectList")
             private NonMotorVehicleObjectListDTO NonMotorVehicleObjectList;
             @JsonProperty("Title")
-            private String title;
+            private String Title;
             @JsonProperty("TriggerTime")
-            private String triggerTime;
+            private String TriggerTime;
             @JsonProperty("InfoIDs")
-            private String infoIDs;
+            private String InfoIDs;
 
             @NoArgsConstructor
             @Data
             public static class MotorVehicleObjectListDTO {
                 @JsonProperty("MotorVehicleObject")
-                private List<ViidMotorVehicle> motorVehicleObject;
+                private List<ViidMotorVehicle> MotorVehicleObject;
             }
 
             @NoArgsConstructor
             @Data
             public static class PersonObjectListDTO {
                 @JsonProperty("PersonObject")
-                private List<ViidPerson> personObject;
+                private List<ViidPerson> PersonObject;
             }
 
             @NoArgsConstructor
             @Data
             public static class FaceObjectListDTO {
                 @JsonProperty("FaceObject")
-                private List<ViidFace> faceObject;
+                private List<ViidFace> FaceObject;
             }
 
             @NoArgsConstructor
             @Data
             public static class NonMotorVehicleObjectListDTO {
                 @JsonProperty("NonMotorVehicleObject")
-                private List<ViidNonMotorVehicle> nonMotorVehicleObject;
+                private List<ViidNonMotorVehicle> NonMotorVehicleObject;
             }
         }
     }

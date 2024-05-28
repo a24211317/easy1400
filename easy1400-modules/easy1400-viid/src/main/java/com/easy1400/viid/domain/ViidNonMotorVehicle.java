@@ -32,7 +32,7 @@ public class ViidNonMotorVehicle {
      */
     @JsonProperty("InfoKind")
     @TableField(value = "InfoKind")
-    private String InfoKind;
+    private int InfoKind;
     /**
      * 来源标识
      */
@@ -50,25 +50,25 @@ public class ViidNonMotorVehicle {
      */
     @JsonProperty("LeftTopX")
     @TableField(value = "LeftTopX")
-    private String LeftTopX;
+    private int LeftTopX;
     /**
      * 左上角Y坐标
      */
     @JsonProperty("LeftTopY")
     @TableField(value = "LeftTopY")
-    private String LeftTopY;
+    private int LeftTopY;
     /**
      * 右下角X坐标
      */
     @JsonProperty("RightBtmX")
     @TableField(value = "RightBtmX")
-    private String RightBtmX;
+    private int RightBtmX;
     /**
      * 右下角Y坐标
      */
     @JsonProperty("RightBtmY")
     @TableField(value = "RightBtmY")
-    private String RightBtmY;
+    private int RightBtmY;
     /**
      * 位置标记时间
      */
@@ -278,13 +278,13 @@ public class ViidNonMotorVehicle {
      */
     @JsonProperty("FilmColor")
     @TableField(value = "FilmColor")
-    private String FilmColor;
+    private int FilmColor;
     /**
      * 改装标志
      */
     @JsonProperty("IsModified")
     @TableField(value = "IsModified")
-    private String IsModified;
+    private int IsModified;
     /**
      * 图像列表
      */

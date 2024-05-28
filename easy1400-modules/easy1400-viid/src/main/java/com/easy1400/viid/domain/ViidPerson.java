@@ -32,7 +32,7 @@ public class ViidPerson {
      */
     @JsonProperty("InfoKind")
     @TableField(value = "InfoKind")
-    private String InfoKind;
+    private int InfoKind;
     /**
      * 来源标识
      */
@@ -50,25 +50,25 @@ public class ViidPerson {
      */
     @JsonProperty("LeftTopX")
     @TableField(value = "LeftTopX")
-    private String LeftTopX;
+    private int LeftTopX;
     /**
      * 左上角Y坐标
      */
     @JsonProperty("LeftTopY")
     @TableField(value = "LeftTopY")
-    private String LeftTopY;
+    private int LeftTopY;
     /**
      * 右下角X坐标
      */
     @JsonProperty("RightBtmX")
     @TableField(value = "RightBtmX")
-    private String RightBtmX;
+    private int RightBtmX;
     /**
      * 右下角Y坐标
      */
     @JsonProperty("RightBtmY")
     @TableField(value = "RightBtmY")
-    private String RightBtmY;
+    private int RightBtmY;
     /**
      * 位置标记时间
      */
@@ -135,14 +135,14 @@ public class ViidPerson {
      */
     @JsonProperty("AgeUpLimit")
     @TableField(value = "AgeUpLimit")
-    private String AgeUpLimit;
+    private int AgeUpLimit;
 
     /**
      * 年龄下限
      */
     @JsonProperty("AgeLowerLimit")
     @TableField(value = "AgeLowerLimit")
-    private String AgeLowerLimit;
+    private int AgeLowerLimit;
 
     /**
      * 民族代码
@@ -198,19 +198,19 @@ public class ViidPerson {
      */
     @JsonProperty("AccompanyNumber")
     @TableField(value = "AccompanyNumber")
-    private String AccompanyNumber;
+    private int AccompanyNumber;
     /**
      * 身高上限
      */
     @JsonProperty("HeightUpLimit")
     @TableField(value = "HeightUpLimit")
-    private String HeightUpLimit;
+    private int HeightUpLimit;
     /**
      * 身高下限
      */
     @JsonProperty("HeightLowerLimit")
     @TableField(value = "HeightLowerLimit")
-    private String HeightLowerLimit;
+    private int HeightLowerLimit;
 
 
     /**
@@ -422,14 +422,14 @@ public class ViidPerson {
      */
     @JsonProperty("IsDriver")
     @TableField(value = "IsDriver")
-    private String IsDriver;
+    private int IsDriver;
 
     /**
      * 是否涉外人员
      */
     @JsonProperty("IsForeigner")
     @TableField(value = "IsForeigner")
-    private String IsForeigner;
+    private int IsForeigner;
 
     /**
      * 护照证件种类
@@ -451,7 +451,7 @@ public class ViidPerson {
      */
     @JsonProperty("IsSuspectedTerrorist")
     @TableField(value = "IsSuspectedTerrorist")
-    private String IsSuspectedTerrorist;
+    private int IsSuspectedTerrorist;
 
     /**
      * 涉恐人员编号
@@ -465,7 +465,7 @@ public class ViidPerson {
      */
     @JsonProperty("IsCriminalInvolved")
     @TableField(value = "IsCriminalInvolved")
-    private String IsCriminalInvolved;
+    private int IsCriminalInvolved;
 
     /**
      * 涉案人员专长代
@@ -508,7 +508,7 @@ public class ViidPerson {
      */
     @JsonProperty("IsDetainees")
     @TableField(value = "IsDetainees")
-    private String IsDetainees;
+    private int IsDetainees;
 
     /**
      * 看守所编码
@@ -544,7 +544,7 @@ public class ViidPerson {
      */
     @JsonProperty("IsVictim")
     @TableField(value = "IsVictim")
-    private String IsVictim;
+    private int IsVictim;
 
     /**
      * 被害人种类
@@ -572,7 +572,7 @@ public class ViidPerson {
      */
     @JsonProperty("IsSuspiciousPerson")
     @TableField(value = "IsSuspiciousPerson")
-    private String IsSuspiciousPerson;
+    private int IsSuspiciousPerson;
 
 
     /**

@@ -8,6 +8,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.easy1400.common.core.utils.StringUtils;
 import com.easy1400.common.core.web.domain.AjaxResult;
+import com.easy1400.common.redis.service.RedisService;
+import com.easy1400.viid.common.constant.RedisConstants;
 import com.easy1400.viid.domain.*;
 import com.easy1400.viid.domain.enums.ResponsStatusEnum;
 import com.easy1400.viid.domain.message.*;
@@ -41,6 +43,8 @@ public class ViidDataController {
     private ViidApeService viidApeService;
     @Autowired
     private ViidSubscribeService viidSubscribeService;
+    @Autowired
+    private RedisService redisService;
 
     @GetMapping("/MotorVehicles/{page}/{rows}")
     public AjaxResult getMotorVehicles(@PathVariable(value = "page") Integer page, @PathVariable(value = "rows") Integer rows,
@@ -117,7 +121,7 @@ public class ViidDataController {
     public ResponsObject MotorVehicles(@RequestBody String motorVehicleRequest) {
         for (ViidMotorVehicle motorVehicle : JSON.toJavaObject(JSON.parseObject(motorVehicleRequest), MotorVehicleRequest.class).getMotorVehicleListObject().getMotorVehicleObject()) {
             viidDataService.saveViidMotorVehicleData(motorVehicle);
-
+            viidDataService.SubscribeNotificationsSend(null,null,motorVehicle,null);
         }
         return new ResponsObject(ResponsStatusEnum.OK);
 
@@ -133,6 +137,8 @@ public class ViidDataController {
     public ResponsObject NonMotorVehicles(@RequestBody NonMotorVehicleRequest nonMotorVehicleRequest) {
         for (ViidNonMotorVehicle nonMotorVehicle : nonMotorVehicleRequest.getNonMotorVehicleListObject().getNonMotorVehicleObject()) {
             viidDataService.saveViidNonMotorVehicleData(nonMotorVehicle);
+            viidDataService.SubscribeNotificationsSend(null,null,null,nonMotorVehicle);
+
         }
         return new ResponsObject(ResponsStatusEnum.OK);
     }
@@ -147,6 +153,8 @@ public class ViidDataController {
     public ResponsObject Faces(@RequestBody FaceRequest faceRequest) {
         for (ViidFace viidFace : faceRequest.getFaceListObject().getFaceObject()) {
             viidDataService.saveViidFaceData(viidFace);
+            viidDataService.SubscribeNotificationsSend(viidFace,null,null,null);
+
         }
         return new ResponsObject(ResponsStatusEnum.OK);
     }
@@ -161,6 +169,8 @@ public class ViidDataController {
     public ResponsObject Persons(@RequestBody PersonRequest personRequest) {
         for (ViidPerson viidPerson : personRequest.getPersonListObject().getPersonObject()) {
             viidDataService.saveViidPersonData(viidPerson);
+            viidDataService.SubscribeNotificationsSend(null,viidPerson,null,null);
+
         }
         return new ResponsObject(ResponsStatusEnum.OK);
     }
@@ -217,7 +227,7 @@ public class ViidDataController {
         viidSubscribe.setSubscribeStatus(subscribeObjectDTO.getSubscribeStatus().toString());
         viidSubscribe.setSubscribeCancOrg(subscribeObjectDTO.getSubscribeCancelOrg());
         viidSubscribe.setSubscribeCancelPerson(subscribeObjectDTO.getSubscribeCancelPerson());
-        viidSubscribe.setCancelTime(DateUtil.parse(subscribeObjectDTO.getCancelTime()));
+        viidSubscribe.setCancelTime(subscribeObjectDTO.getCancelTime() != null ? DateUtil.parse(subscribeObjectDTO.getCancelTime()) : null);
         viidSubscribe.setCancelReason(subscribeObjectDTO.getCancelReason());
         viidSubscribe.setSubscribeType("1");
         viidSubscribe.setResourceClass(subscribeObjectDTO.getResourceClass());
@@ -228,8 +238,116 @@ public class ViidDataController {
         viidSubscribe.setSubscriberSendOrgID(deviceId);
         viidSubscribe.setSubscriberRecoverOrgID(subscribeObjectDTO.getResourceURI());
         viidSubscribeService.save(viidSubscribe);
+        for (String s : subscribeObjectDTO.getSubscribeDetail().split(",")) {
+            switch (s) {
+                case "11":
+                    redisService.setCacheMapValue(RedisConstants.SUBSCRIBE_PARENT_PERSON, subscribeObjectDTO.getSubscribeID(),viidSubscribe);
+                    break;
+                case "12":
+                    redisService.setCacheMapValue(RedisConstants.SUBSCRIBE_PARENT_FACE, subscribeObjectDTO.getSubscribeID(),viidSubscribe);
+                    break;
+                case "13":
+                    redisService.setCacheMapValue(RedisConstants.SUBSCRIBE_PARENT_MOTORVEHICLE, subscribeObjectDTO.getSubscribeID(), viidSubscribe);
+                    break;
+                case "14":
+                    redisService.setCacheMapValue(RedisConstants.SUBSCRIBE_PARENT_NONMOTORVEHICLE, subscribeObjectDTO.getSubscribeID(), viidSubscribe);
+                    break;
+            }
+        }
         //TODO 将订阅加入队列供后续数据推送
-        return new ResponsObject(ResponsStatusEnum.OK,subscribeObjectDTO.getSubscribeID(),"/VIID/Subscribes");
+        return new ResponsObject(ResponsStatusEnum.OK, subscribeObjectDTO.getSubscribeID(), "/VIID/Subscribes");
+    }
+
+    @PutMapping("/Subscribes")
+    public ResponsObject UpdateSubscribes(@RequestBody SubscribeRequest subscribeRequest, HttpServletRequest request) {
+        String deviceId = request.getHeader("User-Identify");
+        SubscribeRequest.SubscribeListObjectDTO.SubscribeObjectDTO subscribeObjectDTO = subscribeRequest.getSubscribeListObject().getSubscribeObject().get(0);
+        ViidSubscribe viidSubscribe = new ViidSubscribe();
+        viidSubscribe.setSubscribeID(subscribeObjectDTO.getSubscribeID());
+        viidSubscribe.setTitle(subscribeObjectDTO.getTitle());
+        viidSubscribe.setSubscribeDetail(subscribeObjectDTO.getSubscribeDetail());
+        viidSubscribe.setResourceURI(subscribeObjectDTO.getResourceURI());
+        viidSubscribe.setApplicantName(subscribeObjectDTO.getApplicantName());
+        viidSubscribe.setApplicantOrg(subscribeObjectDTO.getApplicantOrg());
+        viidSubscribe.setBeginTime(subscribeObjectDTO.getBeginTime());
+        viidSubscribe.setEndTime(subscribeObjectDTO.getEndTime());
+        viidSubscribe.setReceiveAddr(subscribeObjectDTO.getReceiveAddr());
+        viidSubscribe.setReportInterval(subscribeObjectDTO.getReportInterval());
+        viidSubscribe.setReason(subscribeObjectDTO.getReason());
+        viidSubscribe.setOperateType(subscribeObjectDTO.getOperateType().toString());
+        viidSubscribe.setSubscribeStatus(subscribeObjectDTO.getSubscribeStatus().toString());
+        viidSubscribe.setSubscribeCancOrg(subscribeObjectDTO.getSubscribeCancelOrg());
+        viidSubscribe.setSubscribeCancelPerson(subscribeObjectDTO.getSubscribeCancelPerson());
+        viidSubscribe.setCancelTime(subscribeObjectDTO.getCancelTime() != null ? DateUtil.parse(subscribeObjectDTO.getCancelTime()) : null);
+        viidSubscribe.setCancelReason(subscribeObjectDTO.getCancelReason());
+        viidSubscribe.setSubscribeType("1");
+        viidSubscribe.setResourceClass(subscribeObjectDTO.getResourceClass());
+        viidSubscribe.setApprovalStatus("0");
+        viidSubscribe.setResultImageDeclare(subscribeObjectDTO.getResultImageDeclare());
+        viidSubscribe.setResultFeatureDeclare(subscribeObjectDTO.getResultFeatureDeclare());
+        viidSubscribe.setTabID(subscribeObjectDTO.getTabID());
+        viidSubscribe.setSubscriberSendOrgID(deviceId);
+        viidSubscribe.setSubscriberRecoverOrgID(subscribeObjectDTO.getResourceURI());
+        viidSubscribeService.updateById(viidSubscribe);
+        redisService.deleteCacheMapValue(RedisConstants.SUBSCRIBE_PARENT_PERSON, subscribeObjectDTO.getSubscribeID());
+        redisService.deleteCacheMapValue(RedisConstants.SUBSCRIBE_PARENT_FACE, subscribeObjectDTO.getSubscribeID());
+        redisService.deleteCacheMapValue(RedisConstants.SUBSCRIBE_PARENT_MOTORVEHICLE, subscribeObjectDTO.getSubscribeID());
+        redisService.deleteCacheMapValue(RedisConstants.SUBSCRIBE_PARENT_NONMOTORVEHICLE, subscribeObjectDTO.getSubscribeID());
+        for (String s : subscribeObjectDTO.getSubscribeDetail().split(",")) {
+            switch (s) {
+                case "11":
+                    redisService.setCacheMapValue(RedisConstants.SUBSCRIBE_PARENT_PERSON, subscribeObjectDTO.getSubscribeID(), viidSubscribe);
+                    break;
+                case "12":
+                    redisService.setCacheMapValue(RedisConstants.SUBSCRIBE_PARENT_FACE, subscribeObjectDTO.getSubscribeID(), viidSubscribe);
+                    break;
+                case "13":
+                    redisService.setCacheMapValue(RedisConstants.SUBSCRIBE_PARENT_MOTORVEHICLE, subscribeObjectDTO.getSubscribeID(), viidSubscribe);
+                    break;
+                case "14":
+                    redisService.setCacheMapValue(RedisConstants.SUBSCRIBE_PARENT_NONMOTORVEHICLE, subscribeObjectDTO.getSubscribeID(), viidSubscribe);
+                    break;
+            }
+        }
+        return new ResponsObject(ResponsStatusEnum.OK, subscribeObjectDTO.getSubscribeID(), "/VIID/Subscribes");
+    }
+
+    @DeleteMapping("/Subscribes")
+    public ResponsObject DelSubscribes(@RequestBody SubscribeRequest subscribeRequest, HttpServletRequest request) {
+        String deviceId = request.getHeader("User-Identify");
+        SubscribeRequest.SubscribeListObjectDTO.SubscribeObjectDTO subscribeObjectDTO = subscribeRequest.getSubscribeListObject().getSubscribeObject().get(0);
+        ViidSubscribe viidSubscribe = new ViidSubscribe();
+        viidSubscribe.setSubscribeID(subscribeObjectDTO.getSubscribeID());
+        viidSubscribe.setTitle(subscribeObjectDTO.getTitle());
+        viidSubscribe.setSubscribeDetail(subscribeObjectDTO.getSubscribeDetail());
+        viidSubscribe.setResourceURI(subscribeObjectDTO.getResourceURI());
+        viidSubscribe.setApplicantName(subscribeObjectDTO.getApplicantName());
+        viidSubscribe.setApplicantOrg(subscribeObjectDTO.getApplicantOrg());
+        viidSubscribe.setBeginTime(subscribeObjectDTO.getBeginTime());
+        viidSubscribe.setEndTime(subscribeObjectDTO.getEndTime());
+        viidSubscribe.setReceiveAddr(subscribeObjectDTO.getReceiveAddr());
+        viidSubscribe.setReportInterval(subscribeObjectDTO.getReportInterval());
+        viidSubscribe.setReason(subscribeObjectDTO.getReason());
+        viidSubscribe.setOperateType(subscribeObjectDTO.getOperateType().toString());
+        viidSubscribe.setSubscribeStatus(subscribeObjectDTO.getSubscribeStatus().toString());
+        viidSubscribe.setSubscribeCancOrg(subscribeObjectDTO.getSubscribeCancelOrg());
+        viidSubscribe.setSubscribeCancelPerson(subscribeObjectDTO.getSubscribeCancelPerson());
+        viidSubscribe.setCancelTime(subscribeObjectDTO.getCancelTime() != null ? DateUtil.parse(subscribeObjectDTO.getCancelTime()) : null);
+        viidSubscribe.setCancelReason(subscribeObjectDTO.getCancelReason());
+        viidSubscribe.setSubscribeType("1");
+        viidSubscribe.setResourceClass(subscribeObjectDTO.getResourceClass());
+        viidSubscribe.setApprovalStatus("0");
+        viidSubscribe.setResultImageDeclare(subscribeObjectDTO.getResultImageDeclare());
+        viidSubscribe.setResultFeatureDeclare(subscribeObjectDTO.getResultFeatureDeclare());
+        viidSubscribe.setTabID(subscribeObjectDTO.getTabID());
+        viidSubscribe.setSubscriberSendOrgID(deviceId);
+        viidSubscribe.setSubscriberRecoverOrgID(subscribeObjectDTO.getResourceURI());
+        viidSubscribeService.removeById(viidSubscribe);
+        redisService.deleteCacheMapValue(RedisConstants.SUBSCRIBE_PARENT_PERSON, subscribeObjectDTO.getSubscribeID());
+        redisService.deleteCacheMapValue(RedisConstants.SUBSCRIBE_PARENT_FACE, subscribeObjectDTO.getSubscribeID());
+        redisService.deleteCacheMapValue(RedisConstants.SUBSCRIBE_PARENT_MOTORVEHICLE, subscribeObjectDTO.getSubscribeID());
+        redisService.deleteCacheMapValue(RedisConstants.SUBSCRIBE_PARENT_NONMOTORVEHICLE, subscribeObjectDTO.getSubscribeID());
+        return new ResponsObject(ResponsStatusEnum.OK, subscribeObjectDTO.getSubscribeID(), "/VIID/Subscribes");
     }
 
 
