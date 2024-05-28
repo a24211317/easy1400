@@ -59,7 +59,7 @@ public class ViidHttpUtil {
             try {
                 //解析授权信息
                 authorization = RegisterAuthUtil.getAuthorization(
-                        strings, "/VIID/System/Register", viidCascadePlatform.getPassword(), viidCascadePlatform.getPassword(),
+                        strings, "/VIID/System/Register", viidCascadePlatform.getUserId(), viidCascadePlatform.getPassword(),
                         "POST", ncCountMap.getInteger(viidCascadePlatform.getSystemID()));
                 //再次注册 注册成功会的到200OK
 
