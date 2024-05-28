@@ -1,15 +1,12 @@
 package com.easy1400.viid.domain.message;
 
-import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import com.easy1400.viid.domain.enums.ResponsStatusEnum;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +29,21 @@ public class ResponsObject implements Serializable {
         ResponseStatusListObjectDTO.ResponseStatusObjectDTO responseStatusObjectDTO = new ResponseStatusListObjectDTO.ResponseStatusObjectDTO();
         responseStatusObjectDTO.setStatusCode(responsStatusEnum.getCode());
         responseStatusObjectDTO.setStatusString(responsStatusEnum.getStatus());
-        List<ResponseStatusListObjectDTO.ResponseStatusObjectDTO> responseStatusObject=new ArrayList<>();
+        responseStatusObjectDTO.setLocalTime(DateUtil.format(DateUtil.date(), DatePattern.PURE_DATETIME_FORMAT));
+        List<ResponseStatusListObjectDTO.ResponseStatusObjectDTO> responseStatusObject = new ArrayList<>();
+        responseStatusObject.add(responseStatusObjectDTO);
+        this.responseStatusListObject = new ResponseStatusListObjectDTO();
+        responseStatusListObject.setResponseStatusObject(responseStatusObject);
+    }
+
+    public ResponsObject(ResponsStatusEnum responsStatusEnum, String id, String requestURL) {
+        ResponseStatusListObjectDTO.ResponseStatusObjectDTO responseStatusObjectDTO = new ResponseStatusListObjectDTO.ResponseStatusObjectDTO();
+        responseStatusObjectDTO.setStatusCode(responsStatusEnum.getCode());
+        responseStatusObjectDTO.setStatusString(responsStatusEnum.getStatus());
+        responseStatusObjectDTO.setLocalTime(DateUtil.format(DateUtil.date(), DatePattern.PURE_DATETIME_FORMAT));
+        responseStatusObjectDTO.setId(id);
+        responseStatusObjectDTO.setRequestURL(requestURL);
+        List<ResponseStatusListObjectDTO.ResponseStatusObjectDTO> responseStatusObject = new ArrayList<>();
         responseStatusObject.add(responseStatusObjectDTO);
         this.responseStatusListObject = new ResponseStatusListObjectDTO();
         responseStatusListObject.setResponseStatusObject(responseStatusObject);
@@ -51,6 +62,12 @@ public class ResponsObject implements Serializable {
             private String statusString;
             @JsonProperty("StatusCode")
             private Integer statusCode;
+            @JsonProperty("RequestURL")
+            private String requestURL;
+            @JsonProperty("Id")
+            private String id;
+            @JsonProperty("LocalTime")
+            private String LocalTime;
         }
     }
 }

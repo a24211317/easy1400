@@ -3,7 +3,6 @@ package com.easy1400.viid.controller;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -15,6 +14,8 @@ import com.easy1400.viid.domain.message.*;
 import com.easy1400.viid.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @ClassName ViidDataController
@@ -38,7 +39,8 @@ public class ViidDataController {
     private ViidNonMotorVehicleService viidNonMotorVehicleService;
     @Autowired
     private ViidApeService viidApeService;
-
+    @Autowired
+    private ViidSubscribeService viidSubscribeService;
 
     @GetMapping("/MotorVehicles/{page}/{rows}")
     public AjaxResult getMotorVehicles(@PathVariable(value = "page") Integer page, @PathVariable(value = "rows") Integer rows,
@@ -192,13 +194,42 @@ public class ViidDataController {
      * /VIID/Subscribes
      * 批量订阅接口
      *
-     * @param body 消息体结构参考C.19，字段定义参考A.19 。
+     * @param subscribeRequest 消息体结构参考C.19，字段定义参考A.19 。
      * @return 结构参考C.25，字段定义参考A.26。
      */
     @PostMapping("/Subscribes")
-    public ResponsObject Subscribes(@RequestBody JSONObject body) {
-
-        return new ResponsObject(ResponsStatusEnum.OK);
+    public ResponsObject Subscribes(@RequestBody SubscribeRequest subscribeRequest, HttpServletRequest request) {
+        String deviceId = request.getHeader("User-Identify");
+        SubscribeRequest.SubscribeListObjectDTO.SubscribeObjectDTO subscribeObjectDTO = subscribeRequest.getSubscribeListObject().getSubscribeObject().get(0);
+        ViidSubscribe viidSubscribe = new ViidSubscribe();
+        viidSubscribe.setSubscribeID(subscribeObjectDTO.getSubscribeID());
+        viidSubscribe.setTitle(subscribeObjectDTO.getTitle());
+        viidSubscribe.setSubscribeDetail(subscribeObjectDTO.getSubscribeDetail());
+        viidSubscribe.setResourceURI(subscribeObjectDTO.getResourceURI());
+        viidSubscribe.setApplicantName(subscribeObjectDTO.getApplicantName());
+        viidSubscribe.setApplicantOrg(subscribeObjectDTO.getApplicantOrg());
+        viidSubscribe.setBeginTime(subscribeObjectDTO.getBeginTime());
+        viidSubscribe.setEndTime(subscribeObjectDTO.getEndTime());
+        viidSubscribe.setReceiveAddr(subscribeObjectDTO.getReceiveAddr());
+        viidSubscribe.setReportInterval(subscribeObjectDTO.getReportInterval());
+        viidSubscribe.setReason(subscribeObjectDTO.getReason());
+        viidSubscribe.setOperateType(subscribeObjectDTO.getOperateType().toString());
+        viidSubscribe.setSubscribeStatus(subscribeObjectDTO.getSubscribeStatus().toString());
+        viidSubscribe.setSubscribeCancOrg(subscribeObjectDTO.getSubscribeCancelOrg());
+        viidSubscribe.setSubscribeCancelPerson(subscribeObjectDTO.getSubscribeCancelPerson());
+        viidSubscribe.setCancelTime(DateUtil.parse(subscribeObjectDTO.getCancelTime()));
+        viidSubscribe.setCancelReason(subscribeObjectDTO.getCancelReason());
+        viidSubscribe.setSubscribeType("1");
+        viidSubscribe.setResourceClass(subscribeObjectDTO.getResourceClass());
+        viidSubscribe.setApprovalStatus("0");
+        viidSubscribe.setResultImageDeclare(subscribeObjectDTO.getResultImageDeclare());
+        viidSubscribe.setResultFeatureDeclare(subscribeObjectDTO.getResultFeatureDeclare());
+        viidSubscribe.setTabID(subscribeObjectDTO.getTabID());
+        viidSubscribe.setSubscriberSendOrgID(deviceId);
+        viidSubscribe.setSubscriberRecoverOrgID(subscribeObjectDTO.getResourceURI());
+        viidSubscribeService.save(viidSubscribe);
+        //TODO 将订阅加入队列供后续数据推送
+        return new ResponsObject(ResponsStatusEnum.OK,subscribeObjectDTO.getSubscribeID(),"/VIID/Subscribes");
     }
 
 
@@ -211,7 +242,7 @@ public class ViidDataController {
     @PostMapping("/SubscribeNotifications")
     public ResponsObject SubscribeNotifications(@RequestBody SubscribeNotificationsRequest subscribeNotificationsRequest) {
 
-      viidDataService.SubscribeNotifications(subscribeNotificationsRequest);
+        viidDataService.SubscribeNotifications(subscribeNotificationsRequest);
         return new ResponsObject(ResponsStatusEnum.OK);
     }
 

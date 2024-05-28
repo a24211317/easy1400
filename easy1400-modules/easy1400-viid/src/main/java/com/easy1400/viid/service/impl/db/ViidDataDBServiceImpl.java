@@ -142,7 +142,8 @@ public class ViidDataDBServiceImpl implements ViidDataService {
         }
     }
 
-    private void saveSubImage(List<SubImageListDTO.SubImageInfoObjectDTO> subImageList) throws IOException {
+    @Async
+    protected void saveSubImage(List<SubImageListDTO.SubImageInfoObjectDTO> subImageList) throws IOException {
         for (SubImageListDTO.SubImageInfoObjectDTO subImageInfoObjectDTO : subImageList) {
             if (StringUtils.isNotEmpty(subImageInfoObjectDTO.getData())) {
                 R<SysFile> saveFileResult = remoteFileService.upload(MultipartFileUtil.base64ConvertToMultipartFile(subImageInfoObjectDTO.getData(), subImageInfoObjectDTO.getImageID()));
