@@ -1,113 +1,77 @@
 package com.easy1400.viid.common.util;
 
-import org.apache.commons.codec.binary.Hex;
-import org.apache.commons.lang3.Validate;
-
-import java.io.UnsupportedEncodingException;
-import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
-import java.security.SecureRandom;
+import java.security.NoSuchAlgorithmException;
+import java.util.Formatter;
 import java.util.Random;
 
 /**
  * Http Digest
- * @author zhouzhixiang
- * @date 2019-05-14
+ * @author ch
+ * @date 2024-05-29
  */
 public class DigestsUtil {
-
-    private static SecureRandom random = new SecureRandom();
-    /**
-     * 加密遵循RFC2671规范 将相关参数加密生成一个MD5字符串,并返回
-     */
-    public static String http_da_calc_HA1(String username, String realm, String password,
-                                          String nonce, String nc, String cnonce, String qop,
-                                          String method, String uri, String algorithm) {
-        String HA1, HA2;
-        if ("MD5-sess".equals(algorithm)) {
-            HA1 = HA1_MD5_sess(username, realm, password, nonce, cnonce);
-        } else {
-            HA1 = HA1_MD5(username, realm, password);
-        }
-        byte[] md5Byte = md5(HA1.getBytes());
-        HA1 = new String(Hex.encodeHex(md5Byte));
-
-        md5Byte = md5(HA2(method, uri).getBytes());
-        HA2 = new String(Hex.encodeHex(md5Byte));
-
-        String original = HA1 + ":" + (nonce + ":" + nc + ":" + cnonce + ":" + qop) + ":" + HA2;
-
-        md5Byte = md5(original.getBytes());
-        return new String(Hex.encodeHex(md5Byte));
-
-    }
-
-    /**
-     * algorithm值为MD5时规则
-     */
-    private static String HA1_MD5(String username, String realm, String password) {
-        return username + ":" + realm + ":" + password;
-    }
-
-    /**
-     * algorithm值为MD5-sess时规则
-     */
-    private static String HA1_MD5_sess(String username, String realm, String password, String nonce, String cnonce) {
-        //      MD5(username:realm:password):nonce:cnonce
-
-        String s = HA1_MD5(username, realm, password);
-        byte[] md5Byte = md5(s.getBytes());
-        String smd5 = new String(Hex.encodeHex(md5Byte));
-
-        return smd5 + ":" + nonce + ":" + cnonce;
-    }
-
-    private static String HA2(String method, String uri) {
-        return method + ":" + uri;
-    }
-
-    /**
-     * 对输入字符串进行md5散列.
-     */
-    public static byte[] md5(byte[] input) {
-        return digest(input, "MD5", null, 1);
-    }
-
-    /**
-     * 对字符串进行散列, 支持md5与sha1算法.
-     */
-    private static byte[] digest(byte[] input, String algorithm, byte[] salt, int iterations) {
+    public static String md5Hex(String data) {
         try {
-            MessageDigest digest = MessageDigest.getInstance(algorithm);
-
-            if (salt != null) {
-                digest.update(salt);
-            }
-
-            byte[] result = digest.digest(input);
-
-            for (int i = 1; i < iterations; i++) {
-                digest.reset();
-                result = digest.digest(result);
-            }
-            return result;
-        } catch (GeneralSecurityException e) {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] digest = md.digest(data.getBytes());
+            return byteArrayToHexString(digest);
+        } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
     }
 
-    /**
-     * 随机生成numBytes长度数组
-     * @param numBytes
-     * @return
-     */
-    public static byte[] generateSalt(int numBytes) {
-        Validate.isTrue(numBytes > 0, "numBytes argument must be a positive integer (1 or larger)", (long)numBytes);
-        byte[] bytes = new byte[numBytes];
-        random.nextBytes(bytes);
-        return bytes;
+    private static String byteArrayToHexString(byte[] bytes) {
+        Formatter formatter = new Formatter();
+        for (byte b : bytes) {
+            formatter.format("%02x", b);
+        }
+        return formatter.toString();
     }
 
+    private static String generateCnonce() {
+        Random random = new Random();
+        byte[] cnonceBytes = new byte[16];
+        random.nextBytes(cnonceBytes);
+        return byteArrayToHexString(cnonceBytes);
+    }
+
+    public static String generateDigestAuthHeader(
+            String username, String password, String realm, String nonce,
+            String uri, String method, String qop, int nc) {
+
+        String cnonce = generateCnonce();
+
+        // HA1 = MD5(username:realm:password)
+        String ha1 = md5Hex(username + ":" + realm + ":" + password);
+
+        // HA2 = MD5(method:digestURI)
+        String ha2 = md5Hex(method + ":" + uri);
+
+        // Response = MD5(HA1:nonce:nc:cnonce:qop:HA2)
+        String response = md5Hex(ha1 + ":" + nonce + ":" +  nc + ":" + cnonce + ":" + qop + ":" + ha2);
+
+        return "Digest username=\"" + username + "\", realm=\"" + realm +
+                "\", nonce=\"" + nonce + "\", uri=\"" + uri + "\", response=\"" + response +
+                "\", qop=" + qop + ", nc=" +  nc + ", cnonce=\"" + cnonce + "\"";
+    }
+
+    public static boolean validateDigestAuth(
+            String username, String password, String realm, String nonce,
+            String uri, String method, String qop, int nc, String cnonce, String clientResponse) {
+
+        // HA1 = MD5(username:realm:password)
+        String ha1 = md5Hex(username + ":" + realm + ":" + password);
+
+        // HA2 = MD5(method:digestURI)
+        String ha2 = md5Hex(method + ":" + uri);
+
+        // Server's expected response = MD5(HA1:nonce:nc:cnonce:qop:HA2)
+        String expectedResponse = md5Hex(ha1 + ":" + nonce + ":" + nc + ":" + cnonce + ":" + qop + ":" + ha2);
+
+        // Compare server's expected response with client's response
+        return expectedResponse.equals(clientResponse);
+    }
     @Deprecated
     public static String generateSalt2(int length) {
         String val = "";
@@ -128,15 +92,4 @@ public class DigestsUtil {
     }
 
 
-    //测试
-    public static void main(String[] args) throws UnsupportedEncodingException {
-        // String s = http_da_calc_HA1("povodo", "realm@easycwmp", "povodo",
-        //                             "c10c9897f05a9aee2e2c5fdebf03bb5b0001b1ef", "00000001", "d5324153548c43d8", "auth",
-        //                             "GET", "/", "MD5");
-        // System.out.println("加密后response为:" + s);
-
-        // String s = new String(generateSalt(8),"UTF-8");
-
-        // System.out.println(s);
-    }
 }

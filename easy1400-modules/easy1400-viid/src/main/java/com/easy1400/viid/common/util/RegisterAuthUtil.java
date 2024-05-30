@@ -28,20 +28,28 @@ public class RegisterAuthUtil {
      *
      * @return 验证结果
      */
-    public static boolean hasAuth(String response, String password, Map<String, String> stringStringHashMap) {
+    public static boolean hasAuth(String password, Map<String, String> stringStringHashMap) {
+        String username = stringStringHashMap.get("username");
         String realm = stringStringHashMap.get("realm");
-        String strUsername = stringStringHashMap.get("Digest username");
-        String HA1 = strUsername + ':' + realm + ':' + password;
-        String strHA1 = DigestUtil.md5Hex(HA1);
-        String strMethod = "POST";
-        String HA2 = strMethod + ":" + stringStringHashMap.get("uri");
-        String strHA2 = DigestUtil.md5Hex(HA2);
-        String strHD = stringStringHashMap.get("nonce") +
-                ":" + stringStringHashMap.get("nc") +
-                ":" + stringStringHashMap.get("cnonce") +
-                ":" + stringStringHashMap.get("qop");
+        String nonce = stringStringHashMap.get("nonce");
+        String uri = stringStringHashMap.get("uri");
+        String method = "POST"; // Assuming the method is GET
+        String qop = stringStringHashMap.get("qop");
+        String nc = stringStringHashMap.get("nc");
+        String cnonce = stringStringHashMap.get("cnonce");
+        String response = stringStringHashMap.get("response");
+
+        String HA1 = username + ':' + realm + ':' + password;
+        String strHA1 = DigestsUtil.md5Hex(HA1);
+        String HA2 = method + ":" + uri;
+        String strHA2 = DigestsUtil.md5Hex(HA2);
+        String strHD = nonce +
+                ":" + nc +
+                ":" + cnonce +
+                ":" + qop;
         String strResponse = strHA1 + ':' + strHD + ':' + strHA2;
-        strResponse = DigestUtil.md5Hex(strResponse);
+        strResponse = DigestsUtil.md5Hex(strResponse);
+
         log.debug("HA1====strHA1===={}===={}", HA1, strHA1);
         log.debug("HA2====strHA2===={}======={}", HA2, strHA2);
         return strResponse.equals(response);
@@ -56,7 +64,7 @@ public class RegisterAuthUtil {
      * @return 授权后的数据, 应放在http头的Authorization里
      * @throws IOException 异常
      */
-    public static String getAuthorization(String authorization, String uri, String username, String password, String method,Integer nc) throws IOException {
+    public static String getAuthorization(String authorization, String uri, String username, String password, String method, Integer nc) throws IOException {
 
         uri = StringUtils.isEmpty(uri) ? "/" : uri;
         String temp = authorization.replaceFirst("Digest", "").trim().replace("MD5", "\"MD5\"");
@@ -84,8 +92,9 @@ public class RegisterAuthUtil {
                 + "\",cnonce=\"" + cnonce
                 + "\",qop=\"" + qop
                 + "\",response=\"" + response + "\"";
-        return authorization;
+        return DigestsUtil.generateDigestAuthHeader(username,password,realm,nonce,uri,method,qop,nc);
     }
+
     /**
      * 加密工具
      *
@@ -127,7 +136,8 @@ public class RegisterAuthUtil {
         });
         return JSONObject.toJSONString(map);
     }
-    public static String getAuthHeader(){
+
+    public static String getAuthHeader() {
         StringBuilder responseHeader = new StringBuilder();
         responseHeader.append("Digest realm=\"easy1400.ch@com\"");
         responseHeader.append(",qop=\"auth\"");
