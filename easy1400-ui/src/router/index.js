@@ -70,6 +70,11 @@ export const constantRoutes = [
     hidden: true
   },
   {
+    path: '/viid/subscribes',
+    component: () => import('@/views/viid/system/subscribes'),
+    hidden: true
+  },
+  {
     path: '/login',
     component: () => import('@/views/login'),
     hidden: true

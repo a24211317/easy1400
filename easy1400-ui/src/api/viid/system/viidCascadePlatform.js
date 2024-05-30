@@ -25,7 +25,7 @@ export function delViidCascadePlatform(id) {
     method: 'delete',
   })
 }
-// 删除级联平台
+// 修改级联平台
 export function updateViidCascadePlatform(data) {
   return request({
     url: '/VIID/Platform/ViidCascadePlatform',

@@ -65,9 +65,9 @@
       <el-collapse v-model="activeNames" accordion @change="colChange">
         <el-collapse-item
           v-for="subscribe in viidSubscribeformList"
-          :key="subscribe.id"
+          :key="subscribe.SubscribeID"
           :title="subscribe.Name"
-          :name="subscribe.id"
+          :name="subscribe.SubscribeID"
         >
           <div slot="title" style="width: 100%">
             <span>{{ subscribe.SubscriberSendOrgID }} 订阅 {{ subscribe.SubscriberRecoverOrgID }}</span>
@@ -303,7 +303,7 @@
 </template>
 
 <script>
-import {getViidSubscribe,addviidSubscribeform} from "@/api/viid/system/ViidSubscribe";
+import {getViidSubscribe,addviidSubscribe,delviidSubscribe} from "@/api/viid/system/ViidSubscribe";
 import {getToken} from "@/utils/auth";
 
 export default {
@@ -432,7 +432,7 @@ export default {
           } else {
             _this.addForm.OperateType="0";
             _this.addForm.SubscribeType="0";
-            addviidSubscribeform(_this.addForm).then((response) => {
+            addviidSubscribe(_this.addForm).then((response) => {
               if(response.msg == "send error"){
                 _this.$modal.msgSuccess("新增成功,订阅发送失败");
                 _this.addFormOpen = false;
@@ -452,13 +452,10 @@ export default {
       });
     },
     delSubscribe(subscribe) {
-      if (subscribe.Type == 2) {
-        this.$modal.msgError("本级视图库禁止删除！");
-      } else {
         this.$modal
           .confirm("删除不可恢复,确认删除吗？")
           .then(function () {
-            return delviidSubscribeform(subscribe.id);
+            return delviidSubscribe(subscribe.SubscribeID);
           })
           .then(() => {
             this.getviidSubscribe();
@@ -466,7 +463,7 @@ export default {
           })
           .catch(() => {
           });
-      }
+  
     },
     updateSubscribe(subscribe) {
       this.addFormTitle = "修改订阅";
