@@ -121,7 +121,7 @@ public class ViidDataController {
     public ResponsObject MotorVehicles(@RequestBody String motorVehicleRequest) {
         for (ViidMotorVehicle motorVehicle : JSON.toJavaObject(JSON.parseObject(motorVehicleRequest), MotorVehicleRequest.class).getMotorVehicleListObject().getMotorVehicleObject()) {
             viidDataService.saveViidMotorVehicleData(motorVehicle);
-            viidDataService.SubscribeNotificationsSend(null,null,motorVehicle,null);
+            viidDataService.SubscribeNotificationsSend(null, null, motorVehicle, null);
         }
         return new ResponsObject(ResponsStatusEnum.OK);
 
@@ -137,7 +137,7 @@ public class ViidDataController {
     public ResponsObject NonMotorVehicles(@RequestBody NonMotorVehicleRequest nonMotorVehicleRequest) {
         for (ViidNonMotorVehicle nonMotorVehicle : nonMotorVehicleRequest.getNonMotorVehicleListObject().getNonMotorVehicleObject()) {
             viidDataService.saveViidNonMotorVehicleData(nonMotorVehicle);
-            viidDataService.SubscribeNotificationsSend(null,null,null,nonMotorVehicle);
+            viidDataService.SubscribeNotificationsSend(null, null, null, nonMotorVehicle);
 
         }
         return new ResponsObject(ResponsStatusEnum.OK);
@@ -153,7 +153,7 @@ public class ViidDataController {
     public ResponsObject Faces(@RequestBody FaceRequest faceRequest) {
         for (ViidFace viidFace : faceRequest.getFaceListObject().getFaceObject()) {
             viidDataService.saveViidFaceData(viidFace);
-            viidDataService.SubscribeNotificationsSend(viidFace,null,null,null);
+            viidDataService.SubscribeNotificationsSend(viidFace, null, null, null);
 
         }
         return new ResponsObject(ResponsStatusEnum.OK);
@@ -169,7 +169,7 @@ public class ViidDataController {
     public ResponsObject Persons(@RequestBody PersonRequest personRequest) {
         for (ViidPerson viidPerson : personRequest.getPersonListObject().getPersonObject()) {
             viidDataService.saveViidPersonData(viidPerson);
-            viidDataService.SubscribeNotificationsSend(null,viidPerson,null,null);
+            viidDataService.SubscribeNotificationsSend(null, viidPerson, null, null);
 
         }
         return new ResponsObject(ResponsStatusEnum.OK);
@@ -223,8 +223,8 @@ public class ViidDataController {
         viidSubscribe.setReceiveAddr(subscribeObjectDTO.getReceiveAddr());
         viidSubscribe.setReportInterval(subscribeObjectDTO.getReportInterval());
         viidSubscribe.setReason(subscribeObjectDTO.getReason());
-        viidSubscribe.setOperateType(subscribeObjectDTO.getOperateType().toString());
-        viidSubscribe.setSubscribeStatus(subscribeObjectDTO.getSubscribeStatus().toString());
+        viidSubscribe.setOperateType(Integer.parseInt(subscribeObjectDTO.getOperateType()));
+        viidSubscribe.setSubscribeStatus(0);
         viidSubscribe.setSubscribeCancOrg(subscribeObjectDTO.getSubscribeCancelOrg());
         viidSubscribe.setSubscribeCancelPerson(subscribeObjectDTO.getSubscribeCancelPerson());
         viidSubscribe.setCancelTime(subscribeObjectDTO.getCancelTime() != null ? DateUtil.parse(subscribeObjectDTO.getCancelTime()) : null);
@@ -241,10 +241,10 @@ public class ViidDataController {
         for (String s : subscribeObjectDTO.getSubscribeDetail().split(",")) {
             switch (s) {
                 case "11":
-                    redisService.setCacheMapValue(RedisConstants.SUBSCRIBE_PARENT_PERSON, subscribeObjectDTO.getSubscribeID(),viidSubscribe);
+                    redisService.setCacheMapValue(RedisConstants.SUBSCRIBE_PARENT_PERSON, subscribeObjectDTO.getSubscribeID(), viidSubscribe);
                     break;
                 case "12":
-                    redisService.setCacheMapValue(RedisConstants.SUBSCRIBE_PARENT_FACE, subscribeObjectDTO.getSubscribeID(),viidSubscribe);
+                    redisService.setCacheMapValue(RedisConstants.SUBSCRIBE_PARENT_FACE, subscribeObjectDTO.getSubscribeID(), viidSubscribe);
                     break;
                 case "13":
                     redisService.setCacheMapValue(RedisConstants.SUBSCRIBE_PARENT_MOTORVEHICLE, subscribeObjectDTO.getSubscribeID(), viidSubscribe);
@@ -274,8 +274,8 @@ public class ViidDataController {
         viidSubscribe.setReceiveAddr(subscribeObjectDTO.getReceiveAddr());
         viidSubscribe.setReportInterval(subscribeObjectDTO.getReportInterval());
         viidSubscribe.setReason(subscribeObjectDTO.getReason());
-        viidSubscribe.setOperateType(subscribeObjectDTO.getOperateType().toString());
-        viidSubscribe.setSubscribeStatus(subscribeObjectDTO.getSubscribeStatus().toString());
+        viidSubscribe.setOperateType(Integer.parseInt(subscribeObjectDTO.getOperateType()));
+        viidSubscribe.setSubscribeStatus(Integer.parseInt(subscribeObjectDTO.getSubscribeStatus()));
         viidSubscribe.setSubscribeCancOrg(subscribeObjectDTO.getSubscribeCancelOrg());
         viidSubscribe.setSubscribeCancelPerson(subscribeObjectDTO.getSubscribeCancelPerson());
         viidSubscribe.setCancelTime(subscribeObjectDTO.getCancelTime() != null ? DateUtil.parse(subscribeObjectDTO.getCancelTime()) : null);
@@ -328,8 +328,8 @@ public class ViidDataController {
         viidSubscribe.setReceiveAddr(subscribeObjectDTO.getReceiveAddr());
         viidSubscribe.setReportInterval(subscribeObjectDTO.getReportInterval());
         viidSubscribe.setReason(subscribeObjectDTO.getReason());
-        viidSubscribe.setOperateType(subscribeObjectDTO.getOperateType().toString());
-        viidSubscribe.setSubscribeStatus(subscribeObjectDTO.getSubscribeStatus().toString());
+        viidSubscribe.setOperateType(Integer.parseInt(subscribeObjectDTO.getOperateType()));
+        viidSubscribe.setSubscribeStatus(Integer.parseInt(subscribeObjectDTO.getSubscribeStatus()));
         viidSubscribe.setSubscribeCancOrg(subscribeObjectDTO.getSubscribeCancelOrg());
         viidSubscribe.setSubscribeCancelPerson(subscribeObjectDTO.getSubscribeCancelPerson());
         viidSubscribe.setCancelTime(subscribeObjectDTO.getCancelTime() != null ? DateUtil.parse(subscribeObjectDTO.getCancelTime()) : null);
@@ -358,9 +358,9 @@ public class ViidDataController {
      * @return 结构参考C.25，字段定义参考A.26。
      */
     @PostMapping("/SubscribeNotifications")
-    public ResponsObject SubscribeNotifications(@RequestBody SubscribeNotificationsRequest subscribeNotificationsRequest) {
-
-        viidDataService.SubscribeNotifications(subscribeNotificationsRequest);
+    public ResponsObject SubscribeNotifications(@RequestBody String subscribeNotificationsRequest) {
+        viidDataService.SubscribeNotifications(JSON.toJavaObject(
+                JSON.parseObject(subscribeNotificationsRequest), SubscribeNotificationsRequest.class));
         return new ResponsObject(ResponsStatusEnum.OK);
     }
 

@@ -1,9 +1,6 @@
 package com.easy1400.viid.domain.message;
 
-import com.easy1400.viid.domain.ViidFace;
-import com.easy1400.viid.domain.ViidMotorVehicle;
-import com.easy1400.viid.domain.ViidNonMotorVehicle;
-import com.easy1400.viid.domain.ViidPerson;
+import com.easy1400.viid.domain.*;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -44,6 +41,8 @@ public class SubscribeNotificationsRequest {
             private FaceObjectListDTO FaceObjectList;
             @JsonProperty("NonMotorVehicleObjectList")
             private NonMotorVehicleObjectListDTO NonMotorVehicleObjectList;
+            @JsonProperty("DeviceList")
+            private DeviceListDTO DeviceList;
             @JsonProperty("Title")
             private String Title;
             @JsonProperty("TriggerTime")
@@ -56,6 +55,13 @@ public class SubscribeNotificationsRequest {
             public static class MotorVehicleObjectListDTO {
                 @JsonProperty("MotorVehicleObject")
                 private List<ViidMotorVehicle> MotorVehicleObject;
+            }
+
+            @NoArgsConstructor
+            @Data
+            public static class DeviceListDTO {
+                @JsonProperty("APEObject")
+                private List<ViidApe> APEObject;
             }
 
             @NoArgsConstructor

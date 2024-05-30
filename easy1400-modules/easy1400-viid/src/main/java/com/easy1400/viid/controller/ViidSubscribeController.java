@@ -40,38 +40,53 @@ public class ViidSubscribeController {
         LambdaQueryWrapper<ViidCascadePlatform> viidCascadePlatformQueryWrapper = new LambdaQueryWrapper<>();
         viidCascadePlatformQueryWrapper.eq(ViidCascadePlatform::getType, 2);
         ViidCascadePlatform viidCascadePlatform = viidCascadePlatformService.getOne(viidCascadePlatformQueryWrapper);
-        String UserIdentify = request.getHeader("User-Identify");
-        //被订阅
-        if (StringUtils.isNotEmpty(UserIdentify)) {
-            viidSubscribe.setSubscriberSendOrgID(UserIdentify);
-            viidSubscribe.setSubscriberRecoverOrgID(viidCascadePlatform.getSystemID());
-        } else {
-            viidSubscribe.setSubscriberSendOrgID(viidCascadePlatform.getSystemID());
-            viidSubscribe.setSubscriberRecoverOrgID(viidSubscribe.getSubscriberRecoverOrgID());
-        }
+        viidSubscribe.setSubscriberSendOrgID(viidCascadePlatform.getSystemID());
+        viidSubscribe.setSubscriberRecoverOrgID(viidSubscribe.getSubscriberRecoverOrgID());
         if (viidSubscribeService.save(viidSubscribe)) {
             switch (viidSubscribe.getSubscribeType()) {
                 //订阅上级需要像上级发送通知
                 case "0":
+                    viidCascadePlatformQueryWrapper = new LambdaQueryWrapper<>();
+                    viidCascadePlatformQueryWrapper.eq(ViidCascadePlatform::getSystemID, viidSubscribe.getSubscriberRecoverOrgID());
+                    viidCascadePlatformQueryWrapper.eq(ViidCascadePlatform::getType, 1);
+                    viidCascadePlatform = viidCascadePlatformService.getOne(viidCascadePlatformQueryWrapper);
                     return AjaxResult.success(viidSubscribeService.add(viidSubscribe, viidCascadePlatform));
             }
             return AjaxResult.success("save success");
         }
-        return AjaxResult.error("500","save error");
-}
+        return AjaxResult.error("500", "save error");
+    }
 
-/**
- * 查询订阅信息
- *
- * @param type
- * @return
- */
-@GetMapping("/ViidSubscribe")
-public AjaxResult getViidCascadePlatform(String type) {
-    LambdaQueryWrapper<ViidSubscribe> queryWrapper = new LambdaQueryWrapper<>();
-    queryWrapper.eq(StringUtils.isNotEmpty(type), ViidSubscribe::getSubscribeType, type);
-    return AjaxResult.success(viidSubscribeService.list(queryWrapper));
-}
+    /**
+     * 删除订阅
+     *
+     * @param id
+     * @return
+     */
+    @DeleteMapping("/ViidSubscribe/{id}")
+    public AjaxResult delViidSubscribe(@PathVariable String id) {
+        ViidSubscribe viidSubscribe = viidSubscribeService.getById(id);
+        viidSubscribeService.removeById(id);
+        //TODO 上级订阅 需要向上级取消
+        if (viidSubscribe.getSubscribeType().equals("0")){
+
+        }
+        return AjaxResult.success();
+
+    }
+
+    /**
+     * 查询订阅信息
+     *
+     * @param type
+     * @return
+     */
+    @GetMapping("/ViidSubscribe")
+    public AjaxResult getViidCascadePlatform(String type) {
+        LambdaQueryWrapper<ViidSubscribe> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(StringUtils.isNotEmpty(type), ViidSubscribe::getSubscribeType, type);
+        return AjaxResult.success(viidSubscribeService.list(queryWrapper));
+    }
 
 
 }

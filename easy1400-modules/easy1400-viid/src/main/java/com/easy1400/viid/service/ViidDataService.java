@@ -1,9 +1,6 @@
 package com.easy1400.viid.service;
 
-import com.easy1400.viid.domain.ViidFace;
-import com.easy1400.viid.domain.ViidMotorVehicle;
-import com.easy1400.viid.domain.ViidNonMotorVehicle;
-import com.easy1400.viid.domain.ViidPerson;
+import com.easy1400.viid.domain.*;
 import com.easy1400.viid.domain.message.*;
 
 /**
@@ -19,6 +16,8 @@ public interface ViidDataService {
     void saveViidMotorVehicleData(ViidMotorVehicle motorVehicleRequest);
 
     void saveViidNonMotorVehicleData(ViidNonMotorVehicle nonMotorVehicleRequest);
+
+    void saveViidApesData(ViidApe viidApe);
 
     void saveViidPersonData(ViidPerson personRequest);
 

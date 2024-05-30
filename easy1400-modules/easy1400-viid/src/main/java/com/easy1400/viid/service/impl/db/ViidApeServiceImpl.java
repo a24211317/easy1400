@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author chenghong
@@ -44,16 +46,18 @@ public class ViidApeServiceImpl extends ServiceImpl<ViidApeMapper, ViidApe>
         // 取到下级平台ID
         String deviceID = registerRequest.getDeviceID();
         ViidApe ape = this.getById(deviceID);
+        ViidCascadePlatform viidCascadePlatform=null;
         String password = null;
         // 从采集设备库查询是否有此下级平台ID
         if (ape == null) {
             //从下级平台里查询
             LambdaQueryWrapper<ViidCascadePlatform> queryWrapper = new LambdaQueryWrapper<>();
-            queryWrapper.eq(ViidCascadePlatform::getUserId, deviceID);
-            queryWrapper.eq(ViidCascadePlatform::getType, 1);
-            ViidCascadePlatform viidCascadePlatform = viidCascadePlatformMapper.selectOne(queryWrapper);
+            queryWrapper.eq(ViidCascadePlatform::getSystemID, deviceID);
+            queryWrapper.eq(ViidCascadePlatform::getType, 0);
+             viidCascadePlatform = viidCascadePlatformMapper.selectOne(queryWrapper);
             if (viidCascadePlatform == null) {
                 log.info("无此下级平台ID");
+                response.setStatus(404);
                 return null;
             }
             password = viidCascadePlatform.getPassword();
@@ -69,20 +73,13 @@ public class ViidApeServiceImpl extends ServiceImpl<ViidApeMapper, ViidApe>
             return null;
         }
         // 获取请求头认证信息
-        // 以逗号分隔切割数组
-        String[] split = authorization.split(",");
-
         // 存放解析后的字典映射
-        Map<String, String> stringStringHashMap = new HashMap<>();
-        for (String s : split) {
-            String[] split1 = s.split("=");
-            stringStringHashMap.put(split1[0].trim(), split1[1].replace("\"", ""));
-        }
+        Map<String, String> stringStringHashMap =parseDigestParams(authorization);
         //=======================开始认证加密======================
         log.debug("平台id为====》{}", deviceID);
         log.debug("注册信息为====》{}", stringStringHashMap);
 
-        if (RegisterAuthUtil.hasAuth(stringStringHashMap.get("response").toString(), password, stringStringHashMap)) {
+        if (RegisterAuthUtil.hasAuth(password, stringStringHashMap)) {
             log.debug("下级平台验证通过");
             response.setStatus(200);
             HashMap<String, Object> responseMap = new HashMap<>();
@@ -93,10 +90,17 @@ public class ViidApeServiceImpl extends ServiceImpl<ViidApeMapper, ViidApe>
             responseStatus.put("Id", deviceID);
             responseStatus.put("LocalTime", String.valueOf(DateUtil.current()));
             responseMap.put("ResponseStatusObject", responseStatus);
-            DeviceIDs.add(ape.getApeID());
+            if (ape == null) {
+                DeviceIDs.add(viidCascadePlatform.getSystemID());
+
+            }else {
+                DeviceIDs.add(ape.getApeID());
+
+            }
             return responseMap;
         }
         log.debug("下级平台验证未通过");
+        response.setStatus(400);
         return null;
     }
 
@@ -116,6 +120,20 @@ public class ViidApeServiceImpl extends ServiceImpl<ViidApeMapper, ViidApe>
         response.addHeader("WWW-Authenticate", RegisterAuthUtil.getAuthHeader());
         response.setStatus(401);
         return null;
+    }
+    public static Map<String, String> parseDigestParams(String authHeader) {
+        Map<String, String> params = new HashMap<>();
+        Pattern pattern = Pattern.compile("([a-zA-Z0-9]+)=(\"[^\"]+\"|[^,]+)");
+        Matcher matcher = pattern.matcher(authHeader);
+        while (matcher.find()) {
+            String key = matcher.group(1);
+            String value = matcher.group(2);
+            if (value.startsWith("\"") && value.endsWith("\"")) {
+                value = value.substring(1, value.length() - 1);
+            }
+            params.put(key, value);
+        }
+        return params;
     }
 }
 

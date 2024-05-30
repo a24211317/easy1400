@@ -13,10 +13,7 @@ import com.easy1400.viid.common.util.ViidHttpUtil;
 import com.easy1400.viid.domain.*;
 import com.easy1400.viid.domain.dto.SubImageListDTO;
 import com.easy1400.viid.domain.message.SubscribeNotificationsRequest;
-import com.easy1400.viid.mapper.ViidFaceMapper;
-import com.easy1400.viid.mapper.ViidMotorVehicleMapper;
-import com.easy1400.viid.mapper.ViidNonMotorVehicleMapper;
-import com.easy1400.viid.mapper.ViidPersonMapper;
+import com.easy1400.viid.mapper.*;
 import com.easy1400.viid.service.ViidDataService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,6 +48,8 @@ public class ViidDataDBServiceImpl implements ViidDataService {
     private ViidMotorVehicleMapper viidMotorVehicleMapper;
     @Resource
     private ViidNonMotorVehicleMapper viidNonMotorVehicleMapper;
+    @Resource
+    private ViidApeMapper viidApeMapper;
     @Resource
     private ViidPersonMapper viidPersonMapper;
     @Autowired
@@ -110,6 +109,16 @@ public class ViidDataDBServiceImpl implements ViidDataService {
 
     @Async
     @Override
+    public void saveViidApesData(ViidApe viidApe) {
+        if (viidApeMapper.selectById(viidApe) != null) {
+            viidApeMapper.updateById(viidApe);
+        } else {
+            viidApeMapper.insert(viidApe);
+        }
+    }
+
+    @Async
+    @Override
     public void saveViidPersonData(ViidPerson viidPerson) {
         //图片存入服务
         try {
@@ -145,6 +154,11 @@ public class ViidDataDBServiceImpl implements ViidDataService {
             if (subscribeNotificationObjectDTO.getNonMotorVehicleObjectList() != null) {
                 for (ViidNonMotorVehicle nonMotorVehicle : subscribeNotificationObjectDTO.getNonMotorVehicleObjectList().getNonMotorVehicleObject()) {
                     this.saveViidNonMotorVehicleData(nonMotorVehicle);
+                }
+            }
+            if (subscribeNotificationObjectDTO.getDeviceList() != null) {
+                for (ViidApe viidApe : subscribeNotificationObjectDTO.getDeviceList().getAPEObject()) {
+                    this.saveViidApesData(viidApe);
                 }
             }
         }

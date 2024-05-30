@@ -1,9 +1,6 @@
 package com.easy1400.viid.service.impl.es;
 
-import com.easy1400.viid.domain.ViidFace;
-import com.easy1400.viid.domain.ViidMotorVehicle;
-import com.easy1400.viid.domain.ViidNonMotorVehicle;
-import com.easy1400.viid.domain.ViidPerson;
+import com.easy1400.viid.domain.*;
 import com.easy1400.viid.domain.message.*;
 import com.easy1400.viid.service.ViidDataService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -29,6 +26,11 @@ public class ViidDataESServiceImpl implements ViidDataService {
 
     @Override
     public void saveViidNonMotorVehicleData(ViidNonMotorVehicle viidNonMotorVehicle) {
+
+    }
+
+    @Override
+    public void saveViidApesData(ViidApe viidApe) {
 
     }
 

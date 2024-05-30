@@ -90,7 +90,7 @@ public class ViidSubscribe implements Serializable {
      */
     @TableField(value = "ReportInterval")
     @JsonProperty("ReportInterval")
-    private Integer ReportInterval;
+    private int ReportInterval;
 
     /**
      * 理由
@@ -104,14 +104,14 @@ public class ViidSubscribe implements Serializable {
      */
     @TableField(value = "OperateType")
     @JsonProperty("OperateType")
-    private String OperateType;
+    private int OperateType;
 
     /**
      * 订阅执行状态
      */
     @TableField(value = "SubscribeStatus")
     @JsonProperty("SubscribeStatus")
-    private String SubscribeStatus;
+    private int SubscribeStatus;
 
     /**
      * 订阅取消单位
