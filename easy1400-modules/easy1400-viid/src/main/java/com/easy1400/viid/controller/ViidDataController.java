@@ -2,6 +2,8 @@ package com.easy1400.viid.controller;
 
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.json.JSONConfig;
+import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -189,14 +191,26 @@ public class ViidDataController {
         QueryWrapper<ViidApe> apeQueryWrapper = new QueryWrapper();
         apeQueryWrapper.eq(StringUtils.isNotEmpty(ApeID), "ApeID", ApeID);
         apeQueryWrapper.eq(StringUtils.isNotEmpty(Name), "Name", Name);
+        JSONConfig jsonConfig = new JSONConfig();
+        jsonConfig.setIgnoreCase(false);
         //分页参数用于平台自查，无分页则代表下级平台调用 返回全量
         if (page != null && rows != null) {
-            return viidApeService.page(new Page<>(page, rows), apeQueryWrapper);
+            return JSONUtil.toJsonStr(viidApeService.page(new Page<>(page, rows), apeQueryWrapper),jsonConfig);
         }
         ApeRequest ApeRequest = new ApeRequest();
 
         ApeRequest.setAPEListObject(new ApeRequest.APEListObjectDTO(viidApeService.list(apeQueryWrapper)));
-        return ApeRequest;
+        return JSONUtil.toJsonStr(ApeRequest,jsonConfig);
+    }
+
+    /**
+     * 添加采集设备
+     *
+     * @return
+     */
+    @PostMapping("/APE")
+    public AjaxResult saveAPE(@RequestBody ViidApe viidApe) {
+        return AjaxResult.success(viidApeService.save(viidApe));
     }
 
 

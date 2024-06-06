@@ -8,3 +8,11 @@ export function getApesPage(data) {
       params: data
     })
   }
+// 添加采集设备
+export function addApe(data) {
+  return request({
+    url: '/VIID/APE',
+    method: 'post',
+    data: data
+  })
+}
