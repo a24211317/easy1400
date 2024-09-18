@@ -39,7 +39,7 @@
     </div>
     <div></div>
     <div style="width: 99%;overflow-x: auto;">
-      <el-table  :data="apesDataList" style="width: 100%">
+      <el-table :data="apesDataList" style="width: 100%">
         <el-table-column width="200" prop="ApeID" label="设备ID"> </el-table-column>
         <el-table-column prop="Name" label="名称"> </el-table-column>
         <el-table-column prop="Model" label="型号"> </el-table-column>
@@ -48,25 +48,27 @@
         <el-table-column prop="Port" label="端口号"> </el-table-column>
         <el-table-column prop="Longitude" label="经度"> </el-table-column>
         <el-table-column prop="Latitude" label="纬度"> </el-table-column>
-        <el-table-column prop="PlaceCode" label="行政区划代码"> </el-table-column>
+        <el-table-column width="200" prop="PlaceCode" label="行政区划代码"> </el-table-column>
         <el-table-column prop="Place" label="位置名"> </el-table-column>
-        <el-table-column prop="OrgCode" label="管辖单位代码"> </el-table-column>
-        <el-table-column prop="CapDirection" label="车辆抓拍方向"> </el-table-column>
+        <el-table-column width="200" prop="OrgCode" label="管辖单位代码"> </el-table-column>
+        <el-table-column width="200" prop="CapDirection" label="车辆抓拍方向"> </el-table-column>
         <el-table-column prop="MonitorDirection" label="监视方向"> </el-table-column>
-        <el-table-column prop="MonitorAreaDesc" label="监视区域说明"> </el-table-column>
-        <el-table-column prop="IsOnline" label="是否在线"> </el-table-column>
-        <el-table-column prop="OwnerApsID" label="所属采集系统"> </el-table-column>
-        <el-table-column  width="200" prop="UserId" label="用户帐号"> </el-table-column>
-        <el-table-column  width="200" prop="Password" label="口令"> </el-table-column>
-        <el-table-column
-      fixed="right"
-      label="操作"
-      width="100">
-      <template slot-scope="scope">
-        <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
-        <el-button type="text" size="small">编辑</el-button>
-      </template>
-    </el-table-column>
+        <el-table-column width="200" prop="MonitorAreaDesc" label="监视区域说明"> </el-table-column>
+        <el-table-column prop="IsOnline" label="是否在线">
+          <template v-slot="scope">
+            <span v-if="scope.row.IsOnline === 1">在线</span>
+            <span v-else>离线</span>
+          </template>
+        </el-table-column>
+        <el-table-column width="200" prop="OwnerApsID" label="所属采集系统"> </el-table-column>
+        <el-table-column width="200" prop="UserId" label="用户帐号"> </el-table-column>
+        <el-table-column width="200" prop="Password" label="口令"> </el-table-column>
+        <!-- <el-table-column fixed="right" label="操作" width="100">
+          <template slot-scope="scope">
+            <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
+            <el-button type="text" size="small">编辑</el-button>
+          </template>
+        </el-table-column> -->
       </el-table>
     </div>
     <div class="block">

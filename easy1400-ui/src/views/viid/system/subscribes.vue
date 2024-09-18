@@ -2,12 +2,7 @@
   <div class="app-container">
     <div>
       <el-row :gutter="12">
-        <el-form
-          ref="elForm"
-          :model="formData"
-          size="medium"
-          label-width="85px"
-        >
+        <el-form ref="elForm" :model="formData" size="medium" label-width="85px">
           <el-col :span="5">
             <el-form-item label="订阅类型" prop="type">
               <el-select v-model="formData.type" placeholder="请选择">
@@ -19,23 +14,14 @@
           </el-col>
           <el-col :span="3">
             <el-form-item label="平台名称" prop="name">
-              <el-input
-                v-model="formData.name"
-                clearable
-                :style="{ width: '90%' }"
-              >
+              <el-input v-model="formData.name" clearable :style="{ width: '90%' }">
               </el-input>
             </el-form-item>
           </el-col>
 
           <el-col :span="1">
             <el-form-item label-width="1px">
-              <el-button
-                type="primary"
-                icon="el-icon-search"
-                size="medium"
-                @click="submitForm"
-              >
+              <el-button type="primary" icon="el-icon-search" size="medium" @click="submitForm">
                 查询
               </el-button>
             </el-form-item>
@@ -43,32 +29,21 @@
         </el-form>
         <div style="float: right">
           <el-col :span="1.5">
-            <el-button
-              type="primary"
-              plain
-              icon="el-icon-plus"
-              size="medium"
-              @click="
-                addFormOpen = true;
-                addFormTitle = `新增订阅`;
-                addFormID = 0;
-                addForm = {};
-              "
-            >新增
-            </el-button
-            >
+            <el-button type="primary" plain icon="el-icon-plus" size="medium" @click="
+              addFormOpen = true;
+            addFormTitle = `新增订阅`;
+            addFormID = 0;
+            addForm = {};
+            ">新增
+            </el-button>
           </el-col>
         </div>
       </el-row>
     </div>
     <div>
       <el-collapse v-model="activeNames" accordion @change="colChange">
-        <el-collapse-item
-          v-for="subscribe in viidSubscribeformList"
-          :key="subscribe.SubscribeID"
-          :title="subscribe.Name"
-          :name="subscribe.SubscribeID"
-        >
+        <el-collapse-item v-for="subscribe in viidSubscribeformList" :key="subscribe.SubscribeID"
+          :title="subscribe.Name" :name="subscribe.SubscribeID">
           <div slot="title" style="width: 100%">
             <span>{{ subscribe.SubscriberSendOrgID }} 订阅 {{ subscribe.SubscriberRecoverOrgID }}</span>
             <div style="float: right; margin-right: 30px">
@@ -89,7 +64,7 @@
               </el-descriptions-item>
               <el-descriptions-item>
                 <template slot="label"> 订阅类别</template>
-                {{ subscribe.SubscribeDetail }}
+                {{ subscribeTypeFormat(subscribe.SubscribeDetail) }}
               </el-descriptions-item>
               <el-descriptions-item>
                 <template slot="label"> 订阅资源路径</template>
@@ -171,27 +146,27 @@
                 <template slot="label"> 返回结果图片约定</template>
                 {{ subscribe.ResultImageDeclare }}
               </el-descriptions-item>
-              
+
               <el-descriptions-item>
                 <template slot="label"> 返回结果特征值约定</template>
                 {{ subscribe.ResultFeatureDeclare }}
               </el-descriptions-item>
-              
+
               <el-descriptions-item>
                 <template slot="label"> 订阅分类标签标识</template>
                 {{ subscribe.TabID }}
               </el-descriptions-item>
-              
+
               <el-descriptions-item>
                 <template slot="label"> 审批时间</template>
                 {{ subscribe.ApprovalTime }}
               </el-descriptions-item>
-              
+
               <el-descriptions-item>
                 <template slot="label"> 订阅发起方ID</template>
                 {{ subscribe.SubscriberSendOrgID }}
               </el-descriptions-item>
-              
+
               <el-descriptions-item>
                 <template slot="label"> 被订阅方ID</template>
                 {{ subscribe.SubscriberRecoverOrgID }}
@@ -203,19 +178,8 @@
     </div>
 
     <!-- 添加或修改用户配置对话框 -->
-    <el-dialog
-      :title="addFormTitle"
-      :visible.sync="addFormOpen"
-      width="800px"
-      append-to-body
-    >
-      <el-form
-        v-if="addFormOpen"
-        ref="addForm"
-        :rules="addFormRules"
-        :model="addForm"
-        label-width="200px"
-      >
+    <el-dialog :title="addFormTitle" :visible.sync="addFormOpen" width="800px" append-to-body>
+      <el-form v-if="addFormOpen" ref="addForm" :rules="addFormRules" :model="addForm" label-width="200px">
         <div>
           <el-form-item label="订阅标识符" prop="SubscribeID">
             <el-input v-model="addForm.SubscribeID"></el-input>
@@ -303,11 +267,12 @@
 </template>
 
 <script>
-import {getViidSubscribe,addviidSubscribe,delviidSubscribe} from "@/api/viid/system/ViidSubscribe";
-import {getToken} from "@/utils/auth";
+import { getViidSubscribe, addviidSubscribe, delviidSubscribe } from "@/api/viid/system/ViidSubscribe";
+import { getToken } from "@/utils/auth";
 
 export default {
   name: "viidSubscribeform",
+  dicts: ['gat1400_subscribe_detail_type'],
   data() {
     let validateIp = (rule, value, callback) => {
       if (value == "") {
@@ -368,7 +333,7 @@ export default {
       },
       addFormRules: {
         SystemID: [
-          {required: true, message: "平台ID不能为空", trigger: "blur"},
+          { required: true, message: "平台ID不能为空", trigger: "blur" },
           {
             min: 20,
             max: 20,
@@ -377,18 +342,18 @@ export default {
           },
         ],
         Name: [
-          {required: true, message: "平台名称不能为空", trigger: "blur"},
+          { required: true, message: "平台名称不能为空", trigger: "blur" },
         ],
-        IPAddr: [{required: true, validator: validateIp, trigger: "blur"}],
-        Port: [{required: true, validator: validatePort, trigger: "blur"}],
+        IPAddr: [{ required: true, validator: validateIp, trigger: "blur" }],
+        Port: [{ required: true, validator: validatePort, trigger: "blur" }],
         Type: [
-          {required: true, message: "平台类型不能为空", trigger: "blur"},
+          { required: true, message: "平台类型不能为空", trigger: "blur" },
         ],
         Password: [
-          {required: true, message: "平台密码不能为空", trigger: "blur"},
+          { required: true, message: "平台密码不能为空", trigger: "blur" },
         ],
         UserId: [
-          {required: true, message: "注册ID不能为空", trigger: "blur"},
+          { required: true, message: "注册ID不能为空", trigger: "blur" },
         ],
       },
     };
@@ -404,6 +369,12 @@ export default {
   mounted() {
   },
   methods: {
+    // 操作日志类型字典翻译
+    subscribeTypeFormat(value) {
+      console.log("");
+      console.log(this.selectDictLabels(this.dict.type.gat1400_subscribe_detail_type, value,","));
+      return this.selectDictLabels(this.dict.type.gat1400_subscribe_detail_type, value,",");
+    },
     getviidSubscribe() {
       var _this = this;
       getViidSubscribe(_this.formData).then((response) => {
@@ -430,18 +401,18 @@ export default {
               }
             });
           } else {
-            _this.addForm.OperateType="0";
-            _this.addForm.SubscribeType="0";
+            _this.addForm.OperateType = "0";
+            _this.addForm.SubscribeType = "0";
             addviidSubscribe(_this.addForm).then((response) => {
-              if(response.msg == "send error"){
+              if (response.msg == "send error") {
                 _this.$modal.msgSuccess("新增成功,订阅发送失败");
                 _this.addFormOpen = false;
                 _this.getviidSubscribe();
-              }else if(response.msg == "save error"){
+              } else if (response.msg == "save error") {
                 _this.$modal.msgSuccess("新增失败，请联系管理员");
                 _this.addFormOpen = false;
                 _this.getviidSubscribe();
-              }else {
+              } else {
                 _this.$modal.msgSuccess("新增成功");
                 _this.addFormOpen = false;
                 _this.getviidSubscribe();
@@ -452,18 +423,18 @@ export default {
       });
     },
     delSubscribe(subscribe) {
-        this.$modal
-          .confirm("删除不可恢复,确认删除吗？")
-          .then(function () {
-            return delviidSubscribe(subscribe.SubscribeID);
-          })
-          .then(() => {
-            this.getviidSubscribe();
-            this.$modal.msgSuccess("删除成功");
-          })
-          .catch(() => {
-          });
-  
+      this.$modal
+        .confirm("删除不可恢复,确认删除吗？")
+        .then(function () {
+          return delviidSubscribe(subscribe.SubscribeID);
+        })
+        .then(() => {
+          this.getviidSubscribe();
+          this.$modal.msgSuccess("删除成功");
+        })
+        .catch(() => {
+        });
+
     },
     updateSubscribe(subscribe) {
       this.addFormTitle = "修改订阅";
@@ -537,6 +508,5 @@ export default {
   background-color: #f9fafc;
 }
 
-.el-image__error {
-}
+.el-image__error {}
 </style>
